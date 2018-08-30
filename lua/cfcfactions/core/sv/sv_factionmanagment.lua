@@ -58,9 +58,9 @@ end)
 concommand.Add("fpvp_allowpermission", function(ply,cmd,args)
 
 	if fpm:IsValidPermission(args[1]) then
-		if fpm:hasPermission(ply,"IsTester") then 
+		if fpm:hasPermission(ply,"IsDeveloper") then 
 			if fpm:addPermission(ply, args[1]) == true then
-				ply:ChatPrint(string.format("You have been granted access: ",args[1]))
+				ply:ChatPrint(string.format("You have been granted access: %s",args[1]))
 			end
 		else
 			ply:ChatPrint("You require developer level permissions for this command.")
@@ -72,15 +72,31 @@ end)
 --player:player, permission:string
 concommand.Add("fpvp_removepermission", function(ply,cmd,args)
 	if fpm:IsValidPermission(args[1]) then
-		print(string.format("Success on removing permission",args[1]))
-		fpm:revokePermissions(ply, args[1])
+
+		if fpm:hasPermission(ply,"IsDeveloper") then 
+			if fpm:revokePermission(ply, args[1]) then
+				print(string.format("Success on removing permission %s",args[1]))
+			end
+		else
+			ply:ChatPrint("You require developer level permissions for this command.")
+		end
+
+
 	else
-		print(string.format("Failure on removing permission",args[1]))
+		print(string.format("Failure on removing permission %s",args[1]))
 	end
 end)
 --player:player permission:string
 concommand.Add("fpvp_checkpermission", function(ply,cmd,args)
-
+	if fpm:IsValidPermission(args[1]) then
+		if fpm:hasPermission(ply, args[1]) then 
+			print(string.format("Player has proper permission %s.",args[1]))
+		else
+			print(string.format("Player does not have proper permission %s.",args[1]))
+		end
+	else
+		print(string.format("%s is not a valid permission.",args[1]))
+	end
 end)
 --Prints a list of all possible inuse permissions. 
 concommand.Add("fpvp_printpermissions", function(ply, cmd, args)
@@ -88,6 +104,17 @@ concommand.Add("fpvp_printpermissions", function(ply, cmd, args)
 		ply:PrintMessage(HUD_PRINTCONSOLE,string.format("[%s]\n\t\tDescription: %s\n\t\tAlias:%s",key, value.Description,value.Alias))
 	end
 end)
+concommand.Add("fpvp_revokeuser", function(ply, cmd, args)
+
+	if fpm:hasPermission(ply,"IsDeveloper") then 
+		fpm:revokeUser(ply)
+	else
+		ply:ChatPrint("You require developer level permissions for this command.")
+	end
+
+end)
+
+
 --------------------------------------------------------------------------------------------------------------
 --ADMIN COMMANDS : admin only
 --------------------------------------------------------------------------------------------------------------
@@ -128,21 +155,21 @@ end)
 --XP COMMANDS
 --------------------------------------------------------------------------------------------------------------
 --nil
-concommand.Add("fpvp_spawnxporb", function(ply,cmd,args)
+-- concommand.Add("fpvp_spawnxporb", function(ply,cmd,args)
 
-end)
---time:number
-concommand.Add("fpvp_spawnglobalxporb", function(ply,cmd,args)
+-- end)
+-- --time:number
+-- concommand.Add("fpvp_spawnglobalxporb", function(ply,cmd,args)
 
-end)
---nil
-concommand.Add("fpvp_removexporb", function(ply,cmd,args)
+-- end)
+-- --nil
+-- concommand.Add("fpvp_removexporb", function(ply,cmd,args)
 
-end)
---nil
-concommand.Add("fpvp_removeglobalxporb", function(ply,cmd,args)
+-- end)
+-- --nil
+-- concommand.Add("fpvp_removeglobalxporb", function(ply,cmd,args)
 
-end)
+-- end)
 
 
 --------------------------------------------------------------------------------------------------------------
@@ -178,6 +205,9 @@ concommand.Add("fpvp_factionmenu", function(ply, cmd, args)
 end)
 --nil
 concommand.Add("fpvp_checkcontract", function(ply,cmd,args)
+
+end)
+concommand.Add("fpvp_createcontract", function(ply, cmd,args)
 
 end)
 --------------------------------------------------------------------------------------------------------------
@@ -219,11 +249,7 @@ concommand.Add("fpvp_testpermsys", function(ply, cmd,args)
 	ply:ConCommand("fpvp_allowpermission TestPerm")
 
 	--test for allow
-	if fpm:hasPermission(ply, "TestPerm") then
-		print("You have proper permission to test.")
-	else
-		print("You do not have proper permission to test.")
-	end
+	ply:ConCommand("fpvp_checkpermission TestPerm")
 
 	--remove
 	print("Removing perm")
@@ -231,11 +257,7 @@ concommand.Add("fpvp_testpermsys", function(ply, cmd,args)
 
 
 	--test for remove
-	if fpm:hasPermission(ply, "TestPerm") then
-		print("You have proper permission to test.")
-	else
-		print("You do not have proper permission to test.")
-	end
+	ply:ConCommand("fpvp_checkpermission TestPerm")
 	
 end)
 concommand.Add("fpvp_debugtest", function(ply, cmd, args)

@@ -136,10 +136,18 @@ function fpm:revokeUser(player)
 	return false
 end
 
+
+--forces init for all current humans connected
+function fpm:authAllUsers()
+	for _ , players in pairs (player.GetHumans()) do
+		fpm:authUser(players)
+	end
+end
+
 --Auths a user and allows them to use factions properly. If not, things make explode
 --Or simply just don't want them using it
 function fpm:authUser(player)
-
+	print("Authenticating user " .. player:SteamID())
 	--Checks and balances
 	if not player:IsPlayer() or not IsValid(player) then return end
 	if not (fpm.Users[player:SteamID64()] == nil) then 
@@ -155,21 +163,12 @@ function fpm:authUser(player)
 	local AuthUserPerms = {
 		"AccessAll","CanReceiveAllMessage","CanLeaveFaction","CanCreateFaction","CanJoinFaction"
 	}
-	--TODO
-		--[[
-			Fix referencing a table
-			{Apple, Banana, Cucumber}
 
-			{1,2,3}
-
-			{1 = Apple, 2 = Banana, 3 = Cucumber}
-		]]--
-	--
 	if IsValid(player) and player:IsAdmin() then
 		table.insert(AuthUserPerms, "IsFactionsAdmin")
 		--testing dev access
 		if player:SteamID() == "STEAM_0:1:28607710" then
-			--table.insert(AuthUserPerms, "IsDeveloper")
+			table.insert(AuthUserPerms, "IsDeveloper")
 			table.insert(AuthUserPerms,"IsTester")
 		end
 	end
@@ -181,7 +180,7 @@ function fpm:authUser(player)
 		self:addPermission(player, v)
 	end
 	print("Authed user permissions complete.")
-	PrintTable(fpm.Users[player:SteamID64()] )
+	PrintTable(fpm.Users[player:SteamID64()])
 end
 
 --Checks to see if a player has a  specific permission(s)
@@ -190,7 +189,15 @@ function fpm:hasPermission(player, permission)
 	--If developer, pretty much free control over everything
 	--if table.HasValue(fpm.Users[player:SteamID64()].Permissions, "IsDeveloper") then return true end
 	--Handling normal permissions now
-	if table.HasValue(fpm.Users[player:SteamID64()].Permissions, permission) then return true end
+	for _ , perms in pairs(fpm.Users[player:SteamID64()].Permissions) do
+		if perms == permission then
+			return true 
+		end
+	end
+	-- for _ , perm in pairs(fpm.Users[player:SteamID64()].Permissions) do
+	-- 	if (perm == permission) then return true end
+	-- end
+
 	return false
 end
 
@@ -214,18 +221,16 @@ end
 
 
 --Revokes a permission(s) from the player. True if success, false if otherwise
-function fpm:revokePermissions(player, permission)
+function fpm:revokePermission(player, permission)
 	local usr = fpm.Users[player:SteamID64()]
-	if usr.Permissions[permission] == nil then return true 
-	else 
-		PrintTable(cfcFaction.fpm.Users)
-		usr.Permissions[permission] = nil
-		print("after\n")
-		PrintTable(cfcFaction.fpm.Users)
-		return true
+	for k , perms in pairs(usr.Permissions) do
+		if perms == permission then
+			usr.Permissions[k] = nil
+			return true
+		end
+		
 	end
 	return false
-	
 end
 
 --Returns a list of permissions the player currently has
@@ -253,3 +258,5 @@ function fpm:IsValidPermission(cmd)
 		end
 	end
 end
+
+hook.Add("Initialize", "cfcInitializeUsers", fpm:authAllUsers())
