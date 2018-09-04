@@ -1,6 +1,6 @@
-CFC Factions
+CFC Factions v3.0
 ==============
-This is the CFC factions addon for the Corn Flake Crew Build/Kill server. This addon will be updated constantly. View below for more information on the addon.
+Version 3 for Corn Flake Crew Build/Kill server.
 
 
 Console Commands
@@ -14,11 +14,6 @@ Console Commands
 | fpvp_closemenu | {} | No | Close the menu if it's stuck. |
 
 
-Warning
-========
-Do NOT edit the faction data files under data/pvpfactions! This will ruin the entire addon and will cause some players to 'bug' and become factionless whereas the server still thinks that they are in a faction.
-
-
 The Wiki
 =========
-You can find the Wiki for more information on the addon [here](https://github.com/brandonsturgeon/cfc_factions/wiki).
+You can find the Wiki for more information on the addon [here](https://github.com/brandonsturgeon/cfc_factions_3/wiki).
