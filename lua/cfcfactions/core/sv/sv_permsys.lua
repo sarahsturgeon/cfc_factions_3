@@ -179,8 +179,6 @@ function fpm:authUser(player)
 	for k,v in pairs(AuthUserPerms) do
 		self:addPermission(player, v)
 	end
-	print("Authed user permissions complete.")
-	PrintTable(fpm.Users[player:SteamID64()])
 end
 
 --Checks to see if a player has a  specific permission(s)
@@ -189,14 +187,13 @@ function fpm:hasPermission(player, permission)
 	--If developer, pretty much free control over everything
 	--if table.HasValue(fpm.Users[player:SteamID64()].Permissions, "IsDeveloper") then return true end
 	--Handling normal permissions now
+	--if fpm.Users[player:SteamID64()].Permissions["IsDeveloper" ~= nil] then return true end
+
 	for _ , perms in pairs(fpm.Users[player:SteamID64()].Permissions) do
 		if perms == permission then
 			return true 
 		end
 	end
-	-- for _ , perm in pairs(fpm.Users[player:SteamID64()].Permissions) do
-	-- 	if (perm == permission) then return true end
-	-- end
 
 	return false
 end
@@ -257,6 +254,17 @@ function fpm:IsValidPermission(cmd)
 			return true
 		end
 	end
+end
+
+
+function fpm:IsDev(player)
+	if self:hasPermission(player,"IsDeveloper") then return true end
+	return false
+end
+
+function fpm:IsAdmin(player)
+	if self:hasPermission(player,"IsFactionsAdmin") then return true end
+	return false
 end
 
 hook.Add("Initialize", "cfcInitializeUsers", fpm:authAllUsers())

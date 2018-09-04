@@ -60,7 +60,10 @@ function meta:SetFactionID(id)
 	fpm.Users[self:SteamID64()].FactionID = id
 
 end
+function meta:SetFactionRank(rank)
+	fpm.Users[self:SteamID64()].FactionRank = rank
 
+end
 
 function meta:IsMerc()
 	if fpm[self:SteamID64()].IsMerc == true then return true end

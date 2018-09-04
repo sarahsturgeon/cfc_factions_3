@@ -9,7 +9,6 @@ end
 
 if CLIENT then
 	--defines all others files to be loaded for the client
-	print("INCLUDING CL_INIT.LUA")
     include("cfcfactions/core/cl/cl_init.lua")
 end
 

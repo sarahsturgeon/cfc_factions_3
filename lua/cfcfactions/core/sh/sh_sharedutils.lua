@@ -11,11 +11,11 @@ Global Tables: cfcFactions.Dermas,cfcFactions.Alerts, cfcFactions.ErrorTypes
 local net = net
 local string = string
 local table = table
-cfcFactions.Dermas = {}
+
 
 
 --Sends a notifaction msg:string, mtype:number, player:entity
-cfcFactions.Alerts = {}
+
 
 cfcFactions.ErrorTypes = {
 	[0] = "An unknown error occured",
@@ -45,30 +45,13 @@ cfcFactions.ErrorTypes = {
 	[24] = "You lack the required funds to allow this contract.",
 	[25] = "Too many kills requested. Set a lower number.",
 	[26] = "Unable to accept contract",
-	[27] = "Unable to create faction, duplicate name or too similar to exsisting faction name."
+	[27] = "Unable to create faction, duplicate name or too similar to exsisting faction name.",
+	[28] = "Test String, please ignore."
 }
 
-function cfcFactions:AddAlert(msg, mtype)
-	if SERVER then return end
-	if mtype == nil then mtype = MsgType.Msg end
-	table.insert(cfcFactions.Alerts, { msg, mtype, os.date( "%T " , os.time() )})
-	hook.Call("CFC_FAC_AlertAdded", _,msg,mtype)
-end
 
---Registers items to be placed into the menubar at loadtime
---todo: possibly rework cl_init so this is completely clientside
-function cfcFactions:RegisterDermaMenu(name, panel, ranking)
-	if not CLIENT then return end
 
-	if name == nil then name = "No Text Set" end
-	if panel == nil then panel = {} end
-	if ranking == nil then ranking = 99 end
-	table.insert(cfcFactions.Dermas, {
-		internal_name=name, internal_panel=panel,internal_ranking=ranking,internal_button={}
-	})
-	
 
-end
 
 function cfcFactions:TimeStamp()
 	return os.date( "%H:%M:%S - %d/%m/%Y" , os.time())
@@ -82,9 +65,16 @@ function cfcFactions:UUID()
     end)
 end
 
+--TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
 function cfcFactions:SendNotifcation(msg, mtype, player)
+	if type(msg) == "number" then msg = cfcFactions.ErrorTypes[msg] and cfcFactions.ErrorTypes[msg] or "" end
 	print(string.format("Sending notifcation for %s, msg=%s, type=%s",(player:Nick() and player:Nick() or "InvalidPlayer"),msg,mtype))
+	
+	--only 4 types of error types. 
 	if mtype == nil then mtype = 1 end
+	if mtype > 4 then mtype = 1 end
+	if mtype < 1 then mytype = 1 end
+
 	if CLIENT then
 		
 		if #msg <= 256 then
@@ -121,3 +111,38 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
 
 	end
 end
+
+
+-- function cfcFactions.includeFile( filename, state )
+--     if state == frile.STATE_SHARED or filename:find( "sh_" ) then
+--         if SERVER then AddCSLuaFile( filename ) end
+--         include( filename )
+--     elseif state == frile.STATE_SERVER or SERVER and filename:find( "sv_" ) then
+--         include( filename )
+--     elseif state == frile.STATE_CLIENT or filename:find( "cl_" ) then
+--         if SERVER then AddCSLuaFile( filename )
+--         else include( filename ) end
+--     end
+-- end
+
+-- function cfcFactions.includeFolder( currentFolder, ignoreFilesInFolder, ignoreFoldersInFolder )
+--     if file.Exists( currentFolder .. "sh_frile.lua", "LUA" ) then
+--         frile.includeFile( currentFolder .. "sh_frile.lua" )
+
+--         return
+--     end
+
+--     local files, folders = file.Find( currentFolder .. "*", "LUA" )
+
+--     if not ignoreFilesInFolder then
+--         for _, File in ipairs( files ) do
+--             frile.includeFile( currentFolder .. File )
+--         end
+--     end
+
+--     if not ignoreFoldersInFolder then
+--         for _, folder in ipairs( folders ) do
+--             frile.includeFolder( currentFolder .. folder .. "/" )
+--         end
+--     end
+-- end

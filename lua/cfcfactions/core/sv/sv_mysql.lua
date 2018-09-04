@@ -122,7 +122,6 @@ function sql_db:initilize()
 
 
 	for k,q in pairs(queries) do
-		MsgN(string.format("Executing query [%s]",k))
 		function q:onSuccess(_)
 			MsgN(string.format("cfcFactions query [%s] returned success.",k))
 		end

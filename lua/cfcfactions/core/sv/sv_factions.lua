@@ -135,12 +135,13 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 
 	}
 	local owner = fpm.Users[factionOwner:SteamID64()]
+	--set user id and rank using ply:Set functions
 	owner.FactionID = TmpUnqID
 	owner.FactionRank = cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
 
 	--function cfcFactions:SaveFaction(factionid)
 	--function cfcFactions:SaveUser(userid)
-
+	cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]",cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, Owner)
 	---Returns the newly created faction as a table
 	return cfcFactions.Factions[TmpUnqID]
 
@@ -161,50 +162,7 @@ function cfcFactions:EditFaction(Name, Color, Description, InviteOnly)
 end
 
 
---Global function to refresh both users, factions, and everything in between
-function cfcFactions:Refresh()
 
-end
-
-
---Saving Users to mysql_db
-function cfcFactions:SaveUsers()
-
-end
-
-function cfcFactions:SaveUser(id)
-
-end
-
---Loading Users from mysql_db
-function cfcFactions:LoadUsers()
-
-end
-
-function cfcFactions:LoadUser(id)
-
-end
-
-
-
-
---Saveing factions to mysql_db
-function cfcFactions:SaveFaction(factionid)
-
-end
-
-function cfcFactions:SaveFactions()
-
-end
-
---Loading factions to mysql_db
-function cfcFactions:LoadFaction(factionid)
-
-end
-
-function cfcFactions:LoadFactions()
-
-end
 
 function cfcFactions:LoadNews(path)
 	if not file.Exists("news.txt",path ) then print("Unable to load news") return end
@@ -221,38 +179,12 @@ end
 
 --Handles removing a faction(s) and its attached users properly
 function cfcFactions:RemoveFaction(ply, id)
-
-	local factioncollection = {}
-	local oldid = ply:GetFactionID()
-	if type(id) == "table" then 
-		factioncollection = ids
-	else
-		table.insert(factioncollection, ids)
-	end
-
-	if #ids >= 1 then
-		for k ,v in pairs(factioncollection) do
-			sql_db:GetUsersByFactionID(v, function(data, onlineusers, offlineusers)
-
-					for _, p in pairs(onlineusers) do
-
-						--If the player's steamID64 exsist in data then we can proceed with deleting them
-							if p:IsPlayer() then
-
-								p:SetNWString("FactionID", 0)
-								p:SetNWString("FactionRank","")
-
-								--alert the user that their faction was disbanded
-								net.Start("DisbandFactionClient")
-								net.WriteBool(1)
-								net.Send(p)
-							end
-					end
-			end)
-
-			sql_db:LogAction(ply,oldid, ply:SteamID64(), "DELETED")
-			sql_db:DeleteFaction(v)
-
+	if fpm:IsDev(ply) then
+		if cfcFactions.Factions[id] ~= nil then
+			cfcFactions.Factions[id] = nil
+			ply:SetFactionID(nil)
+			ply:SetFactionRank(nil)
+			--todo: Remove all players too
 		end
 	end
 end

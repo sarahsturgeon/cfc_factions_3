@@ -16,16 +16,19 @@ include("cfcfactions/core/sv/sv_factionmanagment.lua")
 include("cfcfactions/core/sv/sv_player_ext.lua")
 
 --cl
+AddCSLuaFile("cfcfactions/core/cl/cl_clientstartup.lua")
 AddCSLuaFile("cfcfactions/config/cl_config.lua")
 AddCSLuaFile("cfcfactions/core/sh/sh_init.lua")
 AddCSLuaFile("cfcfactions/core/cl/cl_init.lua")
-AddCSLuaFile("cfcfactions/core/cl/cl_mainderma.lua")
-AddCSLuaFile("cfcfactions/core/cl/cl_factionsderma.lua")
-AddCSLuaFile("cfcfactions/core/cl/cl_usersderma.lua")
-AddCSLuaFile("cfcfactions/core/cl/cl_alertbox.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_mainderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_factionsderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_usersderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/minis/cl_alertbox.lua")
 AddCSLuaFile("cfcfactions/core/cl/cl_utilities.lua")
-AddCSLuaFile("cfcfactions/core/cl/cl_newsderma.lua")
-AddCSLuaFile("cfcfactions/core/cl/cl_creditsderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_newsderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_creditsderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_alertsderma.lua")
+AddCSLuaFile("cfcfactions/core/cl/dermas/cl_logsderma.lua")
 resource.AddFile("resource/fonts/coolvetica.ttf")
 
 --Core function to initilizeFactions
@@ -41,9 +44,6 @@ function cfcFactions:InitializeFactions()
 
 	end
 	sql_db:initilize()
-
-
-
 
 	--un needed but might as well
 	if not file.IsDir('cfcFactions', 'DATA') then

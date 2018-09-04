@@ -7,7 +7,8 @@ local Panel = {}
 
 --Registers the panel to be loaded into the menubar if desired
 --change tab_name and index to be desired. index being where you wish the tab to appear
-cfcFactions:RegisterDermaMenu(tab_name, Panel, index)
+
+--cfcFactions:RegisterDermaMenu(tab_name, Panel, index)
 
 
 --main function to init the panel when it is called

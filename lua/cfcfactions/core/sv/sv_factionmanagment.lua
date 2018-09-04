@@ -261,9 +261,20 @@ concommand.Add("fpvp_testpermsys", function(ply, cmd,args)
 	
 end)
 concommand.Add("fpvp_debugtest", function(ply, cmd, args)
-
+	if fpm:IsDev(ply) then
+		 cfcFactions:RemoveFaction(ply, ply:GetFactionID())
+		 ply:concommand("fpvp_createfaction")
+	end
 end)
-
+concommand.Add("fpvp_debugmsg", function(ply, cmd, args)
+	local argstring = ""
+	for K=1, #args do
+		argstring = argstring .. args[K] .. " "
+	end
+	if fpm:IsDev(ply) then
+		 cfcFactions:SendNotifcation(argstring, 3, ply)
+	end
+end)
 
 
 

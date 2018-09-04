@@ -27,13 +27,14 @@ local NamedNetworkVars = {
 	"CFC_Fac_RequestPlayerInfo",
 	"CFC_Fac_SentPlayerInfo",
 	--Menu
-	"CFC_Fac_ToggleDerma"
+	"CFC_Fac_ToggleDerma",
+	"CFC_Fac_RequestNotifcation",
+	"CFC_Fac_SendNotifcation"
 }
 
 --[[
 TODO: Reference -- Incorparate cfc function auto name netvars and hooks
-		util.AddNetworkString(cfcLib.Convert("SendTextAlert"))
-		util.AddNetworkString(CFCLib.generateCFCHook())
+		util.AddNetworkString(CFCLib.generateCFCHook(hookName))
 ]]--
 
 
