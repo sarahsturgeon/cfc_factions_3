@@ -31,6 +31,13 @@ AddCSLuaFile("cfcfactions/core/cl/dermas/cl_alertsderma.lua")
 AddCSLuaFile("cfcfactions/core/cl/dermas/cl_logsderma.lua")
 resource.AddFile("resource/fonts/coolvetica.ttf")
 
+
+function cfcFactions:LoadNews()
+	if not file.Exists("cfcfactions/news.txt", "DATA" ) then print("Unable to load news") return end
+	local NewsFile = file.Read("cfcfactions/news.txt", "DATA" )
+	return NewsFile
+end
+
 --Core function to initilizeFactions
 	--Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
@@ -49,10 +56,19 @@ function cfcFactions:InitializeFactions()
 	if not file.IsDir('cfcFactions', 'DATA') then
 		file.CreateDir('cfcFactions','DATA')
 	end
-
+	if not file.Exists("cfcfactions/news.txt", "DATA") then
+		file.Write("cfcfactions/news.txt","")
+	end
+	--load news
+	cfcFactions:LoadNews()
 
 end
 hook.Add("Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions())
+
+
+
+
+
 
 
 --Player Say Hook
@@ -73,6 +89,12 @@ hook.Add('PlayerSay', 'cfcPlayerSay', cfcPlayerSay)
 
 --InitialSpawn hook, fetches the data and properly sets it serverside
 local function cfcOnPlayerInitialSpawn(ply)
+	for k ,v in pairs(string.Explode("\n",cfcFactions:LoadNews())) do
+		net.Start("CFC_Fac_SendNews")
+		net.WriteString(v .. "\n")
+		net.WriteString(ply:Nick())
+		net.Send(ply)
+	end
 	--ply:FetchUserData()
 end
 hook.Add("PlayerInitialSpawn", "cfcPlayerInitialSpawn", cfcOnPlayerInitialSpawn)

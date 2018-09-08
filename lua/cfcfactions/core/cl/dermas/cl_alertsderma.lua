@@ -33,7 +33,6 @@ local function drawAlertsTable(main_panel)
 		lastCount = #cfcFactions.Alerts
 
 	end
-	main_panel.logview:DataLayout()
 end
 
 

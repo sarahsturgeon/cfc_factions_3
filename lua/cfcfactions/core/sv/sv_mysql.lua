@@ -27,7 +27,7 @@ function sql_db:onConnectionFailed(error)
     MsgN('CFCFactions MySQL: An error occured when connecting. Check local settings: ' .. error)
 end
 
-sql_db:connect()
+--sql_db:connect()
 
 --------------------------------------------------------------------------------------------------------------
 --Core Init

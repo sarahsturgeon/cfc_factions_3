@@ -2,7 +2,12 @@ if not CLIENT then return end
 
 cfcFactions.FactionsView = nil
 
+
+
 local Panel = {}
+local cfg = cfcFactions.Config.Client
+local MinQuery = 1
+local MaxQuery = 15
 
 cfcFactions:RegisterDermaMenu("View Factions", Panel, 1)
 
@@ -22,49 +27,113 @@ local function addFactions(panel, locked, name, description, owner, kd, id)
 end
 
 function Panel:Init()
+
+
+	--[[
+	Structing of a faction's view and internal panel layout
+	
+		Panel
+		{
+			MainContainer
+			{
+				Factionsview 
+				{
+	
+
+				}
+				BottomPanel	
+				{
+					BottomContainerTop{
+						BottomButtonsControlPanel
+						{
+		
+						}
+
+					}
+					BottomContainerBottom 
+					{
+						BottomsContainer
+						{
+													{LEFT | RIGHT}
+						}		
+					}					
+				}
+			}
+		}	
+
+
+	]]--
+
+
+
+
 	cfcFactions.FactionsView=1
 	self:SetSize(math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ))
 	self.MainContainer = vgui.Create("DPanel",self)
 	self.MainContainer:Dock(FILL)
 
 
+
+
 	self.Factionsview = vgui.Create("DListView", self.MainContainer)
 	self.Factionsview:Dock(FILL)
-	
+	--self.Factionsview:SetTall(5)
 	
 	self.BottomPanel = vgui.Create("DPanel",self.MainContainer)
 	self.BottomPanel:Dock(BOTTOM)
 	self.BottomPanel:SetBackgroundColor(Color(0,0,0,0))
 	self.BottomPanel:SetWide(self:GetWide())
+	self.BottomPanel:SetTall(50)
 	self.BottomPanel:InvalidateParent(true)
-	--[[
-		Panel
-		{
-			MainContainer
-			{
-				Factionsview {}
+	self.BottomPanel:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
 
-				BottomPanel				{LEFT | RIGHT}
-			}
-		}					
-	]]--
+	self.BottomContainerTop = vgui.Create("DPanel", self.BottomPanel)
+	self.BottomContainerTop:Dock(TOP)
+	self.BottomContainerTop:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
 
-	self.ButtonsContainer = vgui.Create("DPanel", self.BottomPanel)
+	self.BottomContainerBottom = vgui.Create("DPanel", self.BottomPanel)
+	self.BottomContainerBottom:Dock(BOTTOM)
+	self.BottomContainerBottom:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+
+--
+	--Bottom Panel - Contains buttons to interact with factions
+	self.BottomButtonsControlPanel = vgui.Create("DPanel", self.BottomContainerBottom)
+	self.BottomButtonsControlPanel:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+	self.BottomButtonsControlPanel:Dock(BOTTOM)
+
+	--Factions View buttons (Changing pages)
+	self.ButtonsContainer = vgui.Create("DPanel", self.BottomContainerTop)
 	self.ButtonsContainer:Dock(RIGHT)
 	self.ButtonsContainer:InvalidateParent(true)
+	self.ButtonsContainer:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+
+
 	-- self.ButtonsContainer:SetWide(210)
 
 	self.ButtonsPanelLeft = vgui.Create("DPanel", self.ButtonsContainer)
 	self.ButtonsPanelLeft:Dock(LEFT)
 	self.ButtonsPanelLeft:InvalidateParent(true)
+	self.ButtonsPanelLeft:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
 	self.ButtonsPanelRight = vgui.Create("DPanel", self.ButtonsContainer)
 	self.ButtonsPanelRight:Dock(RIGHT)
 	self.ButtonsPanelRight:InvalidateParent(true)
-	-- self.ButtonsPanelLeft:SetWide(100)
-	-- self.ButtonsPanelRight:SetWide(100)
+	self.ButtonsPanelRight:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
 
-	self.BottomPanel:SetBackgroundColor(Color(44, 62, 80, 255))
-
+	--Create, Edit, Delete, View
+	self.CreateFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
+	self.CreateFaction:SetText("Create Faction")
+	self.CreateFaction:Dock(LEFT)
+	self.EditFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
+	self.EditFaction:SetText("Edit Faction")
+	self.EditFaction:Dock(LEFT)
+	self.DeleteFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
+	self.DeleteFaction:SetText("Delete Faction")
+	self.DeleteFaction:Dock(LEFT)
+	self.ViewFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
+	self.ViewFaction:SetText("View Faction")
+	self.ViewFaction:Dock(LEFT)
+	cfcFactions:ResizeParentFromChildren(self.BottomButtonsControlPanel)
+	cfcFactions:ResizeChildrenEqually(self.BottomButtonsControlPanel,6)
 --First Page, Previous Page, Next Page, Last Page
 	self.FirstPage = vgui.Create("DButton", self.ButtonsPanelLeft)
 	self.FirstPage:SetText("<<")
@@ -84,7 +153,9 @@ function Panel:Init()
 
 	self.ButtonsPanelLeft:SetWide(self.FirstPage:GetWide() + self.NextPage:GetWide())
 	self.ButtonsPanelRight:SetWide(self.NextPage:GetWide() + self.LastPage:GetWide())
-	self.ButtonsContainer:SetWide(self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide())
+	--self.ButtonsContainer:SetWide(self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide())
+	cfcFactions:ResizeParentFromChildren(self.ButtonsContainer)
+
 	--[[
 
 		--Container [  Container[Name] Container[Description] -... ]
@@ -95,11 +166,13 @@ function Panel:Init()
 	self.namecol = self.Factionsview:AddColumn("Name", 2)
 	self.desccol = self.Factionsview:AddColumn("Description", 3)
 	self.owncol = self.Factionsview:AddColumn("owner", 4)
-	self.killcol = self.Factionsview:AddColumn("Kills/Deaths", 5)
+	self.killcol = self.Factionsview:AddColumn("K/D", 5)
 	self.idcol = self.Factionsview:AddColumn("ID", 6)
 
 	--sizing
 	self.privcol:SetWide(5)
+	self.killcol:SetWide(5)
+	self.idcol:SetWide(20)
 
 
 
@@ -120,11 +193,23 @@ end
 
 vgui.Register('D_cfcfactionsderma', Panel)
 
-
 --todo: FactionRemoved
 
 
---todo: 
+
+--todo:  tie into being actually used
 net.Receive("FactionCreated", function()
+
+end)
+
+net.Receive("FactionEdited", function()
+
+end)
+
+net.Receive("FactionFetchQuery", function()
+
+end)
+
+net.Receivve("FactionDeleted", function()
 
 end)

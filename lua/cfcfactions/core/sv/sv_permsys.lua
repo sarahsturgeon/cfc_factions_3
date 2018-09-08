@@ -82,14 +82,6 @@ local function lookUpAlias(alias)
 
 end
 
---Dev Note: Permissons should not be able to be used yet since its missing
---the table infront of it. Ether redefine how permissions are coded
---or go through and throw a table infront of every single permission
---in order for them to be properly used.
-
---IE: CanKick to fpm.Permissions.CorePermissions.CanKick
-
-
 --//interal ranks inside a self contained faction. These will always be avaible to default to encase
 --a user decides to mess up their internal ranks. 
 --!Best not to change these unless a core permission is needed
@@ -155,9 +147,6 @@ function fpm:authUser(player)
 		return 
 	end
 	fpm.Users[player:SteamID64()] = {["Permissions"] = {}}
-
-	local Perms = fpm.Permissions.CorePermissions
-	local Special = fpm.Permissions.SpecialPermissions
 
 	--Basic, core permissions (almost) every user should require in order to properly use factions.
 	local AuthUserPerms = {

@@ -21,9 +21,10 @@ function Panel:SetupMenubars(menubar)
 
 				--assign a button to a stripped down cleaned name
 				Entry.internal_button = vgui.Create("DButton", menubar)
+
 				Entry.internal_button:Dock(LEFT)
 				Entry.internal_button:SetText(Entry.internal_name)
-				Entry.internal_button:SetWide(#Entry.internal_name*6)
+				--Entry.internal_button:SetWide(#Entry.internal_name*6)
 				Entry.internal_button:SetTall(menubar:GetTall()+0.5)
 				Entry.internal_button.DoClick = function()
 					cfcFactions.CurrentTab = Entry.internal_button
@@ -37,7 +38,6 @@ function Panel:SetupMenubars(menubar)
 						else
 							otherbuttons.internal_button:SetEnabled(true)
 						end
-						
 					end
 					
 
@@ -47,10 +47,11 @@ function Panel:SetupMenubars(menubar)
 					]]--
 					self:SetMainView(Entry.internal_panel)
 				end
-		else
+			else
 				MsgN("Unable to create a self.menubar button!")
 			end
 		end
+		cfcFactions:ResizeChildrenEqually(menubar,6)
 end
 
 
@@ -63,13 +64,6 @@ function Panel:Init()
 
 	self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
 	self:SetPos( ( (ScrW() / 2) - (self:GetWide() / 2) ), ((ScrH() / 2) - (self:GetTall() / 2) ) )
-
-	--print("Size: " .. self:GetSize())
-	--self:SetTitle( "cfcFactions - Main Menu" )
-	-- self:SetVisible(true)
-	-- self:SetDraggable(false)
-	-- self:Showself.closeButton(true)
-	-- self:MakePopup()
 
 	--window buttons
 	self.closeButton = vgui.Create('DButton', self)
@@ -90,7 +84,7 @@ function Panel:Init()
 	self.menubar:DockMargin(0,45,0,0)
 	self.menubar:Dock(TOP)
 	self.menubar:SetSize(self:GetWide() - 0.1, self:GetTall() - 745)
-	self.menubar:SetBackgroundColor(Color(44, 62, 80,200))
+	self.menubar:SetBackgroundColor(cfg.ColorSchemes.BackgroundPanel)
 
 	--Load the registered dermas into the menubar
 	self:SetupMenubars(self.menubar)
@@ -155,6 +149,7 @@ function Panel:Think()
 
 end
 
+--todo: move to alerts derma
 function Panel:ClearAlerts(panel)
 	if self.alertPanel == nil then return end
 	if #self.alertPanel:GetChildren() == 0 then return end

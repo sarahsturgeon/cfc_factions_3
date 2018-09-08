@@ -4,7 +4,7 @@ cfcFactions.Logs = {}
 cfcFactions.IsOpen = false
 cfcFactions.MainDerma = nil
 cfcFactions.CurrentTab = nil
-
+cfcFactions.News = ""
 
 --Registers items to be placed into the menubar at loadtime
 --todo: possibly rework cl_init so this is completely clientside

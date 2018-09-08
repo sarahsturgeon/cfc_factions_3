@@ -13,7 +13,7 @@ local net = net
 local util = util
 local table = table
 local fpm = cfcFactions.fpm
-
+local cfg = cfcFactions.Config.Server
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
@@ -157,25 +157,30 @@ function cfcFactions:isUniqueName(faction_name)
 	return true
 	
 end
-function cfcFactions:EditFaction(Name, Color, Description, InviteOnly)
+
+function cfcFactions:IsValidFaction(id)
+
 
 end
 
+--Edits a faction based on ID, player is who ever is editing it
+function cfcFactions:EditFaction(id, name, color, description, inviteOnly, player)
 
+	--Can't edit a non valid faction
+	if not cfcFactions:IsValidFaction(id) then
 
+	end
+	local faction = cfcFactions.Factions[id]
 
-function cfcFactions:LoadNews(path)
-	if not file.Exists("news.txt",path ) then print("Unable to load news") return end
-	local NewsFile = file.Read(path, "DATA" )
+	--Check if user can edit the faction, 
 
-	net.Start("SendNews")
-	net.WriteString(NewsFile)
-	net.Send(v)
+	--CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
+	if fpm:hasPermission(player, "")
 
+	--save to db
+
+	--send to players
 end
-
-
-
 
 --Handles removing a faction(s) and its attached users properly
 function cfcFactions:RemoveFaction(ply, id)
@@ -188,3 +193,13 @@ function cfcFactions:RemoveFaction(ply, id)
 		end
 	end
 end
+
+
+net.Receive("CFC_Fac_RequestNews", function(len, ply)
+	for k ,v in pairs(string.Explode("\n",cfcFactions:LoadNews())) do
+		net.Start("CFC_Fac_SendNews")
+		net.WriteString(v .. "\n")
+		net.WriteString(ply:Nick())
+		net.Send(ply)
+	end
+end)
