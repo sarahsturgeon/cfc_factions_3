@@ -210,6 +210,6 @@ net.Receive("FactionFetchQuery", function()
 
 end)
 
-net.Receivve("FactionDeleted", function()
+net.Receive("FactionDeleted", function()
 
 end)

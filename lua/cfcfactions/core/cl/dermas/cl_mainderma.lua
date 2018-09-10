@@ -1,6 +1,21 @@
-surface.CreateFont("CFC_Normal", { font = "Arial",size = 18,weight = 500,antialias = true } )
-surface.CreateFont("CFC_Special",{ font = "coolvetica",size = 40,weight = 500,antialias = true } )
-surface.CreateFont("CFC_Alert", {font="Arial",size=23,weight=100})
+surface.CreateFont("CFC_Normal", { font = "arial",size = 18,weight = 500,antialias = true } )
+
+surface.CreateFont("CFC_Special",{ font = "coolvetica",size = 25,weight = 500,antialias = true } )
+
+surface.CreateFont("CFC_Alert", 
+	{ 
+		font = "Arial",
+		size = 45,
+		weight = 100,
+	})
+surface.CreateFont("CFC_Alert_Small", 
+	{ 
+		font = "Arial",
+		size = 20,
+		weight = 100,
+	})
+
+
 
 local cfg = cfcFactions.Config.Client
 local Panel = {}
@@ -26,6 +41,9 @@ function Panel:SetupMenubars(menubar)
 				Entry.internal_button:SetText(Entry.internal_name)
 				--Entry.internal_button:SetWide(#Entry.internal_name*6)
 				Entry.internal_button:SetTall(menubar:GetTall()+0.5)
+				--Panel:DockPadding( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom )
+				--Entry.internal_button:DockPadding(100,0,100,0)
+				Entry.internal_button:DockMargin(25,0,0,0)
 				Entry.internal_button.DoClick = function()
 					cfcFactions.CurrentTab = Entry.internal_button
 
@@ -94,7 +112,7 @@ function Panel:Init()
 	self.container = vgui.Create("DPanel", self)
 	self.container:DockMargin(0, 0, 0, 0)
 	self.container:Dock(TOP)
-	self.container:SetSize(self:GetWide() - 60, self:GetTall() - 150)
+	self.container:SetSize(self:GetWide() - 20, self:GetTall() - 150)
 	self.container:SetPos((self:GetWide() / 2) - (self.container:GetWide() / 2), 120)
 	self.container:SetBackgroundColor(Color(0,0,0,0))
 
@@ -119,7 +137,7 @@ function Panel:Init()
 	self.mainview = vgui.Create("DPanel",self.container)
 	self.mainview:DockMargin(15, 15, 15, 15)
 	self.mainview:Dock(TOP)
-	self.mainview:SetSize(self:GetWide() - 60, self:GetTall() - 230)
+	self.mainview:SetSize(self:GetWide() - 20, self:GetTall() - 230)
 	self.mainview:SetPos((self:GetWide() / 2) - (self.mainview:GetWide() / 2), 120)
 	self.mainview:SetBackgroundColor(Color(0,0,0,0))
 		--set main view to whatever the first menubar item is
@@ -150,7 +168,7 @@ function Panel:Think()
 end
 
 --todo: move to alerts derma
-function Panel:ClearAlerts(panel)
+function Panel:ClearAlerts()
 	if self.alertPanel == nil then return end
 	if #self.alertPanel:GetChildren() == 0 then return end
 	for _,panel in pairs(self.alertPanel:GetChildren()) do
@@ -169,19 +187,34 @@ function Panel:SetMainView(panel)
 	mview:SetSize(self.mainview:GetWide(), self.mainview:GetTall())
 end
 
-function Panel:AddAlert(msg, type)
+function Panel:OnMousePressed(key)
+	if key ==MOUSE_RIGHT then
+		self:CreateAlert("Test Alert was created", cfg.MsgType[2])
+	end
+end
+function Panel:CreateAlert(msg, type)
 
 	if self.alertPanel == nil then return end
-	if #self.alertPanel:GetChildren() > 0 then cfcFactions:ClearAlerts() end
+	if #self.alertPanel:GetChildren() > 0 then self:ClearAlerts() end
 	local Alert = vgui.Create("D_cfcalertboxpanel", self.alertPanel)
+	Alert:SetWide(self.alertPanel:GetWide())
+	Alert:SetTall(self.alertPanel:GetTall())
 	Alert.ErrMsg:SetText(msg)
-	Alert.ErrMsg:SetColor(cfcFactions.Config.MsgType[type])
+	if #msg >= 25 then
+		Alert.ErrMsg:SetFont("CFC_Alert_Small")
+	else
+		Alert.ErrMsg:SetFont("CFC_Alert")
+	end
+
+	Alert.ErrMsg:SetColor(cfg.MsgType[type])
+	Alert.ErrMsg:SetSize(Alert:GetWide(), Alert:GetTall())
 	Alert:Dock(FILL)
-
-
+	surface.PlaySound("buttons/button15.wav")
+--buttons/button15.wav
 
 
 end
+
 
 
 vgui.Register('D_cfcmainderma', Panel)

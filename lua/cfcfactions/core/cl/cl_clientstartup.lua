@@ -70,5 +70,7 @@ net.Receive('CFC_Fac_SendServerTextAlert', function(len, ply)
 	local mtype = net.ReadInt(4)
 	local ment = net.ReadEntity()
 
-	cfcFactions.MainDerma:AddAlert(msg, mtype)
+	if cfcFactions.MainDerma ~= nil then
+		cfcFactions.MainDerma:CreateAlert(msg, mtype)
+	end
 end)

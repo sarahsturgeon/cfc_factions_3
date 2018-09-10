@@ -39,6 +39,6 @@ net.Receive("UserUpdateStats", function()
 
 end)
 
-net.Receivve("UserDeleted", function()
+net.Receive("UserDeleted", function()
 
 end)

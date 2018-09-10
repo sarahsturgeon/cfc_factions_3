@@ -33,7 +33,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 	--Testing notifcations
 	----------------
 	if(nil) then
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[1], 1, nil)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[1], 1, nil)
 	end
 
 
@@ -42,43 +42,43 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 	----------------
 	if (not type(factionOwner) == "Player") then
 		--Send Alert -> Not a valid PlayerType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[1], 1, nil)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[1], 1, nil)
 		return
 	end
 
 	if (not type(factionName) == "string") then
 		--Send Alert -> Not a valid NameType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[2], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[2], 1, Owner)
 		return
 	end
 
 	if (not type(factionColor) == "table") then
 		--Send Alert -> Not a valid ColorType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[3], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[3], 1, Owner)
 		return
 	end
 
 	if (not type(factionDescription) == "string") then
 		--Send Alert -> Not a valid DescriptionType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[2], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[2], 1, Owner)
 		return
 	end
 
 	if (not type(factionInviteOnly) == "boolean") then
 		--Send Alert -> Not a valid IntType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[4], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[4], 1, Owner)
 		return
 	end
 
 	if (not factionOwner:IsPlayer()) or (not IsValid(factionOwner)) then
 		--SendAlert -> Not a valid player
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[1], 1, nil)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[1], 1, nil)
 		return
 	end
 
 	if (factionOwner:IsInFaction()) then
 		--SendAlert -> Already in a Faction
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[5], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[5], 1, Owner)
 	end
 
 
@@ -88,7 +88,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 
 	--[Permissions]
 	if (not fpm:hasPermission(factionOwner, "CanCreateFaction")) then
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[27], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[24], 1, Owner)
 		--todo: make return here
 		--return
 	end
@@ -98,12 +98,12 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 
 	--IsInFaction Check
 	if factionOwner:IsInFaction() == true then 
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[5], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[5], 1, Owner)
 		return 
 	end
 	--UniqueName Check
 	if not cfcFactions:isUniqueName(factionName) then 
-		cfcFactions:SendNotifcation(cfcFactions.ErrorTypes[5], 1, Owner)
+		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages[5], 1, Owner)
 		return
 	end
 	--
@@ -130,7 +130,8 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 		["Allies"] = {},
 		["Enemies"] = {},
 		["Contracts"] = {},
-		["Talents"] = {1,1,1,1,1}
+		["Talents"] = nil,
+
 
 
 	}
@@ -159,9 +160,27 @@ function cfcFactions:isUniqueName(faction_name)
 end
 
 function cfcFactions:IsValidFaction(id)
-
+	if (cfcFactions.Factions[id] == nil) then return false end
+	return true
 
 end
+
+function cfcFactions:SetAlly(id)
+
+end
+
+function cfcFactions:SetEnemy(id)
+
+end
+
+function cfcFactions:RemoveAlly(id)
+
+end
+
+function cfcFactions:RemoveEnemy(id)
+
+end
+
 
 --Edits a faction based on ID, player is who ever is editing it
 function cfcFactions:EditFaction(id, name, color, description, inviteOnly, player)
@@ -175,7 +194,39 @@ function cfcFactions:EditFaction(id, name, color, description, inviteOnly, playe
 	--Check if user can edit the faction, 
 
 	--CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
-	if fpm:hasPermission(player, "")
+
+
+	--if IsAdmin or IsDeveloper, allow freely edit of a faction
+	if fpm:IsDeveloper(player) or fpm:IsFactionAdmin(player) then
+	
+
+
+	else
+	--else check for normal permissions
+	--ONLY IF, that specific element is being edited. 
+
+		if not fpm:hasPermission(player, "CanEditAll") then
+
+		end
+
+		--if string ~= string then
+		if not fpm:hasPermission(player, "CanEditDescription") then
+
+		end
+		--end
+		if not fpm:hasPermission(player, "CanEditDescription") then
+
+		end
+		if not fpm:hasPermission(player, "CanEditDescription") then
+
+		end
+		if not fpm:hasPermission(player, "CanEditDescription") then
+
+		end
+
+	end
+
+
 
 	--save to db
 

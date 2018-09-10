@@ -251,7 +251,7 @@ function fpm:IsDev(player)
 	return false
 end
 
-function fpm:IsAdmin(player)
+function fpm:IsFactionAdmin(player)
 	if self:hasPermission(player,"IsFactionsAdmin") then return true end
 	return false
 end
