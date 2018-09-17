@@ -7,7 +7,7 @@ local Panel = {}
 
 cfcFactions:RegisterDermaMenu("View Users", Panel, 1)
 function Panel:Init()
-	
+
 end
 function Panel:Paint(w, h)
 end

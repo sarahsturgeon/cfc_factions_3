@@ -8,7 +8,7 @@ if SERVER then
 end
 
 if CLIENT then
-	--defines all others files to be loaded for the client
+    --defines all others files to be loaded for the client
     include("cfcfactions/core/cl/cl_init.lua")
 end
 

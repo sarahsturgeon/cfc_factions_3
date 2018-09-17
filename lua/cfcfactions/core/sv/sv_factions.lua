@@ -150,18 +150,18 @@ end
 
 --Checks a specifc string to see if it is unique amongst other factions.
 function cfcFactions:isUniqueName(faction_name)
-	for k,v in pairs(cfcFactions.Factions) do
-		if string.lower(string.Trim(v.Name)) == string.lower(string.Trim(faction_name)) then
-			return false
-		end
-	end
-	return true
-	
+    for k,v in pairs(cfcFactions.Factions) do
+        if string.lower(string.Trim(v.Name)) == string.lower(string.Trim(faction_name)) then
+            return false
+        end
+    end
+    return true
+    
 end
 
 function cfcFactions:IsValidFaction(id)
-	if (cfcFactions.Factions[id] == nil) then return false end
-	return true
+    if (cfcFactions.Factions[id] == nil) then return false end
+    return true
 
 end
 
@@ -185,72 +185,72 @@ end
 --Edits a faction based on ID, player is who ever is editing it
 function cfcFactions:EditFaction(id, name, color, description, inviteOnly, player)
 
-	--Can't edit a non valid faction
-	if not cfcFactions:IsValidFaction(id) then
+    --Can't edit a non valid faction
+    if not cfcFactions:IsValidFaction(id) then
 
-	end
-	local faction = cfcFactions.Factions[id]
+    end
+    local faction = cfcFactions.Factions[id]
 
-	--Check if user can edit the faction, 
+    --Check if user can edit the faction, 
 
-	--CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
-
-
-	--if IsAdmin or IsDeveloper, allow freely edit of a faction
-	if fpm:IsDeveloper(player) or fpm:IsFactionAdmin(player) then
-	
+    --CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
 
 
-	else
-	--else check for normal permissions
-	--ONLY IF, that specific element is being edited. 
-
-		if not fpm:hasPermission(player, "CanEditAll") then
-
-		end
-
-		--if string ~= string then
-		if not fpm:hasPermission(player, "CanEditDescription") then
-
-		end
-		--end
-		if not fpm:hasPermission(player, "CanEditDescription") then
-
-		end
-		if not fpm:hasPermission(player, "CanEditDescription") then
-
-		end
-		if not fpm:hasPermission(player, "CanEditDescription") then
-
-		end
-
-	end
+    --if IsAdmin or IsDeveloper, allow freely edit of a faction
+    if fpm:IsDeveloper(player) or fpm:IsFactionAdmin(player) then
+    
 
 
+    else
+    --else check for normal permissions
+    --ONLY IF, that specific element is being edited. 
 
-	--save to db
+        if not fpm:hasPermission(player, "CanEditAll") then
 
-	--send to players
+        end
+
+        --if string ~= string then
+        if not fpm:hasPermission(player, "CanEditDescription") then
+
+        end
+        --end
+        if not fpm:hasPermission(player, "CanEditDescription") then
+
+        end
+        if not fpm:hasPermission(player, "CanEditDescription") then
+
+        end
+        if not fpm:hasPermission(player, "CanEditDescription") then
+
+        end
+
+    end
+
+
+
+    --save to db
+
+    --send to players
 end
 
 --Handles removing a faction(s) and its attached users properly
 function cfcFactions:RemoveFaction(ply, id)
-	if fpm:IsDev(ply) then
-		if cfcFactions.Factions[id] ~= nil then
-			cfcFactions.Factions[id] = nil
-			ply:SetFactionID(nil)
-			ply:SetFactionRank(nil)
-			--todo: Remove all players too
-		end
-	end
+    if fpm:IsDev(ply) then
+        if cfcFactions.Factions[id] ~= nil then
+            cfcFactions.Factions[id] = nil
+            ply:SetFactionID(nil)
+            ply:SetFactionRank(nil)
+            --todo: Remove all players too
+        end
+    end
 end
 
 
 net.Receive("CFC_Fac_RequestNews", function(len, ply)
-	for k ,v in pairs(string.Explode("\n",cfcFactions:LoadNews())) do
-		net.Start("CFC_Fac_SendNews")
-		net.WriteString(v .. "\n")
-		net.WriteString(ply:Nick())
-		net.Send(ply)
-	end
+    for k ,v in pairs(string.Explode("\n",cfcFactions:LoadNews())) do
+        net.Start("CFC_Fac_SendNews")
+        net.WriteString(v .. "\n")
+        net.WriteString(ply:Nick())
+        net.Send(ply)
+    end
 end)
