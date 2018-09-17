@@ -23,8 +23,7 @@ function Panel:Init()
 	self.ErrMsg = vgui.Create("DLabel",self.MiniPanel)
 	self.ErrMsg:Dock(RIGHT)
 	self.ErrMsg:SetColor(msgtype and msgtype ~= nil or Color(255,0,0))
-	self.ErrMsg:SetText(msg and msg ~= nil or cfcFactions.ErrorMessages
-[0])
+	self.ErrMsg:SetText(msg and msg ~= nil or cfcFactions.ErrorMessages["generalError"])
 	self.CreationTime = CurTime()
 	self.MiniPanel:SetWide(#self.ErrMsg:GetText()*6)
 
