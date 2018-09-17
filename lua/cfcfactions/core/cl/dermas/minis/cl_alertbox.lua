@@ -8,30 +8,30 @@ local ErrType = nil
 local AlertInc = 0
 function Panel:Init()
 
-	self:SetSize(250,50)
-	if not type(msgtype) == "table" then msgtype = cfg.MsgType.Msg end
+    self:SetSize(250,50)
+    if not type(msgtype) == "table" then msgtype = cfg.MsgType.Msg end
 
-	self.MiniPanel = vgui.Create("DPanel",self)
-	self.MiniPanel:SetSize(self:GetWide(),self:GetTall())
-	self.MiniPanel:Dock(FILL)
-	self.MiniPanel:SetBackgroundColor(Color(0,0,0,0))
-	self.err_icon = vgui.Create( "DImage",self.MiniPanel)	-- Add image to Frame
-	self.err_icon:SetPos( 10, 35 )	-- Move it into frame
-	self.err_icon:SetSize( 555, 150 )	
-	self.err_icon:Dock(LEFT)
+    self.MiniPanel = vgui.Create("DPanel",self)
+    self.MiniPanel:SetSize(self:GetWide(),self:GetTall())
+    self.MiniPanel:Dock(FILL)
+    self.MiniPanel:SetBackgroundColor(Color(0,0,0,0))
+    self.err_icon = vgui.Create( "DImage",self.MiniPanel)   -- Add image to Frame
+    self.err_icon:SetPos( 10, 35 )  -- Move it into frame
+    self.err_icon:SetSize( 555, 150 )   
+    self.err_icon:Dock(LEFT)
 
-	self.ErrMsg = vgui.Create("DLabel",self.MiniPanel)
-	self.ErrMsg:Dock(RIGHT)
-	self.ErrMsg:SetColor(msgtype and msgtype ~= nil or Color(255,0,0))
-	self.ErrMsg:SetText(msg and msg ~= nil or cfcFactions.ErrorMessages
+    self.ErrMsg = vgui.Create("DLabel",self.MiniPanel)
+    self.ErrMsg:Dock(RIGHT)
+    self.ErrMsg:SetColor(msgtype and msgtype ~= nil or Color(255,0,0))
+    self.ErrMsg:SetText(msg and msg ~= nil or cfcFactions.ErrorMessages
 [0])
-	self.CreationTime = CurTime()
-	self.MiniPanel:SetWide(#self.ErrMsg:GetText()*6)
+    self.CreationTime = CurTime()
+    self.MiniPanel:SetWide(#self.ErrMsg:GetText()*6)
 
 end
 function Panel:Paint()
-	if CurTime() >= self.CreationTime + 5 then self.CreationTime = CurTime()  self:Remove() else return end
-	AlertInc = AlertInc +1
+    if CurTime() >= self.CreationTime + 5 then self.CreationTime = CurTime()  self:Remove() else return end
+    AlertInc = AlertInc +1
 
 end
 
