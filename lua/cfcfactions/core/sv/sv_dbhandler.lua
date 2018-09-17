@@ -13,16 +13,16 @@ local DB = cfcFactions.DB
 
 
 function DB:Init()
-	if cfcFactions.Config.Server.DB_Stance == "MySQL" then
-		sql_db:initilize()
-	elseif DB_Stance == "SQL" then
+    if cfcFactions.Config.Server.DB_Stance == "MySQL" then
+        sql_db:initilize()
+    elseif DB_Stance == "SQL" then
 
-	else
-		--sql
-	end
+    else
+        --sql
+    end
 end
 --[[
-	[Users DB Functions]
+    [Users DB Functions]
 ]]--
 --Saving Users to mysql_db
 function DB:SaveUsers()
@@ -43,7 +43,7 @@ function DB:LoadUser(id)
 
 end
 --[[
-	[Factions DB Functions]
+    [Factions DB Functions]
 ]]--
 
 --Saveing factions to mysql_db
@@ -64,12 +64,12 @@ function DB:LoadFactions()
 
 end
 --[[
-	[Permissions DB Functions]
+    [Permissions DB Functions]
 ]]--
 
 
 --[[
-	[MISC DB Functions]
+    [MISC DB Functions]
 ]]--
 
 

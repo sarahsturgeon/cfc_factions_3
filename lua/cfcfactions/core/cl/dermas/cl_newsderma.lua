@@ -15,8 +15,8 @@ function Panel:Init()
     self.NewsBox:SetMultiline(true)
 
 
-    
-    
+
+
 
     self.NewsBox:SetText(cfcFactions.News)
     string.Replace(self.NewsBox:GetText(),"%s",LocalPlayer():Nick())
