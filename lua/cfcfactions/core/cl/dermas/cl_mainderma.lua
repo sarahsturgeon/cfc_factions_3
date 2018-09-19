@@ -30,8 +30,8 @@ function Panel:SetupMenubars(menubar)
         --Sort by ranking
         table.sort(cfcFactions.Dermas, function(a,b) return a.internal_ranking < b.internal_ranking end)
         --loop through tmpsorttable in order to take advantage of the internal ranking of tabs
-        for N=1, table.Count(cfcFactions.Dermas) do
-            local Entry = cfcFactions.Dermas[N]
+        for n=1, table.Count(cfcFactions.Dermas) do
+            local Entry = cfcFactions.Dermas[n]
             if Entry.internal_button ~= nil then
 
                 --assign a button to a stripped down cleaned name
@@ -47,8 +47,8 @@ function Panel:SetupMenubars(menubar)
                 Entry.internal_button.DoClick = function()
                     cfcFactions.CurrentTab = Entry.internal_button
 
-                    for K=1, table.Count(cfcFactions.Dermas) do
-                        local otherbuttons = cfcFactions.Dermas[K]
+                    for k=1, table.Count(cfcFactions.Dermas) do
+                        local otherbuttons = cfcFactions.Dermas[k]
 
                         --If current tab == button clicked
                         if cfcFactions.CurrentTab == otherbuttons.internal_button then
