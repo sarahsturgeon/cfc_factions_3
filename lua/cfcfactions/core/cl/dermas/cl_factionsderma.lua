@@ -178,7 +178,7 @@ function Panel:Init()
 
 
     --debug code to sample how factions is displayed
-    for K=1, 10 do
+    for k=1, 10 do
         local ID = cfcFactions:UUID()
         local name = "MyTestFaction"
         addFactions(self, math.random(0,1), (name .. ID), string.reverse(string.lower(name)),"Test User", (math.random(0,100) .. "/"..math.random(0,100)), cfcFactions:UUID())

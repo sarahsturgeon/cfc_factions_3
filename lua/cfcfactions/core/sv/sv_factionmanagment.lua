@@ -268,8 +268,8 @@ concommand.Add("fpvp_debugtest", function(ply, cmd, args)
 end)
 concommand.Add("fpvp_debugmsg", function(ply, cmd, args)
     local argstring = ""
-    for K=1, #args do
-        argstring = argstring .. args[K] .. " "
+    for k=1, #args do
+        argstring = argstring .. args[k] .. " "
     end
     if fpm:IsDev(ply) then
          cfcFactions:SendNotifcation(argstring, 3, ply)
