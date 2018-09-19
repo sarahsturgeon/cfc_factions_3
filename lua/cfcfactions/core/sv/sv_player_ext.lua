@@ -18,10 +18,6 @@ end
     TODO: rework a lot of this into sv_users.lua
 ]]--
 
-
-
-
-
 --Checks to see if a player is currently in a faction. returns false if not in one.
 function meta:IsInFaction()
     local usr = fpm[self:SteamID64()]
@@ -30,6 +26,7 @@ function meta:IsInFaction()
     
     if usr.FactionID == nil then return false elseif usr.FactionID ~= nil then return true end
 end
+
 --Obtains the player's faction id, or 0 if not. Bots always return 'b0t'
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
@@ -62,12 +59,12 @@ function meta:GetFaction()
     end
 end
 
-
 --Sets a player's faction based on given id. ply being who is doing the setting
 function meta:SetFactionID(id)
     fpm.Users[self:SteamID64()].FactionID = id
 
 end
+
 function meta:SetFactionRank(rank)
     fpm.Users[self:SteamID64()].FactionRank = rank
 

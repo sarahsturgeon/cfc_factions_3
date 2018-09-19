@@ -26,7 +26,6 @@ function cfcuser:SetUserPermission(player, permission)
 
 end
 
-
 function cfcuser:RemoveUserRank(player)
 
 end
@@ -37,9 +36,7 @@ end
 
 function cfcuser:RemoveUserContract(player)
 
-
 end
-
 
 function cfcuser:AddUserInvite(player, id, inviter)
 
@@ -56,9 +53,6 @@ end
 function cfcuser:RemoveUserPermission(player, permission)
 
 end
-
-
-
 
 function cfcuser:IsInFaction(player) 
 

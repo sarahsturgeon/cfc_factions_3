@@ -2,15 +2,12 @@ if not CLIENT then return end
 
 cfcFactions.FactionsView = nil
 
-
-
 local Panel = {}
 local cfg = cfcFactions.Config.Client
 local MinQuery = 1
 local MaxQuery = 15
 
 cfcFactions:RegisterDermaMenu("View Factions", Panel, 1)
-
 
 local function addFactions(panel, locked, name, description, owner, kd, id)
     --no need to constantly add to the view if factions remains the same
@@ -27,8 +24,6 @@ local function addFactions(panel, locked, name, description, owner, kd, id)
 end
 
 function Panel:Init()
-
-
     --[[
     Structing of a faction's view and internal panel layout
     
@@ -64,16 +59,10 @@ function Panel:Init()
 
     ]]--
 
-
-
-
     cfcFactions.FactionsView=1
     self:SetSize(math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ))
     self.MainContainer = vgui.Create("DPanel",self)
     self.MainContainer:Dock(FILL)
-
-
-
 
     self.Factionsview = vgui.Create("DListView", self.MainContainer)
     self.Factionsview:Dock(FILL)
@@ -95,7 +84,6 @@ function Panel:Init()
     self.BottomContainerBottom:Dock(BOTTOM)
     self.BottomContainerBottom:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
 
---
     --Bottom Panel - Contains buttons to interact with factions
     self.BottomButtonsControlPanel = vgui.Create("DPanel", self.BottomContainerBottom)
     self.BottomButtonsControlPanel:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
@@ -106,7 +94,6 @@ function Panel:Init()
     self.ButtonsContainer:Dock(RIGHT)
     self.ButtonsContainer:InvalidateParent(true)
     self.ButtonsContainer:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
-
 
     -- self.ButtonsContainer:SetWide(210)
 
@@ -134,7 +121,8 @@ function Panel:Init()
     self.ViewFaction:Dock(LEFT)
     cfcFactions:ResizeParentFromChildren(self.BottomButtonsControlPanel)
     cfcFactions:ResizeChildrenEqually(self.BottomButtonsControlPanel,6)
---First Page, Previous Page, Next Page, Last Page
+
+    --First Page, Previous Page, Next Page, Last Page
     self.FirstPage = vgui.Create("DButton", self.ButtonsPanelLeft)
     self.FirstPage:SetText("<<")
     self.FirstPage:Dock(LEFT)
@@ -157,7 +145,6 @@ function Panel:Init()
     cfcFactions:ResizeParentFromChildren(self.ButtonsContainer)
 
     --[[
-
         --Container [  Container[Name] Container[Description] -... ]
     ]]--
 
@@ -174,28 +161,25 @@ function Panel:Init()
     self.killcol:SetWide(5)
     self.idcol:SetWide(20)
 
-
-
-
     --debug code to sample how factions is displayed
     for k=1, 10 do
         local ID = cfcFactions:UUID()
         local name = "MyTestFaction"
         addFactions(self, math.random(0,1), (name .. ID), string.reverse(string.lower(name)),"Test User", (math.random(0,100) .. "/"..math.random(0,100)), cfcFactions:UUID())
-
     end
 end
+
 function Panel:Paint(w, h)
 
 end
+
 function Panel:Think()
+
 end
 
 vgui.Register('D_cfcfactionsderma', Panel)
 
 --TODO: FactionRemoved
-
-
 
 --TODO:  tie into being actually used
 net.Receive("FactionCreated", function()

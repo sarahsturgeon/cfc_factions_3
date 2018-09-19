@@ -1,8 +1,6 @@
 local cfcFactions = cfcFactions or {}
 if not CLIENT then return end
 
-
-
 --Used to clean a string in order to properly use it as a 
 --dynamic variable name
 function cfcFactions:SanitizeLuaVariableName(inputstring)
@@ -14,8 +12,6 @@ function cfcFactions:SanitizeLuaVariableName(inputstring)
     end
     return string.lower(tmp)
 end
-
-
 
 --Resizes all buttons inside a parent equally (Highest text length is what is used to determine all button's size)
 --Modifier adds onto size for a fixed amount 
@@ -35,7 +31,6 @@ function cfcFactions:ResizeChildrenEqually(parent,modifer)
             end
         end
     end
-
 end
 
 --Resizes a parent based on total size of children

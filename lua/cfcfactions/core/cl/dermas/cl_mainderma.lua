@@ -8,14 +8,13 @@ surface.CreateFont("CFC_Alert",
         size = 45,
         weight = 100,
     })
+
 surface.CreateFont("CFC_Alert_Small", 
     { 
         font = "Arial",
         size = 20,
         weight = 100,
     })
-
-
 
 local cfg = cfcFactions.Config.Client
 local Panel = {}
@@ -26,9 +25,9 @@ local menutabs = {}
 
 --Adds the menu bars and handles adding any extras that aren't apart of hard coded items
 function Panel:SetupMenubars(menubar)
-
         --Sort by ranking
         table.sort(cfcFactions.Dermas, function(a,b) return a.internal_ranking < b.internal_ranking end)
+
         --loop through tmpsorttable in order to take advantage of the internal ranking of tabs
         for n=1, table.Count(cfcFactions.Dermas) do
             local Entry = cfcFactions.Dermas[n]
@@ -36,7 +35,6 @@ function Panel:SetupMenubars(menubar)
 
                 --assign a button to a stripped down cleaned name
                 Entry.internal_button = vgui.Create("DButton", menubar)
-
                 Entry.internal_button:Dock(LEFT)
                 Entry.internal_button:SetText(Entry.internal_name)
                 --Entry.internal_button:SetWide(#Entry.internal_name*6)
@@ -44,6 +42,7 @@ function Panel:SetupMenubars(menubar)
                 --Panel:DockPadding( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom )
                 --Entry.internal_button:DockPadding(100,0,100,0)
                 Entry.internal_button:DockMargin(25,0,0,0)
+
                 Entry.internal_button.DoClick = function()
                     cfcFactions.CurrentTab = Entry.internal_button
 
@@ -58,7 +57,6 @@ function Panel:SetupMenubars(menubar)
                         end
                     end
                     
-
                     --[[
                         Logic to handle showing the Panel table to subself.container to view, use and interact with the client
                         Should be parented and docked. Clicking on another tab will reset this view
@@ -69,17 +67,12 @@ function Panel:SetupMenubars(menubar)
                 MsgN("Unable to create a self.menubar button!")
             end
         end
+
         cfcFactions:ResizeChildrenEqually(menubar,6)
 end
-
-
-
-
 --cfcFactions:RegisterDermaMenu("Main Menu", Panel)
 
 function Panel:Init()
-    
-
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self:SetPos( ( (ScrW() / 2) - (self:GetWide() / 2) ), ((ScrH() / 2) - (self:GetTall() / 2) ) )
 
@@ -91,6 +84,7 @@ function Panel:Init()
     self.closeButton:SetColor(Color(255, 255, 255))
     self.closeButton:SetSize(32, 32)
     self.closeButton:SetPos(self:GetWide() - 35, 5)
+
     self.closeButton.DoClick = function()
         cfcFactions:DisplayMenu()
     end
@@ -107,7 +101,6 @@ function Panel:Init()
     --Load the registered dermas into the menubar
     self:SetupMenubars(self.menubar)
 
-
     --Main self.container
     self.container = vgui.Create("DPanel", self)
     self.container:DockMargin(0, 0, 0, 0)
@@ -123,7 +116,6 @@ function Panel:Init()
     self.statusbar:SetSize(self:GetWide(), self:GetTall()-750)
     self.statusbar:SetBackgroundColor(Color(0,0,0,0))
 
-
     --alertbox
     if self.alertPanel == nil then
         self.alertPanel = vgui.Create('DPanel', self.container)
@@ -132,7 +124,6 @@ function Panel:Init()
         self.alertPanel:SetBackgroundColor(Color(0,0,0,0))
     end
 
-
     --sub_self.container
     self.mainview = vgui.Create("DPanel",self.container)
     self.mainview:DockMargin(15, 15, 15, 15)
@@ -140,7 +131,8 @@ function Panel:Init()
     self.mainview:SetSize(self:GetWide() - 20, self:GetTall() - 230)
     self.mainview:SetPos((self:GetWide() / 2) - (self.mainview:GetWide() / 2), 120)
     self.mainview:SetBackgroundColor(Color(0,0,0,0))
-        --set main view to whatever the first menubar item is
+
+    --set main view to whatever the first menubar item is
     if cfcFactions.Dermas[1].internal_panel ~= nil then
         self:SetMainView(cfcFactions.Dermas[1].internal_panel)
         --cfcFactions.Dermas[1].internal_button:SetToggle(true)
@@ -153,7 +145,6 @@ function Panel:Init()
     self.StatusLabel:SetText("Online")
 end
 
-
 function Panel:Paint(w, h)
         Derma_DrawBackgroundBlur(self)
         draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
@@ -163,6 +154,7 @@ function Panel:Paint(w, h)
         --surface.DrawOutlinedRect(0, 0, w, h)
         draw.SimpleText(string.format(cfg.DermaHeaderTitle,LocalPlayer():Nick()), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText) 
 end
+
 function Panel:Think()
 
 end
@@ -171,6 +163,7 @@ end
 function Panel:ClearAlerts()
     if self.alertPanel == nil then return end
     if #self.alertPanel:GetChildren() == 0 then return end
+
     for _,panel in pairs(self.alertPanel:GetChildren()) do
         panel:Remove()
     end
@@ -178,7 +171,6 @@ end
 
 function Panel:SetMainView(panel)
     --fetch children first
-
     for k, v in pairs(self.mainview:GetChildren()) do
         v:Clear()
     end
@@ -192,14 +184,16 @@ function Panel:OnMousePressed(key)
         self:CreateAlert("Test Alert was created", cfg.MsgType[2])
     end
 end
-function Panel:CreateAlert(msg, type)
 
+function Panel:CreateAlert(msg, type)
     if self.alertPanel == nil then return end
     if #self.alertPanel:GetChildren() > 0 then self:ClearAlerts() end
+
     local Alert = vgui.Create("D_cfcalertboxpanel", self.alertPanel)
     Alert:SetWide(self.alertPanel:GetWide())
     Alert:SetTall(self.alertPanel:GetTall())
     Alert.ErrMsg:SetText(msg)
+
     if #msg >= 25 then
         Alert.ErrMsg:SetFont("CFC_Alert_Small")
     else
@@ -210,22 +204,7 @@ function Panel:CreateAlert(msg, type)
     Alert.ErrMsg:SetSize(Alert:GetWide(), Alert:GetTall())
     Alert:Dock(FILL)
     surface.PlaySound("buttons/button15.wav")
---buttons/button15.wav
-
-
+    --buttons/button15.wav
 end
 
-
-
 vgui.Register('D_cfcmainderma', Panel)
-
-
-
-
-
-
-
-
-
-
-

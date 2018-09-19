@@ -17,8 +17,6 @@ sql_db = mysqloo.connect(config.sql_hostname,
     config.sql_username, config.sql_password, 
     config.sql_database, config.sql_port)
 
-
-
 function sql_db:onConnected()
     MsgN('CFCFactions - MySql Successfully connected')
 end
@@ -40,10 +38,8 @@ function sql_db:initilize()
     --cfcusers_data - contains users data (id, factionid, rank, extra)
     --cfcadminlog - contains all administrative transactions
 
-
     MsgN('Initilizing SQL Database for ' .. cfcFactions.Config.NICE_NAME)
     local queries = {
-
         --Table to store factions (string ,json) [id, factiondata]
         q1 = sql_db:query([[
             CREATE TABLE IF NOT EXISTS `cfcfactions_data` (
@@ -61,7 +57,6 @@ function sql_db:initilize()
 
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1
         ]]),
-
 
         --Table to store all userdata (playerid64:string, factionid:string, rank:string, extras:json, kills:number, deaths:number)
         q2 = sql_db:query([[
@@ -101,6 +96,7 @@ function sql_db:initilize()
                 ) ENGINGE=InnoDB DEFAULT CHARSET=latin1
 
             ]]),
+
         q5 = sql_db:query([[
                 CREATE TABLE IF NOT EXISTS `cfcfactionstats` (
                     id int NOT NULL AUTO_INCREMENT,
@@ -109,6 +105,7 @@ function sql_db:initilize()
                     points int,
                 )ENGINGE=InnoDB DEFAULT CHARSET=latin1
             ]]),
+
         q6 = sql_db:query([[
                 CREATE TABLE IF NOT EXISTS `cfcplayerstats` (
                     id int NOT NULL AUTO_INCREMENT,
@@ -119,12 +116,11 @@ function sql_db:initilize()
             ]])
     }
 
-
-
     for k,q in pairs(queries) do
         function q:onSuccess(_)
             MsgN(string.format("cfcFactions query [%s] returned success.",k))
         end
+
         function q:onError(err, sql)
             if sql_db:status() ~= mysqloo.DATABASE_CONNECTED then
                 sql_db:connect()
@@ -138,17 +134,15 @@ function sql_db:initilize()
             MsgN("When attempting query ")
             MsgN(q)
         end
+
         q:start()
     end
-        
 end
-
-
-
 
 --------------------------------------------------------------------------------------------------------------
 --General Fetching 
 --------------------------------------------------------------------------------------------------------------
+
 function sql_db:CountFactions()
     local qs = [[
     SELECT COUNT(*) 
@@ -156,6 +150,7 @@ function sql_db:CountFactions()
     ]]
     local q = sql_db:query(qs)
 end
+
 function sql_db:CountUsers()
     local qs = [[
     SELECT COUNT(*) 
@@ -163,6 +158,7 @@ function sql_db:CountUsers()
     ]]
     local q = sql_db:query(qs)
 end
+
 function sql_db:CountLogs()
     local qs = [[
     SELECT COUNT(*) 
@@ -178,6 +174,7 @@ end
 --------------------------------------------------------------------------------------------------------------
 --Factions
 --------------------------------------------------------------------------------------------------------------
+
 function sql_db:saveFaction()
     local qs = [[
     SELECT  
@@ -193,6 +190,7 @@ function sql_db:saveFactions()
     ]]
     local q = sql_db:query(qs)
 end
+
 function sql_db:loadFaction()
     local qs = [[
     SELECT  
@@ -200,6 +198,7 @@ function sql_db:loadFaction()
     ]]
     local q = sql_db:query(qs)
 end
+
 function sql_db:loadFactions()
     local qs = [[
     SELECT  
@@ -207,6 +206,7 @@ function sql_db:loadFactions()
     ]]
     local q = sql_db:query(qs)
 end
+
 function sql_db:removeFaction()
     local qs = [[
     SELECT  
@@ -214,6 +214,7 @@ function sql_db:removeFaction()
     ]]
     local q = sql_db:query(qs)
 end
+
 --------------------------------------------------------------------------------------------------------------
 --Players
 --------------------------------------------------------------------------------------------------------------
