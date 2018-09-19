@@ -17,10 +17,7 @@ function cfcFactions:RegisterDermaMenu(name, panel, ranking)
     table.insert(cfcFactions.Dermas, {
         internal_name=name, internal_panel=panel,internal_ranking=ranking,internal_button={}
     })
-    
-
 end
-
 
 function cfcFactions:AddAlert(msg, mtype)
     if mtype == nil then mtype = MsgType.Msg end
@@ -31,11 +28,9 @@ end
 
 --Displays and handles closing (an already open) menu derma. 
 function cfcFactions:DisplayMenu()
-
     if not cfcFactions.MainDerma or cfcFactions.MainDerma == nil then
         cfcFactions.MainDerma = vgui.Create("D_cfcmainderma")
         cfcFactions.MainDerma:SetVisible(false)
-        
     end
 
     if not cfcFactions.MainDerma:IsVisible() then
@@ -65,7 +60,6 @@ net.Receive('CFC_Fac_SendMessage', function(len, ply)
 end)
 
 net.Receive('CFC_Fac_SendServerTextAlert', function(len, ply)
-    
     local msg = net.ReadString()
     local mtype = net.ReadInt(4)
     local ment = net.ReadEntity()

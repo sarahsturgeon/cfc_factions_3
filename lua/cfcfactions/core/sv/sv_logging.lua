@@ -10,7 +10,6 @@ things and display to the user. Logging is simply a way to keep track of everyth
 Global Tables: cfcFactions.Logs
 ]]--
 
-
 cfcFactions.Logs = cfcFactions or {}
 cfcFactions.LogTypes = {
     MESSAGE = "MESSAGE",
@@ -41,9 +40,11 @@ local function safeLog(log, msg, type, args, parse, sve,time)
         else
             return log
         end
+
         if log[Msg] == nil then
             log[Msg] = "Undefined Message was thrown"
         end
+
         if log[Type] == nil then
             log[Type] == t.DEBUG
         end
@@ -68,9 +69,7 @@ local function safeLog(log, msg, type, args, parse, sve,time)
     elseif type(log) == "string" then
 
     end
-
-
-
+    
     return tmpLogTable
 end
 

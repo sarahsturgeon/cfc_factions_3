@@ -1,4 +1,3 @@
-
 --if not on client, lets not run this
 if not CLIENT then return end
 
@@ -10,12 +9,10 @@ local Panel = {}
 
 --cfcFactions:RegisterDermaMenu(tab_name, Panel, index)
 
-
 --main function to init the panel when it is called
-function Palen:Init()
+function Panel:Init()
 
 end
 
 --Needed to actually register this derma to be used
 --vgui.Register('D_cfcexamplederma', Panel)
-

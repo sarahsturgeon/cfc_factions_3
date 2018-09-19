@@ -4,7 +4,6 @@ local Panel = {}
 local lastCount = -1
 cfcFactions:RegisterDermaMenu("My Alerts",Panel,3)
 
-
 --converts message type to a pretty string for the user
 local function printyprint(number)
     if number == 1 then
@@ -19,8 +18,8 @@ local function printyprint(number)
         return"Message"
     end
 end
+
 local function drawAlertsTable(main_panel)
-    
     if lastCount == -1 then
         MsgN("Current number of alerts: #" .. #cfcFactions.Alerts)
     end
@@ -35,18 +34,13 @@ local function drawAlertsTable(main_panel)
     end
 end
 
-
-
 function Panel:Init()
     --self:SetSize(self:GetWide(), 25)
     self.subpanel = vgui.Create("DPanel", self)
     self.subpanel:Dock(FILL)
 
-
-
     self.logview = vgui.Create("DListView", self.subpanel)
     self.logview:Dock(FILL)
-
 
     self.column_time = self.logview:AddColumn("Time", _, 1)
 
@@ -54,15 +48,13 @@ function Panel:Init()
     self.column_message:SetTextAlign(5)
 
     self.column_type = self.logview:AddColumn("Type", _, 3)
-
-
-
 end
+
 function Panel:Paint(w, h)
     --TODO: let off some processing time here and only check if the #alerts has changed
     drawAlertsTable(self)
-
 end
+
 function Panel:Think()
 
 end

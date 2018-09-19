@@ -6,8 +6,8 @@ local Panel = {}
 local ErrMsg = nil
 local ErrType = nil
 local AlertInc = 0
-function Panel:Init()
 
+function Panel:Init()
     self:SetSize(250,50)
     if not type(msgtype) == "table" then msgtype = cfg.MsgType.Msg end
 
@@ -27,17 +27,12 @@ function Panel:Init()
 [0])
     self.CreationTime = CurTime()
     self.MiniPanel:SetWide(#self.ErrMsg:GetText()*6)
-
-
 end
+
 function Panel:Paint()
     if CurTime() >= self.CreationTime + 5 then self.CreationTime = CurTime()  self:Remove() else return end
     AlertInc = AlertInc +1
-
 end
 
 --ui/chat_display_text.wav
 vgui.Register('D_cfcalertboxpanel', Panel)
-
-
-

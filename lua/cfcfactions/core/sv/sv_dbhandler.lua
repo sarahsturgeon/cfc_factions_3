@@ -10,8 +10,6 @@ cfcFactions.DB = cfcFactions or {}
 cfcFactions.DB.LastSaved = nil
 local DB = cfcFactions.DB
 
-
-
 function DB:Init()
     if cfcFactions.Config.Server.DB_Stance == "MySQL" then
         sql_db:initilize()
@@ -21,9 +19,11 @@ function DB:Init()
         --sql
     end
 end
+
 --[[
     [Users DB Functions]
 ]]--
+
 --Saving Users to mysql_db
 function DB:SaveUsers()
 
@@ -63,20 +63,16 @@ end
 function DB:LoadFactions()
 
 end
+
 --[[
     [Permissions DB Functions]
 ]]--
-
 
 --[[
     [MISC DB Functions]
 ]]--
 
-
 --Global function to refresh both users, factions, and everything in between
 function DB:Refresh()
 
 end
-
-
-

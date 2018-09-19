@@ -7,16 +7,11 @@ Global Tables: cfcFactions.Dermas,cfcFactions.Alerts, cfcFactions.ErrorMessages
 
 ]]--
 
-
-
 local net = net
 local string = string
 local table = table
 
-
-
 --Sends a notifaction msg:string, mtype:number, player:entity
-
 
 cfcFactions.ErrorMessages = {
     "general-error"         = "An unknown error occured",
@@ -53,10 +48,6 @@ cfcFactions.ErrorMessages = {
     "contract-ban"          = "Unable to create contract. Barred from creating contracts"
 }
 
-
-
-
-
 function cfcFactions:TimeStamp()
     return os.date( "%H:%M:%S - %d/%m/%Y" , os.time())
 end
@@ -82,7 +73,6 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
     if mtype < 1 then mytype = 1 end
 
     if CLIENT then
-        
         if #msg <= 256 then
             if not player:IsPlayer() then
                 MsgN(msg, mtype)
@@ -101,7 +91,6 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
     end
 
     if SERVER then
-        
         if #msg <= 256 then
             if player:IsPlayer() and IsValid(player) then
                 net.Start("CFC_Fac_SendServerTextAlert")
@@ -113,11 +102,8 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
                 MsgN(msg)
             end
         end
-
-
     end
 end
-
 
 -- function cfcFactions.includeFile( filename, state )
 --     if state == frile.STATE_SHARED or filename:find( "sh_" ) then

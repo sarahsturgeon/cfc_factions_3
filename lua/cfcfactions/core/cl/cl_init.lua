@@ -7,7 +7,6 @@
 
 -- end
 
-
 include("cfcfactions/core/cl/cl_clientstartup.lua")
 include("cfcfactions/core/sh/sh_init.lua")
 include("cfcFactions/config/cl_config.lua")
@@ -20,5 +19,3 @@ include("cfcfactions/core/cl/cl_utilities.lua")
 include("cfcfactions/core/cl/dermas/cl_creditsderma.lua")
 include("cfcfactions/core/cl/dermas/cl_alertsderma.lua")
 include("cfcfactions/core/cl/dermas/cl_logsderma.lua")
-
-

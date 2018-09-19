@@ -1,5 +1,3 @@
-
-
 cfcFactions.Talents = cfcFactions.Talents or {}
 
 --A talent is a tree like structure that gives perks
@@ -96,6 +94,4 @@ Tree {
 
 
 }
-
-
 ]]--

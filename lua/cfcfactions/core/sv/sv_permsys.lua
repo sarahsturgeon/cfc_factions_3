@@ -12,13 +12,10 @@ fpm.Permissions = {}
 fpm.Users = {}
 
 fpm.Permissions.CorePermissions = {
-
-
         --  NamedKey = table(description, all_caps_string_followed_by_underscores_for_spaces)
         --"ExamplePermission" = {Description="A short description of what the permission should do",Alias="EXAMPLE_PERM"}
         --"CanKick" = {Description="Allows a user to kick from faction.", Alias="CAN_KICK"}
         --[""] = {Description="",Alias=""},
-
 
         --faction managment
         ["CanBan"] = {Description="Allows the user to ban from their own faction.",Alias="CAN_BAN"},
@@ -59,8 +56,8 @@ fpm.Permissions.CorePermissions = {
         ["CanFireMercs"] ={Description="Allows a user to fire mercenaries.",Alias="CAN_FIRE_MERCS"},
         ["CanSendInvite"] = {Description="Allows a user to send out faction invites.",Alias="CAN_SEND_INVITE"},
         ["CanRevokeInvite"] = {Description="Allows a user to revoke a faction invite.",Alias="CAN_REVOKE_INVITE"}
-
 }
+
 --super special permissions not used by factions specifically
 fpm.Permissions.SpecialPermissions = {
     ["IsDeveloper"] = {Description="Gives full permissions over everything that is cfc_Factions.",Alias="_IS_A_DEV_"},
@@ -71,15 +68,12 @@ fpm.Permissions.SpecialPermissions = {
     ["AccessAll"] = {Description="Lets a user access factions and its content.",Alias="ACCESS_ALL"},
     ["CanLeaveFaction"] = {Description="Lets a user leave their faction.",Alias="CAN_LEAVE_FACTION"},
     ["TestPerm"] = {Description="Test permission, please ignore.", Alias="TEST_PERM"}
-
 }
 
 local function lookUpAlias(alias)
-    
     for k , v in pairs(fpm:FetchMergedPermissions()) do
         if v.Alias == alias.Alias then return k end
     end
-
 end
 
 --//interal ranks inside a self contained faction. These will always be avaible to default to encase
@@ -109,7 +103,6 @@ fpm.defaultRanks = {
     --a user
     ["user"] = {"CanSendAllMessage", "CanSendFactionMessage",
     "CanReceiveFactionMessage"}
-
 }
 
 --Returns a copy of merged tables for all permissions (Special and core). Use lightly
@@ -117,14 +110,13 @@ function fpm:FetchMergedPermissions()
     return table.Merge(fpm.Permissions.CorePermissions, fpm.Permissions.SpecialPermissions)
 end
 
-
 --Revokes a user's permissions, essentiall removing them from cfcFaction's permission system
 function fpm:revokeUser(player)
-
     if player:IsPlayer() and IsValid(player) then
         fpm.Users[player:SteamID64()] = nil
         return true
     end
+
     return false
 end
 
@@ -142,10 +134,12 @@ function fpm:authUser(player)
     print("Authenticating user " .. player:SteamID())
     --Checks and balances
     if not player:IsPlayer() or not IsValid(player) then return end
+
     if not fpm.Users[player:SteamID64()] == nil then 
         player:ChatPrint("User already has proper permissions table.")
         return 
     end
+
     fpm.Users[player:SteamID64()] = {["Permissions"] = {}}
 
     --Basic, core permissions (almost) every user should require in order to properly use factions.
@@ -189,7 +183,6 @@ end
 
 --Adds a permission to the player. True if success, false if otherwise
 function fpm:addPermission(player, permission)
-
     if not IsValid(player) or not player:IsPlayer() then print("Unable to add permission, invalid player") return false end
     if not fpm:IsValidPermission(permission) then 
         player:ChatPrint("Unable to add permission. Unknown string.")
@@ -204,7 +197,6 @@ function fpm:addPermission(player, permission)
     table.insert(usr.Permissions, permission)
     return true
 end
-
 
 --Revokes a permission(s) from the player. True if success, false if otherwise
 function fpm:revokePermission(player, permission)
@@ -224,17 +216,17 @@ function fpm:getPermissionList(player)
     return fpm.Users.AuthUsers[player:SteamID64()]
 end
 
-
 function fpm:IsValidPermission(cmd)
     for k,v in pairs(fpm.Permissions.CorePermissions) do
-
         if string.lower(k) == string.lower(cmd) then
             return true
         end
+
         if v.Alias == string.lower(cmd) then
             return true
         end
     end
+
     for n,m in pairs(fpm.Permissions.SpecialPermissions) do
         if string.lower(n) == string.lower(cmd) then
             return true
@@ -244,7 +236,6 @@ function fpm:IsValidPermission(cmd)
         end
     end
 end
-
 
 function fpm:IsDev(player)
     if self:hasPermission(player,"IsDeveloper") then return true end
