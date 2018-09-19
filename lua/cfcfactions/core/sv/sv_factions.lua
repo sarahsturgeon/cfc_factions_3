@@ -32,7 +32,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 	--todo: remove
 	--Testing notifcations
 	----------------
-	if(nil) then
+	if nil then
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["generalError"], 1, nil)
 	end
 
@@ -40,43 +40,43 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 	----------------
 	--[type checks]
 	----------------
-	if (not type(factionOwner) == "Player") then
+	if not type(factionOwner) == "Player" then
 		--Send Alert -> Not a valid PlayerType
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil)
 		return
 	end
 
-	if (not type(factionName) == "string") then
+	if not type(factionName) == "string" then
 		--Send Alert -> Not a valid NameType
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-string-type"], 1, Owner)
 		return
 	end
 
-	if (not type(factionColor) == "table") then
+	if not type(factionColor) == "table" then
 		--Send Alert -> Not a valid ColorType
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-table-type"], 1, Owner)
 		return
 	end
 
-	if (not type(factionDescription) == "string") then
+	if not type(factionDescription) == "string" then
 		--Send Alert -> Not a valid DescriptionType
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-string-type"], 1, Owner)
 		return
 	end
 
-	if (not type(factionInviteOnly) == "boolean") then
+	if not type(factionInviteOnly) == "boolean" then
 		--Send Alert -> Not a valid IntType
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-int-type"], 1, Owner)
 		return
 	end
 
-	if (not factionOwner:IsPlayer()) or (not IsValid(factionOwner)) then
+	if not factionOwner:IsPlayer() or not IsValid(factionOwner) then
 		--SendAlert -> Not a valid player
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["general-error"], 1, nil)
 		return
 	end
 
-	if (factionOwner:IsInFaction()) then
+	if factionOwner:IsInFaction() then
 		--SendAlert -> Already in a Faction
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
 	end
@@ -87,7 +87,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 
 
 	--[Permissions]
-	if (not fpm:hasPermission(factionOwner, "CanCreateFaction")) then
+	if not fpm:hasPermission(factionOwner, "CanCreateFaction") then
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["faction-ban"], 1, Owner)
 		--todo: make return here
 		--return
