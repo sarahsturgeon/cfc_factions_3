@@ -40,7 +40,7 @@ TODO: Reference -- Incorparate cfc function auto name netvars and hooks
 
 --loop through and auto gens netvar names
 for _,v in pairs(NamedNetworkVars) do
-    --todo: uncomment after CFCLib.generateCFCHook() is implemented
+    --TODO: uncomment after CFCLib.generateCFCHook() is implemented
     --util.AddNetworkString(CFCLib.generateCFCHook(NamedNetworkVars[I]))
     util.AddNetworkString(v)
 end

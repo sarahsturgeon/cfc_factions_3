@@ -29,7 +29,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 
 
 	----------------
-	--todo: remove
+	--TODO: remove
 	--Testing notifcations
 	----------------
 	if nil then
@@ -89,7 +89,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 	--[Permissions]
 	if not fpm:hasPermission(factionOwner, "CanCreateFaction") then
 		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["faction-ban"], 1, Owner)
-		--todo: make return here
+		--TODO: make return here
 		--return
 	end
 
@@ -240,7 +240,7 @@ function cfcFactions:RemoveFaction(ply, id)
             cfcFactions.Factions[id] = nil
             ply:SetFactionID(nil)
             ply:SetFactionRank(nil)
-            --todo: Remove all players too
+            --TODO: Remove all players too
         end
     end
 end
