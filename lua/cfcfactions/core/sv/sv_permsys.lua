@@ -142,7 +142,7 @@ function fpm:authUser(player)
     print("Authenticating user " .. player:SteamID())
     --Checks and balances
     if not player:IsPlayer() or not IsValid(player) then return end
-    if not (fpm.Users[player:SteamID64()] == nil) then 
+    if not fpm.Users[player:SteamID64()] == nil then 
         player:ChatPrint("User already has proper permissions table.")
         return 
     end

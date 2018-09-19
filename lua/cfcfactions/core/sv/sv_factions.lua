@@ -160,7 +160,7 @@ function cfcFactions:isUniqueName(faction_name)
 end
 
 function cfcFactions:IsValidFaction(id)
-    if (cfcFactions.Factions[id] == nil) then return false end
+    if cfcFactions.Factions[id] == nil then return false end
     return true
 
 end
