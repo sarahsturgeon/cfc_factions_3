@@ -15,7 +15,7 @@ end
 vgui.Register('D_logsdermasderma', Panel)
 
 
---todo: tie in to the system
+--TODO: tie in to the system
 net.Receive("FetchAlerts", function()
 
 end)

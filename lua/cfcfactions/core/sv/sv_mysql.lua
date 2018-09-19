@@ -10,7 +10,7 @@ local mysqloo = mysqloo
 local table = table
 local string = string
 
---todo: changed config structure
+--TODO: changed config structure
 local config = cfcFactions.Config.Server.MySQL
 
 sql_db = mysqloo.connect(config.sql_hostname, 
@@ -683,11 +683,11 @@ end
 --  --Check if what we're adding is not already in the table
 --  --push the query that contains extras back into db and save
 
---  --todo: optimize shit shit out of this or choose a different method
+--  --TODO: optimize shit shit out of this or choose a different method
 --  --adding and setting entire tables is dumb
 --  if(extras == nil ) then return end
 
---  --todo: redo this and instead implement a full sql statement (instead of using sql_db:GetUserExtras())
+--  --TODO: redo this and instead implement a full sql statement (instead of using sql_db:GetUserExtras())
 --  sql_db:GetUserExtras(playerid, function(userxtras)
 --      local tmpTable = util.JSONToTable(userxtras)
 --      if userxtras == nil then return end

@@ -167,7 +167,7 @@ function Panel:Think()
 
 end
 
---todo: move to alerts derma
+--TODO: move to alerts derma
 function Panel:ClearAlerts()
     if self.alertPanel == nil then return end
     if #self.alertPanel:GetChildren() == 0 then return end

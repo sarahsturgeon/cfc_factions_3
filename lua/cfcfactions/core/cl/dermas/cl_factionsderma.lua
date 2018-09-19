@@ -193,11 +193,11 @@ end
 
 vgui.Register('D_cfcfactionsderma', Panel)
 
---todo: FactionRemoved
+--TODO: FactionRemoved
 
 
 
---todo:  tie into being actually used
+--TODO:  tie into being actually used
 net.Receive("FactionCreated", function()
 
 end)

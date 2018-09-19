@@ -15,7 +15,7 @@ local fpm = cfcFactions.fpm
 --------------------------------------------------------------------------------------------------------------
 --player:player, name:string, color:table, description:string, inviteOnly:number
 concommand.Add("fpvp_createfaction", function(ply,cmd, args)
-    --todo: create faction from here
+    --TODO: create faction from here
     cfcFactions:CreateFaction(ply, "My Faction", {255,0,0,255}, "My Test Faction", 1)
     PrintTable(cfcFactions.Factions)
 end)
