@@ -178,7 +178,7 @@ end)
 --nil
 concommand.Add("fpvp_deletealladminlogs", function(ply, cmd,args)
     --change to false later
-    if(not ply:IsPlayer()) then
+    if not ply:IsPlayer() then
         MsgN("Deleted all adminlogs in database!")
         sql_db:DeleteAllLogs()
 
@@ -215,15 +215,15 @@ end)
 --------------------------------------------------------------------------------------------------------------
 --nil
 concommand.Add("fpvp_showinternals", function(ply, cmd, args)
-    if (ply:IsPlayer()) then return end
-    if (IsValid(ply)) then return end
+    if ply:IsPlayer() then return end
+    if IsValid(ply) then return end
     PrintTable(cfcFactions)
 end)
 
 --nil
 concommand.Add('fpvp_forceinitilize', function(ply, cmd, args)
     --only rcon
-    if(ply:IsPlayer()) then
+    if ply:IsPlayer() then
         MsgN("Forcing mysql initlizing")
         sql_db:initilize()
     end

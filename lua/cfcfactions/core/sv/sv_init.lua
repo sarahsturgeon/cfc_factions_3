@@ -76,7 +76,7 @@ hook.Add("Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions()
 local function cfcPlayerSay(ply, msg)
     if string.len(cfcFactions.Config.CHAT_COMMAND) > 0 then
         local chatTrigger = cfcFactions.Config.CHAT_COMMAND
-        if (string.sub(msg, 0, #chatTrigger) == chatTrigger) then
+        if string.sub(msg, 0, #chatTrigger) == chatTrigger then
             --Handles both opening and closing
             ply:DisplayMenu()
             return ''
