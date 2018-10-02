@@ -13,7 +13,7 @@ end
 
 function cfcFactions:GetFactionUsers(factionid)
     local tmp = {}
-    for _ , ply in pairs(cfcFactions.Users) do
+    for _, ply in pairs(cfcFactions.Users) do
         if ply.FactionID = factionid then
             table.insert(tmp, ply)
         end

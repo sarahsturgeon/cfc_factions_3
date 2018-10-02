@@ -19,7 +19,7 @@ cfcFactions.LogTypes = {
 }
 
 --parses and correctly displays a log from arg:table into proper format, returns a table 
-local function safeLog(log, msg, type, args, parse, sve,time)
+local function safeLog(log, msg, type, args, parse, sve, time)
 --[[
     --Internal structure of what is passed into a logging session
     Table = {

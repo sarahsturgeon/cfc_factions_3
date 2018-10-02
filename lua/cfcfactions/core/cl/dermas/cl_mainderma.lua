@@ -1,6 +1,6 @@
-surface.CreateFont("CFC_Normal", { font = "arial",size = 18,weight = 500,antialias = true } )
+surface.CreateFont("CFC_Normal", { font = "arial", size = 18, weight = 500, antialias = true } )
 
-surface.CreateFont("CFC_Special",{ font = "coolvetica",size = 25,weight = 500,antialias = true } )
+surface.CreateFont("CFC_Special", { font = "coolvetica", size = 25, weight = 500, antialias = true } )
 
 surface.CreateFont("CFC_Alert", 
     { 
@@ -26,7 +26,7 @@ local menutabs = {}
 --Adds the menu bars and handles adding any extras that aren't apart of hard coded items
 function Panel:SetupMenubars(menubar)
         --Sort by ranking
-        table.sort(cfcFactions.Dermas, function(a,b) return a.internal_ranking < b.internal_ranking end)
+        table.sort(cfcFactions.Dermas, function(a, b) return a.internal_ranking < b.internal_ranking end)
 
         --loop through tmpsorttable in order to take advantage of the internal ranking of tabs
         for n=1, table.Count(cfcFactions.Dermas) do
@@ -40,8 +40,8 @@ function Panel:SetupMenubars(menubar)
                 --Entry.internal_button:SetWide(#Entry.internal_name*6)
                 Entry.internal_button:SetTall(menubar:GetTall()+0.5)
                 --Panel:DockPadding( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom )
-                --Entry.internal_button:DockPadding(100,0,100,0)
-                Entry.internal_button:DockMargin(25,0,0,0)
+                --Entry.internal_button:DockPadding(100, 0, 100, 0)
+                Entry.internal_button:DockMargin(25, 0, 0, 0)
 
                 Entry.internal_button.DoClick = function()
                     cfcFactions.CurrentTab = Entry.internal_button
@@ -68,7 +68,7 @@ function Panel:SetupMenubars(menubar)
             end
         end
 
-        cfcFactions:ResizeChildrenEqually(menubar,6)
+        cfcFactions:ResizeChildrenEqually(menubar, 6)
 end
 --cfcFactions:RegisterDermaMenu("Main Menu", Panel)
 
@@ -93,7 +93,7 @@ function Panel:Init()
     --  cfcFactions:RegisterDermaMenu(string)
     --      cfcFactions.Dermas
     self.menubar = vgui.Create("DPanel", self)
-    self.menubar:DockMargin(0,45,0,0)
+    self.menubar:DockMargin(0, 45, 0, 0)
     self.menubar:Dock(TOP)
     self.menubar:SetSize(self:GetWide() - 0.1, self:GetTall() - 745)
     self.menubar:SetBackgroundColor(cfg.ColorSchemes.BackgroundPanel)
@@ -107,30 +107,30 @@ function Panel:Init()
     self.container:Dock(TOP)
     self.container:SetSize(self:GetWide() - 20, self:GetTall() - 150)
     self.container:SetPos((self:GetWide() / 2) - (self.container:GetWide() / 2), 120)
-    self.container:SetBackgroundColor(Color(0,0,0,0))
+    self.container:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --Status Bar
     self.statusbar = vgui.Create("DPanel", self)
-    self.statusbar:DockMargin(0,0,0,0)
+    self.statusbar:DockMargin(0, 0, 0, 0)
     self.statusbar:Dock(BOTTOM)
     self.statusbar:SetSize(self:GetWide(), self:GetTall()-750)
-    self.statusbar:SetBackgroundColor(Color(0,0,0,0))
+    self.statusbar:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --alertbox
     if self.alertPanel == nil then
         self.alertPanel = vgui.Create('DPanel', self.container)
         self.alertPanel:Dock(TOP)
-        self.alertPanel:SetSize(self.container:GetWide(),55)
-        self.alertPanel:SetBackgroundColor(Color(0,0,0,0))
+        self.alertPanel:SetSize(self.container:GetWide(), 55)
+        self.alertPanel:SetBackgroundColor(Color(0, 0, 0, 0))
     end
 
     --sub_self.container
-    self.mainview = vgui.Create("DPanel",self.container)
+    self.mainview = vgui.Create("DPanel", self.container)
     self.mainview:DockMargin(15, 15, 15, 15)
     self.mainview:Dock(TOP)
     self.mainview:SetSize(self:GetWide() - 20, self:GetTall() - 230)
     self.mainview:SetPos((self:GetWide() / 2) - (self.mainview:GetWide() / 2), 120)
-    self.mainview:SetBackgroundColor(Color(0,0,0,0))
+    self.mainview:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --set main view to whatever the first menubar item is
     if cfcFactions.Dermas[1].internal_panel ~= nil then
@@ -148,11 +148,11 @@ end
 function Panel:Paint(w, h)
         Derma_DrawBackgroundBlur(self)
         draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
-        surface.SetDrawColor(Color(0,0,0,255))
+        surface.SetDrawColor(Color(0, 0, 0, 255))
         surface.DrawOutlinedRect(0, 0, w, h)
 
         --surface.DrawOutlinedRect(0, 0, w, h)
-        draw.SimpleText(string.format(cfg.DermaHeaderTitle,LocalPlayer():Nick()), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText) 
+        draw.SimpleText(string.format(cfg.DermaHeaderTitle, LocalPlayer():Nick()), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText) 
 end
 
 function Panel:Think()
@@ -164,7 +164,7 @@ function Panel:ClearAlerts()
     if self.alertPanel == nil then return end
     if #self.alertPanel:GetChildren() == 0 then return end
 
-    for _,panel in pairs(self.alertPanel:GetChildren()) do
+    for _, panel in pairs(self.alertPanel:GetChildren()) do
         panel:Remove()
     end
 end
@@ -175,7 +175,7 @@ function Panel:SetMainView(panel)
         v:Clear()
     end
 
-    local mview = vgui.CreateFromTable(panel, self.mainview,nil)
+    local mview = vgui.CreateFromTable(panel, self.mainview, nil)
     mview:SetSize(self.mainview:GetWide(), self.mainview:GetTall())
 end
 

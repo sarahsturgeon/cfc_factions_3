@@ -2,7 +2,7 @@ if not CLIENT then return end
 
 local Panel = {}
 local lastCount = -1
-cfcFactions:RegisterDermaMenu("My Alerts",Panel,3)
+cfcFactions:RegisterDermaMenu("My Alerts", Panel,3)
 
 --converts message type to a pretty string for the user
 local function printyprint(number)

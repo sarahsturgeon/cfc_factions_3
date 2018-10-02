@@ -53,11 +53,11 @@ function cfcFactions:InitializeFactions()
 
     --un needed but might as well
     if not file.IsDir('cfcFactions', 'DATA') then
-        file.CreateDir('cfcFactions','DATA')
+        file.CreateDir('cfcFactions', 'DATA')
     end
 
     if not file.Exists("cfcfactions/news.txt", "DATA") then
-        file.Write("cfcfactions/news.txt","")
+        file.Write("cfcfactions/news.txt", "")
     end
 
     --load news
@@ -81,7 +81,7 @@ hook.Add('PlayerSay', 'cfcPlayerSay', cfcPlayerSay)
 
 --InitialSpawn hook, fetches the data and properly sets it serverside
 local function cfcOnPlayerInitialSpawn(ply)
-    for k ,v in pairs(string.Explode("\n",cfcFactions:LoadNews())) do
+    for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
         net.WriteString(v .. "\n")
         net.WriteString(ply:Nick())
