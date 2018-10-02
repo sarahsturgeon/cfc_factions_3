@@ -49,7 +49,7 @@ cfcFactions.ErrorMessages = {
 }
 
 function cfcFactions:TimeStamp()
-    return os.date( "%H:%M:%S - %d/%m/%Y" , os.time())
+    return os.date( "%H:%M:%S - %d/%m/%Y", os.time())
 end
 
 function cfcFactions:UUID()
@@ -65,7 +65,7 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
     if type(msg) == "number" then msg = cfcFactions.ErrorMessages
 [msg] and cfcFactions.ErrorMessages
 [msg] or "" end
-    print(string.format("Sending notifcation for %s, msg=%s, type=%s",(player:Nick() and player:Nick() or "InvalidPlayer"),msg,mtype))
+    print(string.format("Sending notifcation for %s, msg=%s, type=%s", (player:Nick() and player:Nick() or "InvalidPlayer"), msg, mtype))
     
     --only 4 types of error types. 
     if mtype == nil then mtype = 1 end
@@ -80,7 +80,7 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
             end
             net.Start("CFC_Fac_SendTextAlert")
             net.WriteString(msg)
-            net.WriteInt(mtype,4)
+            net.WriteInt(mtype, 4)
             if player:IsPlayer() then
                 net.WriteEntity(player)
             else
@@ -95,7 +95,7 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
             if player:IsPlayer() and IsValid(player) then
                 net.Start("CFC_Fac_SendServerTextAlert")
                 net.WriteString(msg)
-                net.WriteInt(mtype,4)
+                net.WriteInt(mtype, 4)
                 net.WriteEntity(player)
                 net.Send(player)
             else

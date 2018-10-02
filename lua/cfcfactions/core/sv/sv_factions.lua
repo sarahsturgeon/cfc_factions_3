@@ -127,14 +127,14 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
 
 	--function cfcFactions:SaveFaction(factionid)
 	--function cfcFactions:SaveUser(userid)
-	cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]",cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, Owner)
+	cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, Owner)
 	---Returns the newly created faction as a table
 	return cfcFactions.Factions[TmpUnqID]
 end
 
 --Checks a specifc string to see if it is unique amongst other factions.
 function cfcFactions:isUniqueName(faction_name)
-    for k,v in pairs(cfcFactions.Factions) do
+    for k, v in pairs(cfcFactions.Factions) do
         if string.lower(string.Trim(v.Name)) == string.lower(string.Trim(faction_name)) then
             return false
         end
@@ -224,7 +224,7 @@ function cfcFactions:RemoveFaction(ply, id)
 end
 
 net.Receive("CFC_Fac_RequestNews", function(len, ply)
-    for k ,v in pairs(string.Explode("\n",cfcFactions:LoadNews())) do
+    for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
         net.WriteString(v .. "\n")
         net.WriteString(ply:Nick())

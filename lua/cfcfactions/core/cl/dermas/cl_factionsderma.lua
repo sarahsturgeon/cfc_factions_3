@@ -61,14 +61,14 @@ function Panel:Init()
 
     cfcFactions.FactionsView=1
     self:SetSize(math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ))
-    self.MainContainer = vgui.Create("DPanel",self)
+    self.MainContainer = vgui.Create("DPanel", self)
     self.MainContainer:Dock(FILL)
 
     self.Factionsview = vgui.Create("DListView", self.MainContainer)
     self.Factionsview:Dock(FILL)
     --self.Factionsview:SetTall(5)
     
-    self.BottomPanel = vgui.Create("DPanel",self.MainContainer)
+    self.BottomPanel = vgui.Create("DPanel", self.MainContainer)
     self.BottomPanel:Dock(BOTTOM)
     self.BottomPanel:SetBackgroundColor(Color(0,0,0,0))
     self.BottomPanel:SetWide(self:GetWide())

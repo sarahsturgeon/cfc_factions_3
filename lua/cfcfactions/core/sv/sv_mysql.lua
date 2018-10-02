@@ -40,7 +40,7 @@ function sql_db:initilize()
 
     MsgN('Initilizing SQL Database for ' .. cfcFactions.Config.NICE_NAME)
     local queries = {
-        --Table to store factions (string ,json) [id, factiondata]
+        --Table to store factions (string , json) [id, factiondata]
         q1 = sql_db:query([[
             CREATE TABLE IF NOT EXISTS `cfcfactions_data` (
 
@@ -116,9 +116,9 @@ function sql_db:initilize()
             ]])
     }
 
-    for k,q in pairs(queries) do
+    for k, q in pairs(queries) do
         function q:onSuccess(_)
-            MsgN(string.format("cfcFactions query [%s] returned success.",k))
+            MsgN(string.format("cfcFactions query [%s] returned success.", k))
         end
 
         function q:onError(err, sql)

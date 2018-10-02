@@ -15,15 +15,15 @@ function cfcFactions:RegisterDermaMenu(name, panel, ranking)
     if panel == nil then panel = {} end
     if ranking == nil then ranking = 99 end
     table.insert(cfcFactions.Dermas, {
-        internal_name=name, internal_panel=panel,internal_ranking=ranking,internal_button={}
+        internal_name=name, internal_panel=panel, internal_ranking=ranking, internal_button={}
     })
 end
 
 function cfcFactions:AddAlert(msg, mtype)
     if mtype == nil then mtype = MsgType.Msg end
-    table.insert(cfcFactions.Alerts, {["Message"]=msg, ["Type"]=mtype, ["Time"]=os.date( "%T " , os.time() )})
+    table.insert(cfcFactions.Alerts, {["Message"]=msg, ["Type"]=mtype, ["Time"]=os.date( "%T ", os.time() )})
     cfcFactions:AddToAlertPanel(msg, mtype)
-    hook.Call("CFC_FAC_AlertAdded", _,msg,mtype)
+    hook.Call("CFC_FAC_AlertAdded", _, msg, mtype)
 end
 
 --Displays and handles closing (an already open) menu derma. 
@@ -44,7 +44,7 @@ function cfcFactions:DisplayMenu()
 end
 
 --If the defined key is properly set, users can use that specific key to also open/close the derma
-hook.Add("PlayerButtonDown","CFC_FAC_MENUKEYDOWN", function(ply, button)
+hook.Add("PlayerButtonDown", "CFC_FAC_MENUKEYDOWN", function(ply, button)
     if input.GetKeyName(button) == cfcFactions.Config.CLIENT_KEY then
         cfcFactions:DisplayMenu()
     end
