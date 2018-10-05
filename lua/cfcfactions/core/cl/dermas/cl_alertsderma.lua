@@ -23,15 +23,17 @@ local function drawAlertsTable(main_panel)
     if lastCount == -1 then
         MsgN("Current number of alerts: #" .. #cfcFactions.Alerts)
     end
-    if (#cfcFactions.Alerts ~= lastCount) or (lastCount == -1) then
-        main_panel.logview:Clear()
-        for k, logs in pairs(cfcFactions.Alerts) do
-            main_panel.logview:AddLine(logs.Time, logs.Message,printyprint(logs.Type))
-            
-        end
-        lastCount = #cfcFactions.Alerts
 
+    if #cfcFaction.Alerts == lastCount then return end
+    if lastCount ~= -1 then return end
+    
+    main_panel.logview:Clear()
+
+    for k, logs in pairs(cfcFactions.Alerts) do
+        main_panel.logview:AddLine(logs.Time, logs.Message,printyprint(logs.Type))        
     end
+
+    lastCount = #cfcFactions.Alerts
 end
 
 function Panel:Init()

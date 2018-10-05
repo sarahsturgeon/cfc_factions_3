@@ -20,6 +20,10 @@ local cfg = cfcFactions.Config.Client
 local Panel = {}
 local menutabs = {}
 
+local createDPanel    = cfcFactions.createDPanel
+local createDButton   = cfcFactions.createDButton
+local createDListView = cfcFactions.createDListView
+
 --local self.mainview = nil
 --"View Factions" = {"View Factions", {}}
 
@@ -33,27 +37,27 @@ function Panel:SetupMenubars(menubar)
             local Entry = cfcFactions.Dermas[n]
             if Entry.internal_button ~= nil then
 
+                local tall = menubar:GetTall() + 0.5
+
+                Entry.internal_button = createDButton( menubar, {dock = LEFT, text = Entry.internal_name, tall = tall} )
+                Entry.internal_button:DockMargin(25, 0, 0, 0)
+
                 --assign a button to a stripped down cleaned name
-                Entry.internal_button = vgui.Create("DButton", menubar)
-                Entry.internal_button:Dock(LEFT)
-                Entry.internal_button:SetText(Entry.internal_name)
                 --Entry.internal_button:SetWide(#Entry.internal_name*6)
-                Entry.internal_button:SetTall(menubar:GetTall()+0.5)
                 --Panel:DockPadding( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom )
                 --Entry.internal_button:DockPadding(100, 0, 100, 0)
-                Entry.internal_button:DockMargin(25, 0, 0, 0)
 
                 Entry.internal_button.DoClick = function()
                     cfcFactions.CurrentTab = Entry.internal_button
 
-                    for k=1, table.Count(cfcFactions.Dermas) do
+                    for k = 1, table.Count( cfcFactions.Dermas ) do
                         local otherbuttons = cfcFactions.Dermas[k]
 
                         --If current tab == button clicked
                         if cfcFactions.CurrentTab == otherbuttons.internal_button then
-                            cfcFactions.CurrentTab:SetEnabled(false)
+                            cfcFactions.CurrentTab:SetEnabled( false )
                         else
-                            otherbuttons.internal_button:SetEnabled(true)
+                            otherbuttons.internal_button:SetEnabled( true )
                         end
                     end
                     
@@ -61,7 +65,7 @@ function Panel:SetupMenubars(menubar)
                         Logic to handle showing the Panel table to subself.container to view, use and interact with the client
                         Should be parented and docked. Clicking on another tab will reset this view
                     ]]--
-                    self:SetMainView(Entry.internal_panel)
+                    self:SetMainView( Entry.internal_panel )
                 end
             else
                 MsgN("Unable to create a self.menubar button!")
@@ -72,16 +76,17 @@ function Panel:SetupMenubars(menubar)
 end
 --cfcFactions:RegisterDermaMenu("Main Menu", Panel)
 
+local bgColor = cfg.ColorSchemes.BackgroundPanel
+local White = Color( 255, 255, 255 )
+local Black = Color( 0, 0, 0, 0 )
 function Panel:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self:SetPos( ( (ScrW() / 2) - (self:GetWide() / 2) ), ((ScrH() / 2) - (self:GetTall() / 2) ) )
 
     --window buttons
-    self.closeButton = vgui.Create('DButton', self)
-    self.closeButton:SetFont('CFC_Normal')
-    self.closeButton:SetText('[X]')
+    self.closeButton = createDButton( self, {font = "CFC_Normal", text = " [X] ", color = White} )
+    
     self.closeButton.Paint = function() end
-    self.closeButton:SetColor(Color(255, 255, 255))
     self.closeButton:SetSize(32, 32)
     self.closeButton:SetPos(self:GetWide() - 35, 5)
 
@@ -92,45 +97,36 @@ function Panel:Init()
     --self.menubar : Contains the autoloaded elements defined in 
     --  cfcFactions:RegisterDermaMenu(string)
     --      cfcFactions.Dermas
-    self.menubar = vgui.Create("DPanel", self)
+
+    self.menubar = createDPanel( self, {dock = TOP, color = bgColor} )
     self.menubar:DockMargin(0, 45, 0, 0)
-    self.menubar:Dock(TOP)
     self.menubar:SetSize(self:GetWide() - 0.1, self:GetTall() - 745)
-    self.menubar:SetBackgroundColor(cfg.ColorSchemes.BackgroundPanel)
 
     --Load the registered dermas into the menubar
     self:SetupMenubars(self.menubar)
 
     --Main self.container
-    self.container = vgui.Create("DPanel", self)
+    self.container = createDPanel(self, {dock = TOP, color = bgColor} )
     self.container:DockMargin(0, 0, 0, 0)
-    self.container:Dock(TOP)
     self.container:SetSize(self:GetWide() - 20, self:GetTall() - 150)
     self.container:SetPos((self:GetWide() / 2) - (self.container:GetWide() / 2), 120)
-    self.container:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --Status Bar
-    self.statusbar = vgui.Create("DPanel", self)
+    self.statusbar = createDPanel(self, {dock = BOTTOM, color = bgColor} )
     self.statusbar:DockMargin(0, 0, 0, 0)
-    self.statusbar:Dock(BOTTOM)
     self.statusbar:SetSize(self:GetWide(), self:GetTall()-750)
-    self.statusbar:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --alertbox
     if self.alertPanel == nil then
-        self.alertPanel = vgui.Create('DPanel', self.container)
-        self.alertPanel:Dock(TOP)
+        self.alertPanel = createDPanel( self.container, {dock = TOP, color = Black} )
         self.alertPanel:SetSize(self.container:GetWide(), 55)
-        self.alertPanel:SetBackgroundColor(Color(0, 0, 0, 0))
     end
 
     --sub_self.container
-    self.mainview = vgui.Create("DPanel", self.container)
+    self.mainview = createDPanel( self.container, {dock = TOP, color = Black} )
     self.mainview:DockMargin(15, 15, 15, 15)
-    self.mainview:Dock(TOP)
     self.mainview:SetSize(self:GetWide() - 20, self:GetTall() - 230)
     self.mainview:SetPos((self:GetWide() / 2) - (self.mainview:GetWide() / 2), 120)
-    self.mainview:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --set main view to whatever the first menubar item is
     if cfcFactions.Dermas[1].internal_panel ~= nil then
@@ -140,9 +136,7 @@ function Panel:Init()
     end
 
     --Debug Status
-    self.StatusLabel = vgui.Create("DLabel", self.statusbar)
-    self.StatusLabel:Dock(RIGHT)
-    self.StatusLabel:SetText("Online")
+    self.StatusLabel = createDLabel( self.statusbar, {dock = RIGHT, text = "Online"} )
 end
 
 function Panel:Paint(w, h)

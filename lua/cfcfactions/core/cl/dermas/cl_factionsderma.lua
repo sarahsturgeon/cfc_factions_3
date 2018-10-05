@@ -7,11 +7,17 @@ local cfg = cfcFactions.Config.Client
 local MinQuery = 1
 local MaxQuery = 15
 
-cfcFactions:RegisterDermaMenu("View Factions", Panel, 1)
+local createDPanel = cfcFactions.createDPanel
+local createDListView = cfcFactions.createDListView
+local createDButton = cfcFactions.createDButton
+
+
+cfcFactions:RegisterDermaMenu( "View Factions", Panel, 1 )
 
 local function addFactions(panel, locked, name, description, owner, kd, id)
     --no need to constantly add to the view if factions remains the same
     local tmpLock
+    
     if locked == 1 then
         --tmpLock = vgui.Create("DImage", panel)
         tmpLock = "L"
@@ -19,10 +25,14 @@ local function addFactions(panel, locked, name, description, owner, kd, id)
         tmpLock = ""
     end
 
-    panel.Factionsview:AddLine(tmpLock, name, description, owner, kd, id)
+    panel.Factionsview:AddLine( tmpLock, name, description, owner, kd, id )
     panel.Factionsview:DataLayout()
 end
 
+
+local Black = Color( 0, 0, 0, 0 )
+local BasePanelWidth  = 1024
+local BasePanelHeight = 800
 function Panel:Init()
     --[[
     Structing of a faction's view and internal panel layout
@@ -59,90 +69,68 @@ function Panel:Init()
 
     ]]--
 
-    cfcFactions.FactionsView=1
-    self:SetSize(math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ))
-    self.MainContainer = vgui.Create("DPanel", self)
-    self.MainContainer:Dock(FILL)
+    local bgColor = ColorAlpha( cfc.ColorSchemes.BackgroundPanel, 255 )
 
-    self.Factionsview = vgui.Create("DListView", self.MainContainer)
-    self.Factionsview:Dock(FILL)
-    --self.Factionsview:SetTall(5)
+    cfcFactions.FactionsView = 1
+
+    local curScreenWidth  = ScrW()
+    local curScreenHeight = ScrH()
+
+    local panelWidth  = math.Clamp( BasePanelWidth,  0, curScreenWidth )
+    local panelHeight = math.Clamp( BasePanelHeight, 0, curScreenHeight )
     
-    self.BottomPanel = vgui.Create("DPanel", self.MainContainer)
-    self.BottomPanel:Dock(BOTTOM)
-    self.BottomPanel:SetBackgroundColor(Color(0,0,0,0))
-    self.BottomPanel:SetWide(self:GetWide())
-    self.BottomPanel:SetTall(50)
-    self.BottomPanel:InvalidateParent(true)
-    self.BottomPanel:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+    self:SetSize( panelWidth, panelHeight )
 
-    self.BottomContainerTop = vgui.Create("DPanel", self.BottomPanel)
-    self.BottomContainerTop:Dock(TOP)
-    self.BottomContainerTop:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+    self.MainContainer = createDPanel( nil, {dock = FILL} )
+    self.Factionsview  = createDermaItem( "DListView", self.MainContainer, {dock = FILL} )
+    
+    -- BottomPanel, BottomContainer
+    self.BottomPanel = createDPanel( self.MainContainer, {dock = BOTTOM, color = bgColor, inval = true} )
+    self.BottomPanel:SetWide( self:GetWide() )
+    self.BottomPanel:SetTall( 50 )
 
-    self.BottomContainerBottom = vgui.Create("DPanel", self.BottomPanel)
-    self.BottomContainerBottom:Dock(BOTTOM)
-    self.BottomContainerBottom:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+    self.BottomContainerTop    = createDPanel( self.BottomPanel, {dock = TOP, color = bgColor} )
+    self.BottomContainerBottom = createDPanel( self.BottomPanel, {dock = BOTTOM, color = bgColor} )
 
-    --Bottom Panel - Contains buttons to interact with factions
-    self.BottomButtonsControlPanel = vgui.Create("DPanel", self.BottomContainerBottom)
-    self.BottomButtonsControlPanel:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
-    self.BottomButtonsControlPanel:Dock(BOTTOM)
+    self.BottomButtonsControlPanel = createDPanel( self.BottomContainerBottom, {dock = BOTTOM, color = bgColor} )
+    -- END: BottomPanel, BottomContainer
 
-    --Factions View buttons (Changing pages)
-    self.ButtonsContainer = vgui.Create("DPanel", self.BottomContainerTop)
-    self.ButtonsContainer:Dock(RIGHT)
-    self.ButtonsContainer:InvalidateParent(true)
-    self.ButtonsContainer:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+    -- Factions View buttons (Changing pages)
+
+    self.ButtonsContainer = createDPanel( self.BottomContainerTop, {dock = RIGHT, color = bgColor, inval = true} )
+    -- END: Factions View Buttons
 
     -- self.ButtonsContainer:SetWide(210)
 
-    self.ButtonsPanelLeft = vgui.Create("DPanel", self.ButtonsContainer)
-    self.ButtonsPanelLeft:Dock(LEFT)
-    self.ButtonsPanelLeft:InvalidateParent(true)
-    self.ButtonsPanelLeft:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
-    self.ButtonsPanelRight = vgui.Create("DPanel", self.ButtonsContainer)
-    self.ButtonsPanelRight:Dock(RIGHT)
-    self.ButtonsPanelRight:InvalidateParent(true)
-    self.ButtonsPanelRight:SetBackgroundColor(ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255))
+    -- ButtonsPanel
+    self.ButtonsPanelLeft  = createDPanel( self.ButtonsContainer, {dock = LEFT,  inval = true, color = bgColor} )
+    self.ButtonsPanelRight = createDPanel( self.ButtonsContainer, {dock = RIGHT, inval = true, color = bgColor} )
+    
+    -- END: ButtonsPanel
 
-    --Create, Edit, Delete, View
-    self.CreateFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
-    self.CreateFaction:SetText("Create Faction")
-    self.CreateFaction:Dock(LEFT)
-    self.EditFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
-    self.EditFaction:SetText("Edit Faction")
-    self.EditFaction:Dock(LEFT)
-    self.DeleteFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
-    self.DeleteFaction:SetText("Delete Faction")
-    self.DeleteFaction:Dock(LEFT)
-    self.ViewFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
-    self.ViewFaction:SetText("View Faction")
-    self.ViewFaction:Dock(LEFT)
+    -- Create, Edit, Delete, View
+    self.CreateFaction = createDButton( self.BottomButtonsControlPanel, {text = "Create Faction", dock = LEFT} )
+    self.EditFaction   = createDButton( self.BottomButtonsControlPanel, {text = "Edit Faction",   dock = LEFT} )
+    self.DeleteFaction = createDButton( self.BottomButtonsControlPanel, {text = "Delete Faction", dock = LEFT} )
+    self.ViewFaction   = createDButton( self.BottomButtonsControlPanel, {text = "View Faction",   dock = LEFT} )
+
+
     cfcFactions:ResizeParentFromChildren(self.BottomButtonsControlPanel)
     cfcFactions:ResizeChildrenEqually(self.BottomButtonsControlPanel,6)
+    -- END: Create, Edit, Delete, View
 
-    --First Page, Previous Page, Next Page, Last Page
-    self.FirstPage = vgui.Create("DButton", self.ButtonsPanelLeft)
-    self.FirstPage:SetText("<<")
-    self.FirstPage:Dock(LEFT)
+    -- First Page, Previous Page, Next Page, Last Page
+    self.FirstPage    = createDButton( self.ButtonsPanelLeft,  {text = "<<", dock = LEFT} )
+    self.PreviousPage = createDButton( self.ButtonsPanelLeft,  {text = "<",  dock = RIGHT} )
+    self.NextPage     = createDButton( self.ButtonsPanelRight, {text = ">",  dock = LEFT} )
+    self.LastPage     = createDButton( self.ButtonsPanelRight, {text = ">>", dock = RIGHT} )
 
-    self.PreviousPage = vgui.Create("DButton", self.ButtonsPanelLeft)
-    self.PreviousPage:SetText("<")
-    self.PreviousPage:Dock(RIGHT)
-
-    self.NextPage = vgui.Create("DButton", self.ButtonsPanelRight)
-    self.NextPage:SetText(">")
-    self.NextPage:Dock(LEFT)
-
-    self.LastPage = vgui.Create("DButton", self.ButtonsPanelRight) 
-    self.LastPage:SetText(">>")
-    self.LastPage:Dock(RIGHT)
 
     self.ButtonsPanelLeft:SetWide(self.FirstPage:GetWide() + self.NextPage:GetWide())
     self.ButtonsPanelRight:SetWide(self.NextPage:GetWide() + self.LastPage:GetWide())
-    --self.ButtonsContainer:SetWide(self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide())
+
     cfcFactions:ResizeParentFromChildren(self.ButtonsContainer)
+    -- END: First Page, Previous Page, Next Page, Last Page
 
     --[[
         --Container [  Container[Name] Container[Description] -... ]
