@@ -85,7 +85,6 @@ function Panel:Init()
 
     --window buttons
     self.closeButton = createDButton( self, {font = "CFC_Normal", text = " [X] ", color = White} )
-    
     self.closeButton.Paint = function() end
     self.closeButton:SetSize(32, 32)
     self.closeButton:SetPos(self:GetWide() - 35, 5)
@@ -129,7 +128,7 @@ function Panel:Init()
     self.mainview:SetPos((self:GetWide() / 2) - (self.mainview:GetWide() / 2), 120)
 
     --set main view to whatever the first menubar item is
-    if cfcFactions.Dermas[1].internal_panel ~= nil then
+    if cfcFactions.Dermas[1].internal_panel then
         self:SetMainView(cfcFactions.Dermas[1].internal_panel)
         --cfcFactions.Dermas[1].internal_button:SetToggle(true)
         cfcFactions.Dermas[1].internal_button:SetEnabled(false)
@@ -183,9 +182,10 @@ function Panel:CreateAlert(msg, type)
     if self.alertPanel == nil then return end
     if #self.alertPanel:GetChildren() > 0 then self:ClearAlerts() end
 
-    local Alert = vgui.Create("D_cfcalertboxpanel", self.alertPanel)
-    Alert:SetWide(self.alertPanel:GetWide())
-    Alert:SetTall(self.alertPanel:GetTall())
+    local wide = self.alertPanel:GetWide()
+    local tall = self.alertPanel:GetTall()
+
+    local Alert = createDermaItem( "D_cfcalertboxpanel", self.alertPanel, {wide = wide, tall = tall} )
     Alert.ErrMsg:SetText(msg)
 
     if #msg >= 25 then

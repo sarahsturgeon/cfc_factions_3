@@ -72,7 +72,7 @@ function cfcFactions:createDermaItem(dtype, parent, arg)
     if arg.margin then item:SetDockMargin( arg.margin ) end
     if arg.tall   then item:SetTall( arg.tall ) end
     if arg.wide   then item:SetWide( arg.wide ) end
-    if arg.font   then item:SetFOnt( arg.font ) end
+    if arg.font   then item:SetFont( arg.font ) end
 
     return item
 end
