@@ -24,7 +24,7 @@ function Panel:Init()
     self.ErrMsg:Dock(RIGHT)
     self.ErrMsg:SetColor(msgtype and msgtype ~= nil or Color(255,0,0))
     self.ErrMsg:SetText(msg and msg ~= nil or cfcFactions.ErrorMessages["general-error"])
-[0])
+
     self.CreationTime = CurTime()
     self.MiniPanel:SetWide(#self.ErrMsg:GetText()*6)
 end
