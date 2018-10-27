@@ -24,7 +24,8 @@ function meta:IsInFaction()
     if self:IsMerc() == true then return true end
     if usr == nil then return false end
     
-    if usr.FactionID == nil then return false elseif usr.FactionID ~= nil then return true end
+    if usr.FactionID == nil then return false end 
+    if usr.FactionID ~= nil then return true end
 end
 
 --Obtains the player's faction id, or 0 if not. Bots always return 'b0t'

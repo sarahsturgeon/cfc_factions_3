@@ -30,7 +30,13 @@ function Panel:Init()
 end
 
 function Panel:Paint()
-    if CurTime() >= self.CreationTime + 5 then self.CreationTime = CurTime()  self:Remove() else return end
+    if CurTime() >= self.CreationTime + 5 then 
+        self.CreationTime = CurTime()  
+        self:Remove() 
+    else 
+        return 
+    end
+    
     AlertInc = AlertInc +1
 end
 
