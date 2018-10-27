@@ -30,11 +30,12 @@ function Panel:Init()
 end
 
 function Panel:Paint()
-    if CurTime() >= self.CreationTime + 5 then 
-        self.CreationTime = CurTime()  
-        self:Remove() 
-    else 
-        return 
+    local isExpired = CurTime() >= self.CreationTime + 5
+    if isExpired then
+        self.CreationTime = CurTime()
+        self:Remove()
+    else
+        return
     end
     
     AlertInc = AlertInc +1
