@@ -20,11 +20,9 @@ end
 
 --Checks to see if a player is currently in a faction. returns false if not in one.
 function meta:IsInFaction()
-    local usr = fpm[self:SteamID64()]
     if self:IsMerc() == true then return true end
-    if usr == nil then return false end
     
-    local userHasFaction = usr.FactionID ~= nil
+    local userHasFaction = self:GetFactionID() ~= 0
     return userHasFaction
 end
 
@@ -72,8 +70,7 @@ function meta:SetFactionRank(rank)
 end
 
 function meta:IsMerc()
-    if fpm[self:SteamID64()].IsMerc == true then return true end
-    return false
+    return fpm[self:SteamID64()].IsMerc or false
 end
 
 -- function player:SetRank(rank)
