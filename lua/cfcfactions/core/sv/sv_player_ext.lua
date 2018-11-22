@@ -31,7 +31,7 @@ function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
     if self:IsPlayer() then
         if self:IsInFaction() == false then
-            return 0 
+            return nil
         else 
             return fpm[self:SteamID64()].FactionID
         end
