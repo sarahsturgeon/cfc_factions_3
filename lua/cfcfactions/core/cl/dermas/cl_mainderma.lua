@@ -1,20 +1,34 @@
-surface.CreateFont("CFC_Normal", { font = "arial", size = 18, weight = 500, antialias = true } )
+surface.CreateFont("CFC_Normal", 
+    { 
+        font = "arial",
+        size = 18,
+        weight = 500
+    }
+)
 
-surface.CreateFont("CFC_Special", { font = "coolvetica", size = 25, weight = 500, antialias = true } )
+surface.CreateFont("CFC_Special", 
+    { 
+        font = "coolvetica",
+        size = 25,
+        weight = 500
+    }
+)
 
 surface.CreateFont("CFC_Alert", 
     { 
         font = "Arial",
         size = 45,
-        weight = 100,
-    })
+        weight = 100
+    }
+)
 
 surface.CreateFont("CFC_Alert_Small", 
     { 
         font = "Arial",
         size = 20,
-        weight = 100,
-    })
+        weight = 100
+    }
+)
 
 local cfg = cfcFactions.Config.Client
 local Panel = {}
