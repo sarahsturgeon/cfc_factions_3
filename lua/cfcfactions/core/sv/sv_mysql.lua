@@ -93,7 +93,7 @@ function sql_db:initilize()
                     id int NOT NULL AUTO_INCREMENT,
                     permission NOT NULL,
                     PRIMARY KEY(id)
-                ) ENGINGE=InnoDB DEFAULT CHARSET=latin1
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
             ]]),
 
@@ -102,8 +102,8 @@ function sql_db:initilize()
                     id int NOT NULL AUTO_INCREMENT,
                     kills int,
                     deaths int,
-                    points int,
-                )ENGINGE=InnoDB DEFAULT CHARSET=latin1
+                    points int
+                )ENGINE=InnoDB DEFAULT CHARSET=latin1
             ]]),
 
         q6 = sql_db:query([[
@@ -111,8 +111,8 @@ function sql_db:initilize()
                     id int NOT NULL AUTO_INCREMENT,
                     kills int,
                     deaths int,
-                    points int,
-                )ENGINGE=InnoDB DEFAULT CHARSET=latin1
+                    points int
+                )ENGINE=InnoDB DEFAULT CHARSET=latin1
             ]])
     }
 

@@ -22,7 +22,7 @@ end
 function meta:IsInFaction()
     if self:IsMerc() == true then return true end
     
-    local userHasFaction = self:GetFactionID() ~= 0
+    local userHasFaction = self:GetFactionID() ~= nil
     return userHasFaction
 end
 
@@ -30,11 +30,7 @@ end
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
     if self:IsPlayer() then
-        if self:IsInFaction() == false then
-            return nil
-        else 
-            return fpm[self:SteamID64()].FactionID
-        end
+       return fpm[self:SteamID64()] and fpm[self:SteamID64()].FactionID
     end
 end
 

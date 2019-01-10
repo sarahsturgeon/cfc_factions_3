@@ -68,7 +68,7 @@ hook.Add("Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions()
 --Player Say Hook
 --Handles if a player wishes to open the faction menu by typing the command
 local function cfcPlayerSay(ply, msg)
-    if string.len(cfcFactions.Config.CHAT_COMMAND) > 0 then
+    if string.len(cfcFactions.Config.CHAT_COMMAND or "") > 0 then
         local chatTrigger = cfcFactions.Config.CHAT_COMMAND
         if string.sub(msg, 0, #chatTrigger) == chatTrigger then
             --Handles both opening and closing
