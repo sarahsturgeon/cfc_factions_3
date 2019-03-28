@@ -223,11 +223,13 @@ function cfcFactions:RemoveFaction(ply, id)
     end
 end
 
-net.Receive("CFC_Fac_RequestNews", function(len, ply)
-    for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
+local function requestFactionNews(len, ply)
+	for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
         net.WriteString(v .. "\n")
         net.WriteString(ply:Nick())
         net.Send(ply)
     end
-end)
+end
+
+net.Receive("CFC_Fac_RequestNews", requestFactionNews)

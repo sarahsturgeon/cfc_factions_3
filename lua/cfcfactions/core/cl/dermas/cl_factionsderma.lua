@@ -182,18 +182,27 @@ vgui.Register('D_cfcfactionsderma', Panel)
 --TODO: FactionRemoved
 
 --TODO:  tie into being actually used
-net.Receive("FactionCreated", function()
 
-end)
+local function factionCreated()
 
-net.Receive("FactionEdited", function()
+end
 
-end)
+net.Receive("FactionCreated", factionCreated)
 
-net.Receive("FactionFetchQuery", function()
+local function factionEdited()
+	
+end
 
-end)
+net.Receive("FactionEdited", factionEdited)
 
-net.Receive("FactionDeleted", function()
+local function factionFetchQuery()
+	
+end
 
-end)
+net.Receive("FactionFetchQuery", factionFetchQuery)
+
+local function factionDeleted()
+	
+end
+
+net.Receive("FactionDeleted", factionDeleted)
