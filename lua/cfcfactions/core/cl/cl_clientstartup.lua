@@ -44,27 +44,35 @@ function cfcFactions:DisplayMenu()
 end
 
 --If the defined key is properly set, users can use that specific key to also open/close the derma
-hook.Add("PlayerButtonDown", "CFC_FAC_MENUKEYDOWN", function(ply, button)
-    if input.GetKeyName(button) == cfcFactions.Config.CLIENT_KEY then
+local function menuKeyDown(ply, button)
+	if input.GetKeyName(button) == cfcFactions.Config.CLIENT_KEY then
         cfcFactions:DisplayMenu()
     end
-end)
+end
+
+hook.Add("PlayerButtonDown", "CFC_FAC_MENUKEYDOWN", menuKeyDown)
 
 --If a user requests to display the derma from serverside
-net.Receive('CFC_Fac_ToggleDerma', function(len, ply)
-    cfcFactions:DisplayMenu()
-end)
+local function toogleDerma(len, ply)
 
-net.Receive('CFC_Fac_SendMessage', function(len, ply)
+end
 
-end)
+net.Receive('CFC_Fac_ToggleDerma', toogleDerma)
 
-net.Receive('CFC_Fac_SendServerTextAlert', function(len, ply)
-    local msg = net.ReadString()
+local function sendMessage(len, ply)
+
+end
+
+net.Receive('CFC_Fac_SendMessage', sendMessage)
+
+local function sendServerTextAlert(len, ply)
+	local msg = net.ReadString()
     local mtype = net.ReadInt(4)
     local ment = net.ReadEntity()
 
     if cfcFactions.MainDerma ~= nil then
         cfcFactions.MainDerma:CreateAlert(msg, mtype)
     end
-end)
+end
+
+net.Receive('CFC_Fac_SendServerTextAlert', sendServerTextAlert)
