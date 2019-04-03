@@ -54,7 +54,7 @@ hook.Add("PlayerButtonDown", "CFC_FAC_MENUKEYDOWN", menuKeyDown)
 
 --If a user requests to display the derma from serverside
 local function toogleDerma(len, ply)
-
+    cfcFactions:DisplayMenu()
 end
 
 net.Receive('CFC_Fac_ToggleDerma', toogleDerma)
