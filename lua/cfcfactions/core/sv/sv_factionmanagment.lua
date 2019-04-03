@@ -14,7 +14,7 @@ local fpm = cfcFactions.fpm
 --------------------------------------------------------------------------------------------------------------
 --player:player, name:string, color:table, description:string, inviteOnly:number
 local function createFaction(ply, cmd, args)
-	--TODO: create faction from here
+    --TODO: create faction from here
     cfcFactions:CreateFaction(ply, "My Faction", {255, 0, 0, 255}, "My Test Faction", 1)
     PrintTable(cfcFactions.Factions)
 end
@@ -45,7 +45,7 @@ concommand.Add("fpvp_checkinvites", checkInvites)
 --player:player
 
 local function kickPlayer(ply, cmd, args)
-	local tokick = args[1]
+    local tokick = args[1]
     if tokick:IsPlayer() and toKick:GetFactionRank() ~= "Leader" then
 
     end
@@ -62,7 +62,7 @@ concommand.Add("fpvp_clearinvite", clearInvite)
 
 --nil
 local function clearAllPending(ply, cmd, args)
-	if not ply:IsPlayer() then return end
+    if not ply:IsPlayer() then return end
     ply:SetNWBool("invitePending", false)
 end
 
@@ -73,7 +73,7 @@ concommand.Add("fpvp_clearallpending", clearAllPending)
 --------------------------------------------------------------------------------------------------------------
 --player:player, permission:string
 local function allowPermission(ply, cmd, args)
-	if fpm:IsValidPermission(args[1]) then
+    if fpm:IsValidPermission(args[1]) then
         if fpm:hasPermission(ply, "IsDeveloper") then 
             if fpm:addPermission(ply, args[1]) == true then
                 ply:ChatPrint(string.format("You have been granted access: %s", args[1]))
@@ -90,7 +90,7 @@ concommand.Add("fpvp_allowpermission", allowPermission)
 
 --player:player, permission:string
 local function removePermission(ply, cmd, args)
-	if fpm:IsValidPermission(args[1]) then
+    if fpm:IsValidPermission(args[1]) then
         if fpm:hasPermission(ply, "IsDeveloper") then 
             if fpm:revokePermission(ply, args[1]) then
                 print(string.format("Success on removing permission %s", args[1]))
@@ -107,7 +107,7 @@ concommand.Add("fpvp_removepermission", removePermission)
 
 --player:player permission:string
 local function checkPermission(ply, cmd, args)
-	if fpm:IsValidPermission(args[1]) then
+    if fpm:IsValidPermission(args[1]) then
         if fpm:hasPermission(ply, args[1]) then 
             print(string.format("Player has proper permission %s.", args[1]))
         else
@@ -122,7 +122,7 @@ concommand.Add("fpvp_checkpermission", checkPermission)
 
 --Prints a list of all possible inuse permissions.
 local function printPermissions(ply, cmd, args)
-	for key, value in pairs(fpm:FetchMergedPermissions()) do
+    for key, value in pairs(fpm:FetchMergedPermissions()) do
         ply:PrintMessage(HUD_PRINTCONSOLE, string.format("[%s]\n\t\tDescription: %s\n\t\tAlias:%s", key, value.Description, value.Alias))
     end
 end
@@ -130,10 +130,10 @@ end
 concommand.Add("fpvp_printpermissions", printPermissions)
 
 local function revokeUser(ply, cmd, args)
-	if fpm:hasPermission(ply, "IsDeveloper") then 
-		fpm:revokeUser(ply)
-	else
-		ply:ChatPrint("You require developer level permissions for this command.")
+    if fpm:hasPermission(ply, "IsDeveloper") then 
+        fpm:revokeUser(ply)
+    else
+        ply:ChatPrint("You require developer level permissions for this command.")
     end
 end
 
@@ -144,7 +144,7 @@ concommand.Add("fpvp_revokeuser", revokeUser)
 --------------------------------------------------------------------------------------------------------------
 --player:player, faction_id:number
 local function forceSetFaction(ply, cmd, args)
-	local factionid = args[1]
+    local factionid = args[1]
     if factionid == nil then --err out
         return 
     end
@@ -209,7 +209,7 @@ concommand.Add("fpvp_firemerc", fireMerc)
 
 --nil
 local function deleteAllAdminLogs(ply, cmd, args)
-	--change to false later
+    --change to false later
     if not ply:IsPlayer() then
         MsgN("Deleted all adminlogs in database!")
         sql_db:DeleteAllLogs()
@@ -240,7 +240,7 @@ concommand.Add("fpvp_forcedeletefactionlogs", forceDeleteFactionLogs)
 
 --nil
 local function factionMenu(ply, cmd, args)
-	ply:CFCToggleMenu()
+    ply:CFCToggleMenu()
 end
 
 concommand.Add("fpvp_factionmenu", factionMenu)
@@ -263,7 +263,7 @@ concommand.Add("fpvp_createcontract", createContract)
 
 --nil
 local function showInternals(ply, cmd, args)
-	if ply:IsPlayer() then return end
+    if ply:IsPlayer() then return end
     if IsValid(ply) then return end
     PrintTable(cfcFactions)
 end
@@ -272,7 +272,7 @@ concommand.Add("fpvp_showinternals", showInternals)
 
 --nil
 local function forceInitilize(ply, cmd, args)
-	--only rcon
+    --only rcon
     if ply:IsPlayer() then
         MsgN("Forcing mysql initlizing")
         sql_db:initilize()
@@ -289,7 +289,7 @@ end
 concommand.Add("fpvp_resetdb", resetdb)
 
 local function testPermSys(ply, cmd, args)
-	--Revoke auth
+    --Revoke auth
     print("Revoking user")
     cfcFactions.fpm:revokeUser(ply)
 
@@ -315,7 +315,7 @@ end
 concommand.Add("fpvp_testpermsys", testPermSys)
 
 local function debugTest(ply, cmd, args)
-	if fpm:IsDev(ply) then
+    if fpm:IsDev(ply) then
          cfcFactions:RemoveFaction(ply, ply:GetFactionID())
          ply:concommand("fpvp_createfaction")
     end
@@ -324,7 +324,7 @@ end
 concommand.Add("fpvp_debugtest", debugTest)
 
 local function debugMsg(ply, cmd, args)
-	local argstring = ""
+    local argstring = ""
     for k=1, #args do
         argstring = argstring .. args[k] .. " "
     end
@@ -341,7 +341,7 @@ concommand.Add("fpvp_debugmsg", debugMsg)
 --------------------------------------------------------------------------------------------------------------
 
 local function playerInitialSpawn(player)
-	cfcFactions.fpm:authUser(player)
+    cfcFactions.fpm:authUser(player)
 end
 
 hook.Add("PlayerInitialSpawn", "CFC_FAC_PlayerInitialSpawn", playerInitialSpawn)

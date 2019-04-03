@@ -21,7 +21,7 @@ end
 vgui.Register('D_cfcnewsderma', Panel)
 
 local function sendFactionNews(len, ply)
-	local netIN = net.ReadString()
+    local netIN = net.ReadString()
     local netName = net.ReadString()
     cfcFactions.News = cfcFactions.News .. string.Replace(netIN, "%s", netName)
 end

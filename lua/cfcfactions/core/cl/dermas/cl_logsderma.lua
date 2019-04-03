@@ -21,25 +21,25 @@ vgui.Register('D_logsdermasderma', Panel)
 --TODO: tie in to the system
 
 local function fetchAlerts()
-	
+    
 end
 
 net.Receive("FetchAlerts", fetchAlerts)
 
 local function addAlert()
-	
+    
 end
 
 net.Receive("AddAlert", addAlert)
 
 local function fetchAdminAlerts()
-	
+    
 end
 
 net.Receive("FetchAdminAlerts", fetchAdminAlerts)
 
 local function addAdminAlert()
-	
+    
 end
 
 net.Receive("AddAdminAlert", addAdminAlert)

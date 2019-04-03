@@ -190,19 +190,19 @@ end
 net.Receive("FactionCreated", factionCreated)
 
 local function factionEdited()
-	
+    
 end
 
 net.Receive("FactionEdited", factionEdited)
 
 local function factionFetchQuery()
-	
+    
 end
 
 net.Receive("FactionFetchQuery", factionFetchQuery)
 
 local function factionDeleted()
-	
+    
 end
 
 net.Receive("FactionDeleted", factionDeleted)
