@@ -18,118 +18,118 @@ local cfg = cfcFactions.Config.Server
 cfcFactions.Factions = cfcFactions.Factions or {}
 
 function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
-	local TmpUnqID = cfcFactions:UUID()
-	local factionOwner = Owner
-	local factionName = Name
-	local factionColor = Color
-	local factionDescription = Description
-	local factionInviteOnly = InviteOnly
+    local TmpUnqID = cfcFactions:UUID()
+    local factionOwner = Owner
+    local factionName = Name
+    local factionColor = Color
+    local factionDescription = Description
+    local factionInviteOnly = InviteOnly
 
-	----------------
-	--TODO: remove
-	--Testing notifcations
-	----------------
-	if nil then
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["generalError"], 1, nil)
-	end
+    ----------------
+    --TODO: remove
+    --Testing notifcations
+    ----------------
+    if nil then
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["generalError"], 1, nil)
+    end
 
-	----------------
-	--[type checks]
-	----------------
-	if not type(factionOwner) == "Player" then
-		--Send Alert -> Not a valid PlayerType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil)
-		return
-	end
+    ----------------
+    --[type checks]
+    ----------------
+    if not type(factionOwner) == "Player" then
+        --Send Alert -> Not a valid PlayerType
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil)
+        return
+    end
 
-	if not type(factionName) == "string" then
-		--Send Alert -> Not a valid NameType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-string-type"], 1, Owner)
-		return
-	end
+    if not type(factionName) == "string" then
+        --Send Alert -> Not a valid NameType
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-string-type"], 1, Owner)
+        return
+    end
 
-	if not type(factionColor) == "table" then
-		--Send Alert -> Not a valid ColorType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-table-type"], 1, Owner)
-		return
-	end
+    if not type(factionColor) == "table" then
+        --Send Alert -> Not a valid ColorType
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-table-type"], 1, Owner)
+        return
+    end
 
-	if not type(factionDescription) == "string" then
-		--Send Alert -> Not a valid DescriptionType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-string-type"], 1, Owner)
-		return
-	end
+    if not type(factionDescription) == "string" then
+        --Send Alert -> Not a valid DescriptionType
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-string-type"], 1, Owner)
+        return
+    end
 
-	if not type(factionInviteOnly) == "boolean" then
-		--Send Alert -> Not a valid IntType
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-int-type"], 1, Owner)
-		return
-	end
+    if not type(factionInviteOnly) == "boolean" then
+        --Send Alert -> Not a valid IntType
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-int-type"], 1, Owner)
+        return
+    end
 
-	if not factionOwner:IsPlayer() or not IsValid(factionOwner) then
-		--SendAlert -> Not a valid player
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["general-error"], 1, nil)
-		return
-	end
+    if not factionOwner:IsPlayer() or not IsValid(factionOwner) then
+        --SendAlert -> Not a valid player
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["general-error"], 1, nil)
+        return
+    end
 
-	if factionOwner:IsInFaction() then
-		--SendAlert -> Already in a Faction
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
-	end
+    if factionOwner:IsInFaction() then
+        --SendAlert -> Already in a Faction
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
+    end
 
-	--[Permissions]
-	if not fpm:hasPermission(factionOwner, "CanCreateFaction") then
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["faction-ban"], 1, Owner)
-		--TODO: make return here
-		--return
-	end
+    --[Permissions]
+    if not fpm:hasPermission(factionOwner, "CanCreateFaction") then
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["faction-ban"], 1, Owner)
+        --TODO: make return here
+        --return
+    end
 
-	--IsInFaction Check
-	if factionOwner:IsInFaction() == true then 
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
-		return 
-	end
+    --IsInFaction Check
+    if factionOwner:IsInFaction() == true then 
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
+        return 
+    end
 
-	--UniqueName Check
-	if not cfcFactions:isUniqueName(factionName) then 
-		cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
-		return
-	end
+    --UniqueName Check
+    if not cfcFactions:isUniqueName(factionName) then 
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
+        return
+    end
 
-	--What should a faction contain? 
-	cfcFactions.Factions[TmpUnqID] = {
-		["ID"] = TmpUnqID,
-		["Name"] = factionName,
-		["Ranks"] = cfcFactions.fpm.defaultRanks,
-		["Owner"] = factionOwner:SteamID64(),
-		["Description"] = factionDescription,
-		["Color"] = factionColor,
-		["Invite"] = factionInviteOnly,
-		["Kills"] = 0,
-		["Deaths"] = 0,
-		["XP"] = 0,
-		["Currency"] = 0,
-		["Created"] = cfcFactions:TimeStamp(),
-		["Edited"] = cfcFactions:TimeStamp(),
-		["LastSaved"] = nil,
-		["NeedsCleanUp"] = false,
-		["Allies"] = {},
-		["Enemies"] = {},
-		["Contracts"] = {},
-		["Talents"] = nil,
-	}
+    --What should a faction contain? 
+    cfcFactions.Factions[TmpUnqID] = {
+        ["ID"] = TmpUnqID,
+        ["Name"] = factionName,
+        ["Ranks"] = cfcFactions.fpm.defaultRanks,
+        ["Owner"] = factionOwner:SteamID64(),
+        ["Description"] = factionDescription,
+        ["Color"] = factionColor,
+        ["Invite"] = factionInviteOnly,
+        ["Kills"] = 0,
+        ["Deaths"] = 0,
+        ["XP"] = 0,
+        ["Currency"] = 0,
+        ["Created"] = cfcFactions:TimeStamp(),
+        ["Edited"] = cfcFactions:TimeStamp(),
+        ["LastSaved"] = nil,
+        ["NeedsCleanUp"] = false,
+        ["Allies"] = {},
+        ["Enemies"] = {},
+        ["Contracts"] = {},
+        ["Talents"] = nil,
+    }
 
-	local owner = fpm.Users[factionOwner:SteamID64()]
+    local owner = fpm.Users[factionOwner:SteamID64()]
 
-	--set user id and rank using ply:Set functions
-	owner.FactionID = TmpUnqID
-	owner.FactionRank = cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
+    --set user id and rank using ply:Set functions
+    owner.FactionID = TmpUnqID
+    owner.FactionRank = cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
 
-	--function cfcFactions:SaveFaction(factionid)
-	--function cfcFactions:SaveUser(userid)
-	cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, Owner)
-	---Returns the newly created faction as a table
-	return cfcFactions.Factions[TmpUnqID]
+    --function cfcFactions:SaveFaction(factionid)
+    --function cfcFactions:SaveUser(userid)
+    cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, Owner)
+    ---Returns the newly created faction as a table
+    return cfcFactions.Factions[TmpUnqID]
 end
 
 --Checks a specifc string to see if it is unique amongst other factions.
@@ -178,7 +178,7 @@ function cfcFactions:EditFaction(id, name, color, description, inviteOnly, playe
 
     --if IsAdmin or IsDeveloper, allow freely edit of a faction
     if fpm:IsDeveloper(player) or fpm:IsFactionAdmin(player) then
-    	
+        
     else
         --else check for normal permissions
         --ONLY IF, that specific element is being edited. 
@@ -224,7 +224,7 @@ function cfcFactions:RemoveFaction(ply, id)
 end
 
 local function requestFactionNews(len, ply)
-	for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
+    for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
         net.WriteString(v .. "\n")
         net.WriteString(ply:Nick())

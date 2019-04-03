@@ -45,7 +45,7 @@ end
 
 --If the defined key is properly set, users can use that specific key to also open/close the derma
 local function menuKeyDown(ply, button)
-	if input.GetKeyName(button) == cfcFactions.Config.CLIENT_KEY then
+    if input.GetKeyName(button) == cfcFactions.Config.CLIENT_KEY then
         cfcFactions:DisplayMenu()
     end
 end
@@ -66,7 +66,7 @@ end
 net.Receive('CFC_Fac_SendMessage', sendMessage)
 
 local function sendServerTextAlert(len, ply)
-	local msg = net.ReadString()
+    local msg = net.ReadString()
     local mtype = net.ReadInt(4)
     local ment = net.ReadEntity()
 
