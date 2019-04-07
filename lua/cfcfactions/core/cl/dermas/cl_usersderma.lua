@@ -21,38 +21,38 @@ vgui.Register('D_cfcusersderma', Panel)
 
 --TODO: tie into the system
 
-local function fetchUsers()
+local function fetchFactionUsers()
     
 end
 
-net.Receive("FetchUsers", fetchUsers)
+net.Receive("FetchUsers", fetchFactionUsers)
 
-local function userOffline()
+local function factionUserOffline()
     
 end
 
-net.Receive("UserOffline", userOffline)
+net.Receive("UserOffline", factionUserOffline)
 
-local function fetchOnline()
+local function factionFetchOnline()
     
 end
 
-net.Receive("FetchOnline", fetchOnline)
+net.Receive("FetchOnline", factionFetchOnline)
 
-local function userChange()
+local function factionUserChange()
     
 end
 
-net.Receive("UserChange", userChange)
+net.Receive("UserChange", factionUserChange)
 
-local function userUpdateStats()
+local function factionUserUpdateStats()
     
 end
 
-net.Receive("UserUpdateStats", userUpdateStats)
+net.Receive("UserUpdateStats", factionUserUpdateStats)
 
-local function userDeleted()
+local function factionUserDeleted()
     
 end
 
-net.Receive("UserDeleted", userDeleted)
+net.Receive("UserDeleted", factionUserDeleted)
