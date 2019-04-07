@@ -50,20 +50,20 @@ local function menuKeyDown(ply, button)
     end
 end
 
-hook.Add("PlayerButtonDown", "CFC_FAC_MENUKEYDOWN", menuKeyDown)
+hook.Add("PlayerButtonDown", "CFC_Fac_MenuKeyDown", menuKeyDown)
 
 --If a user requests to display the derma from serverside
-local function toogleDerma(len, ply)
+local function toogleFactionDerma(len, ply)
     cfcFactions:DisplayMenu()
 end
 
-net.Receive('CFC_Fac_ToggleDerma', toogleDerma)
+net.Receive('CFC_Fac_ToggleDerma', toogleFactionDerma)
 
-local function sendMessage(len, ply)
+local function sendFactionMessage(len, ply)
 
 end
 
-net.Receive('CFC_Fac_SendMessage', sendMessage)
+net.Receive('CFC_Fac_SendMessage', sendFactionMessage)
 
 local function sendServerTextAlert(len, ply)
     local msg = net.ReadString()
