@@ -25,34 +25,34 @@ local function fetchFactionUsers()
     
 end
 
-net.Receive("FetchUsers", fetchFactionUsers)
+net.Receive("CFC_Fac_FetchUsers", fetchFactionUsers)
 
 local function factionUserOffline()
     
 end
 
-net.Receive("UserOffline", factionUserOffline)
+net.Receive("CFC_Fac_UserOffline", factionUserOffline)
 
 local function factionFetchOnline()
     
 end
 
-net.Receive("FetchOnline", factionFetchOnline)
+net.Receive("CFC_Fac_FetchOnline", factionFetchOnline)
 
 local function factionUserChange()
     
 end
 
-net.Receive("UserChange", factionUserChange)
+net.Receive("CFC_Fac_UserChange", factionUserChange)
 
 local function factionUserUpdateStats()
     
 end
 
-net.Receive("UserUpdateStats", factionUserUpdateStats)
+net.Receive("CFC_Fac_UserUpdateStats", factionUserUpdateStats)
 
 local function factionUserDeleted()
     
 end
 
-net.Receive("UserDeleted", factionUserDeleted)
+net.Receive("CFC_Fac_UserDeleted", factionUserDeleted)

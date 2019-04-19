@@ -187,22 +187,22 @@ local function factionCreated()
 
 end
 
-net.Receive("FactionCreated", factionCreated)
+net.Receive("CFC_Fac_FactionCreated", factionCreated)
 
 local function factionEdited()
     
 end
 
-net.Receive("FactionEdited", factionEdited)
+net.Receive("CFC_Fac_FactionEdited", factionEdited)
 
 local function factionFetchQuery()
     
 end
 
-net.Receive("FactionFetchQuery", factionFetchQuery)
+net.Receive("CFC_Fac_FactionFetchQuery", factionFetchQuery)
 
 local function factionDeleted()
     
 end
 
-net.Receive("FactionDeleted", factionDeleted)
+net.Receive("CFC_Fac_FactionDeleted", factionDeleted)
