@@ -24,22 +24,22 @@ local function fetchFactionAlerts()
     
 end
 
-net.Receive("FetchAlerts", fetchFactionAlerts)
+net.Receive("CFC_Fac_FetchAlerts", fetchFactionAlerts)
 
 local function addFactionAlert()
     
 end
 
-net.Receive("AddAlert", addFactionAlert)
+net.Receive("CFC_Fac_AddAlert", addFactionAlert)
 
 local function fetchAdminFactionAlerts()
     
 end
 
-net.Receive("FetchAdminAlerts", fetchAdminFactionAlerts)
+net.Receive("CFC_Fac_FetchAdminAlerts", fetchAdminFactionAlerts)
 
 local function addAdminFactionAlert()
     
 end
 
-net.Receive("AddAdminAlert", addAdminFactionAlert)
+net.Receive("CFC_Fac_AddAdminAlert", addAdminFactionAlert)
