@@ -48,7 +48,7 @@ function meta:GetFactionRank()
     return factionRank
 end
 
---Gets a player's faction as a table. Returns an empty table if not in one
+--Gets a player's faction as a table. Returns nil if not in one
 function meta:GetFaction()
     if not self:IsInFaction() then return end
 
