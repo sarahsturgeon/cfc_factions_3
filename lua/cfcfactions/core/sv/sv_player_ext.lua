@@ -30,7 +30,11 @@ end
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
     if self:IsPlayer() then
-       return fpm[self:SteamID64()] and fpm[self:SteamID64()].FactionID
+        if self:IsInFaction() == false then
+            return nil
+        else 
+            return fpm[self:SteamID64()].FactionID
+        end
     end
 end
 
