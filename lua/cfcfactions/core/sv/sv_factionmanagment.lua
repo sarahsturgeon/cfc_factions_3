@@ -123,7 +123,7 @@ concommand.Add("fpvp_checkpermission", checkFactionPermission)
 --Prints a list of all possible inuse permissions.
 local function printFactionPermissions(ply, cmd, args)
     for key, value in pairs(fpm:FetchMergedPermissions()) do
-        ply:PrintMessage(HUD_PRINTCONSOLE, string.format("[%s]\n\t\tDescription: %s\n\t\tAlias:%s", key, value.Description, value.Alias))
+        ply:PrintMessage(HUD_PRINTCONSOLE, string.format("[%s]\n\t\tDescription: %s\n", key, value.Description))
     end
 end
 
