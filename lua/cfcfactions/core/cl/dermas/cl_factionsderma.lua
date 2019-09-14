@@ -160,13 +160,7 @@ function Panel:Init()
     self.privcol:SetWide(5)
     self.killcol:SetWide(5)
     self.idcol:SetWide(20)
-
-    --debug code to sample how factions is displayed
-    for k=1, 10 do
-        local ID = cfcFactions:UUID()
-        local name = "MyTestFaction"
-        addFactions(self, math.random(0,1), (name .. ID), string.reverse(string.lower(name)),"Test User", (math.random(0,100) .. "/"..math.random(0,100)), cfcFactions:UUID())
-    end
+    
 end
 
 function Panel:Paint(w, h)
