@@ -179,8 +179,6 @@ vgui.Register('D_cfcfactionsderma', Panel)
 
 local function factionCreated()
 
-end
-
 net.Receive("CFC_Fac_FactionCreated", factionCreated)
 
 local function factionEdited()
