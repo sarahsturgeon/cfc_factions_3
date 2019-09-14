@@ -22,7 +22,12 @@ end
 function meta:IsInFaction()
     if self:IsMerc() == true then return true end
     
-    local userHasFaction = self:GetFactionID() ~= nil
+    local userHasFaction = nil
+    if ( not (self:GetFactionID() == nil ) ) then
+        userHasFaction = true
+    else
+        userHasFaction = false
+    end
     return userHasFaction
 end
 
@@ -30,11 +35,7 @@ end
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
     if self:IsPlayer() then
-        if self:IsInFaction() == false then
-            return nil
-        else 
-            return fpm[self:SteamID64()].FactionID
-        end
+        return fpm[self:SteamID64()].FactionID
     end
 end
 
@@ -49,6 +50,7 @@ end
 
 --Gets a player's faction as a table. Returns an empty table if not in one
 function meta:GetFaction()
+    if not self:IsPlayer() then return false end
     if self:IsInFaction() then
         if cfcFactions.Factions[self:GetFactionID()] ~= 0 then
             return cfcFactions.Factions[self:GetFactionID()]
