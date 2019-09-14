@@ -2,7 +2,9 @@
 File Name: sv_player_ext.lua
 
 Purpose: Player table data that contain generic server-side only functions and not shared.
-
+Note: Many of these functions need to be rewritten under sv_users.lua and then 
+adjusted here to use it. We should still be able to access player:IsInFaction for example,
+but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 
 ]]--
 
@@ -35,7 +37,7 @@ end
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
     if self:IsPlayer() then
-        return fpm[self:SteamID64()].FactionID
+        return fpm[self:SteamID64()]
     end
 end
 
@@ -52,11 +54,9 @@ end
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
     if self:IsInFaction() then
-        if cfcFactions.Factions[self:GetFactionID()] ~= 0 then
-            return cfcFactions.Factions[self:GetFactionID()]
-        end
-    else
-        return {}
+
+    if cfcFactions.Factions[self:GetFactionID()] ~= 0 then
+        return cfcFactions.Factions[self:GetFactionID()]
     end
 end
 
