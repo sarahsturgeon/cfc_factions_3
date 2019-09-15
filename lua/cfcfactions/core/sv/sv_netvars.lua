@@ -6,7 +6,6 @@ Purpose: Contains all NetworkedStrings registered on server start
 
 local util = util
 local NamedNetworkVars = {
-    --TODO: When CFCLib.generateCFCHook() is implemented, strip out CFC_Fac_
 
     --Alerts/Msgs
     "CFC_Fac_SendTextAlert", "CFC_Fac_GetTextAlert", "CFC_Fac_SendServerTextAlert", "CFC_Fac_GetServerTextAlert",
@@ -32,16 +31,8 @@ local NamedNetworkVars = {
     "CFC_Fac_SendNotifcation"
 }
 
---[[
-TODO: Reference -- Incorparate cfc function auto name netvars and hooks
-        util.AddNetworkString(CFCLib.generateCFCHook(hookName))
-]]--
-
-
 --loop through and auto gens netvar names
 for _, v in pairs(NamedNetworkVars) do
-    --TODO: uncomment after CFCLib.generateCFCHook() is implemented
-    --util.AddNetworkString(CFCLib.generateCFCHook(NamedNetworkVars[I]))
     util.AddNetworkString(v)
 end
 
