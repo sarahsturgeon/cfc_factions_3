@@ -14,6 +14,7 @@ local util = util
 local table = table
 local fpm = cfcFactions.fpm
 local cfg = cfcFactions.Config.Server
+local cfcuser = cfcFactions.Users 
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
@@ -72,11 +73,6 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
         return
     end
 
-    if factionOwner:IsInFaction() then
-        --SendAlert -> Already in a Faction
-        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
-    end
-
     --[Permissions]
     if not fpm:hasPermission(factionOwner, "CanCreateFaction") then
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["faction-ban"], 1, Owner)
@@ -85,7 +81,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
     end
 
     --IsInFaction Check
-    if factionOwner:IsInFaction() == true then 
+    if cfcuser:IsInFaction(factionOwner) then 
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
         return 
     end

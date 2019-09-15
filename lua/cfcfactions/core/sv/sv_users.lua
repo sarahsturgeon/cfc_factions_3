@@ -5,7 +5,7 @@ Purpose: Core faction's functions to create, edit, and destory users who use fac
 
 Global Tables: cfcFactions.Users
 ]]--
-
+cfcFactions.Users = cfcFactions.Users or {}
 local cfcuser = cfcFactions.Users 
 local fpm = cfcFactions.fpm
 
@@ -63,7 +63,8 @@ function cfcuser:registeruser(user, factionid, rank)
 		["Kills"] = 0, 
 		["Deaths"] = 0,
 		["FactionRank"] = nil,
-		["HoursInFaction"] = nil
+		["HoursInFaction"] = nil,
+		["Permissions"] = nil
 
 	}
 	table.insert(cfcuser, user:SteamID64())
@@ -121,10 +122,6 @@ function cfcuser:SetUserContract(user, contract)
 
 end
 
-function cfcuser:SetUserPermission(user, permission)
-
-end
-
 function cfcuser:RemoveUserRank(user)
 
 end
@@ -146,14 +143,16 @@ function cfcuser:RemoveUserInvite(user, id, revoker)
 
 end
 
-function cfcuser:SetUserPermission(user, permission)
-
-end
-
-function cfcuser:RemoveUserPermission(user, permission)
-
-end
-
 function cfcuser:IsInFaction(user) 
+	if not user:IsPlayer() then
+		return
+	end
 
+	local GetFactionUser = cfcuser[user:SteamID64()]
+	if GetFactionUser == nil then return false end
+	if GetFactionUser.FactionID == nil then
+		return false
+	else
+		return true
+	end
 end
