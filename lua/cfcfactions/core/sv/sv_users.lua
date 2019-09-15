@@ -59,15 +59,16 @@ function cfcuser:registeruser(user, factionid, rank)
 		["DisplayName"] = user:Nick(),
 		["DateAdded"] = cfcFactions:TimeStamp(),
 		["LastOnline"] = cfcFactions:TimeStamp(),
-		["FactionID"] = nil,
+		["FactionID"] = factionid and factionid or nil,
 		["Kills"] = 0, 
 		["Deaths"] = 0,
-		["FactionRank"] = nil,
+		["FactionRank"] = rank and rank or nil,
 		["HoursInFaction"] = nil,
-		["Permissions"] = nil
+		["CFCPermissions"] = nil,
+		["InternalFactionPermissions"] = nil
 
 	}
-	table.insert(cfcuser, user:SteamID64())
+	table.insert(cfcuser[user:SteamID64()], PreUserTable)
 end
 
 --Checks if a user is already registered

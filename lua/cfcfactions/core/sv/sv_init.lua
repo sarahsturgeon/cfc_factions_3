@@ -8,6 +8,7 @@ include("cfcfactions/core/sh/sh_init.lua")
 --sv
 include("cfcfactions/config/sv_config.lua")
 include("cfcfactions/core/sv/sv_netvars.lua")
+include("cfcfactions/core/sv/sv_users.lua")
 include("cfcfactions/core/sv/sv_permsys.lua")
 include("cfcfactions/core/sv/sv_mysql.lua")
 

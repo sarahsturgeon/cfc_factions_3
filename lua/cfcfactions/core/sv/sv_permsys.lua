@@ -128,7 +128,9 @@ end
 function fpm:authUser(player)
     print("Authenticating user " .. player:SteamID())
     --Checks and balances
-    if not player:IsPlayer() or not IsValid(player) then return end
+    if not player:IsPlayer() then 
+        return 
+    end
 
     if cfcuser:UserExists(player) then
         if ( not ( cfcuser[player:SteamID64()].Permissions == nil ) ) then 
@@ -137,8 +139,7 @@ function fpm:authUser(player)
         end      
     end
 
-
-     cfcuser[player:SteamID64()].Permissions = {["Permissions"] = {}}
+    cfcuser:registeruser(player, nil, nil)
 
     --Basic, core permissions (almost) every user should require in order to properly use factions.
     local AuthUserPerms = {
