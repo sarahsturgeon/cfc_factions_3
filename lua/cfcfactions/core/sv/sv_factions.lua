@@ -119,11 +119,9 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
         ["Talents"] = nil,
     }
 
-    local owner = fpm.Users[factionOwner:SteamID64()]
+    cfcuser:registeruser(factionOwner, factionid, "Leader")
 
-    --set user id and rank using ply:Set functions
-    owner.FactionID = TmpUnqID
-    owner.FactionRank = cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
+    --cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
 
     --function cfcFactions:SaveFaction(factionid)
     --function cfcFactions:SaveUser(userid)
