@@ -18,14 +18,14 @@ local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
-function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
+function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, temporary)
     local TmpUnqID = cfcFactions:UUID()
-    local factionOwner = Owner
-    local factionName = Name
+    local factionOwner = owner
+    local factionName = name
     local factionColor = Color
-    local factionDescription = Description
-    local factionInviteOnly = InviteOnly
-
+    local factionDescription = description
+    local factionInviteOnly = inviteOnly
+    local factionIsTemporary = temporary
     ----------------
     --TODO: remove
     --Testing notifcations
@@ -92,6 +92,11 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
         return
     end
 
+    if not type(factionIsTemporary) == "boolean" then
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-int-type"], 1, Owner)
+        factionIsTemporary = 0
+    end
+
     --What should a faction contain? 
     cfcFactions.Factions[TmpUnqID] = {
         ["ID"] = TmpUnqID,
@@ -103,7 +108,6 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
         ["Invite"] = factionInviteOnly,
         ["Kills"] = 0,
         ["Deaths"] = 0,
-        ["XP"] = 0,
         ["Currency"] = 0,
         ["Created"] = cfcFactions:TimeStamp(),
         ["Edited"] = cfcFactions:TimeStamp(),
@@ -111,8 +115,7 @@ function cfcFactions:CreateFaction(Owner, Name, Color, Description, InviteOnly)
         ["NeedsCleanUp"] = false,
         ["Allies"] = {},
         ["Enemies"] = {},
-        ["Contracts"] = {},
-        ["Talents"] = nil,
+        ["Contracts"] = {}
     }
 
     cfcuser:registeruser(factionOwner, factionid, "Leader")
@@ -227,3 +230,10 @@ local function requestFactionNews(len, ply)
 end
 
 net.Receive("CFC_Fac_RequestNews", requestFactionNews)
+
+--Tie into cl_faction derma to create a faction from vgui
+local function RequestFactionCreation(len, ply)
+
+end
+
+net.Receive("CFC_Fac_RequestFactionSubmit", RequestFactionCreation)
