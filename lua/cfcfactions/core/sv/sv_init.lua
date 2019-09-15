@@ -82,6 +82,10 @@ hook.Add('PlayerSay', 'cfcPlayerSay', cfcPlayerSay)
 
 --InitialSpawn hook, fetches the data and properly sets it serverside
 local function cfcOnPlayerInitialSpawn(ply)
+
+    --Always load a user as if never exsisted. Afterwards, load their proper data from source
+    cfcFactions.Users:registeruser(ply, nil, nil)
+
     for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
         net.WriteString(v .. "\n")

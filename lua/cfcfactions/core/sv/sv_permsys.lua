@@ -108,7 +108,7 @@ end
 --Revokes a user's permissions, essentiall removing them from cfcFaction's permission system
 function fpm:revokeUser(player)
     if player:IsPlayer() and IsValid(player) then
-        cfcuser[player:SteamID64()].Permissions = nil
+        cfcuser[player:SteamID64()].CFCPermissions = nil
         return true
     end
 
@@ -133,7 +133,7 @@ function fpm:authUser(player)
     end
 
     if cfcuser:UserExists(player) then
-        if ( not ( cfcuser[player:SteamID64()].Permissions == nil ) ) then 
+        if ( not ( cfcuser[player:SteamID64()].CFCPermissions == nil ) ) then 
             --Error out, player already has proper permissions for authentication
             return 
         end      
@@ -171,7 +171,7 @@ function fpm:hasPermission(player, permission)
     --Handling normal permissions now
     --if fpm.Users[player:SteamID64()].Permissions["IsDeveloper" ~= nil] then return true end
 
-    for _, perms in pairs(cfcuser[player:SteamID64()].Permissions) do
+    for _, perms in pairs(cfcuser[player:SteamID64()].CFCPermissions) do
         if perms == permission then
             return true 
         end
@@ -195,16 +195,16 @@ function fpm:addPermission(player, permission)
     local usr = cfcuser[player:SteamID64()]
 
     --Permissions["key"] = "Key"[Value]
-    table.insert(usr.Permissions, permission)
+    table.insert(usr.CFCPermissions, permission)
     return true
 end
 
 --Revokes a permission(s) from the player. True if success, false if otherwise
 function fpm:revokePermission(player, permission)
     local usr = cfcuser[player:SteamID64()]
-    for k, perms in pairs(usr.Permissions) do
+    for k, perms in pairs(usr.CFCPermissions) do
         if perms == permission then
-            usr.Permissions[k] = nil
+            usr.CFCPermissions[k] = nil
             return true
         end
         

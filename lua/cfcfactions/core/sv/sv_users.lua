@@ -54,7 +54,7 @@ function cfcuser:registeruser(user, factionid, rank)
 		--Error out, already exsists
 		return
 	end
-
+	print("Regitering " .. user:Nick())
 	local PreUserTable = {
 		["DisplayName"] = user:Nick(),
 		["DateAdded"] = cfcFactions:TimeStamp(),
@@ -64,11 +64,12 @@ function cfcuser:registeruser(user, factionid, rank)
 		["Deaths"] = 0,
 		["FactionRank"] = rank and rank or nil,
 		["HoursInFaction"] = nil,
-		["CFCPermissions"] = nil,
+		["CFCPermissions"] = {},
 		["InternalFactionPermissions"] = nil
 
 	}
-	table.insert(cfcuser[user:SteamID64()], PreUserTable)
+	cfcuser[user:SteamID64()] = PreUserTable
+
 end
 
 --Checks if a user is already registered

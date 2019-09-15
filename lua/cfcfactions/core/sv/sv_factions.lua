@@ -114,8 +114,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
         ["LastSaved"] = nil,
         ["NeedsCleanUp"] = false,
         ["Allies"] = {},
-        ["Enemies"] = {},
-        ["Contracts"] = {}
+        ["Enemies"] = {}
     }
 
     cfcuser:registeruser(factionOwner, factionid, "Leader")
@@ -233,7 +232,22 @@ net.Receive("CFC_Fac_RequestNews", requestFactionNews)
 
 --Tie into cl_faction derma to create a faction from vgui
 local function RequestFactionCreation(len, ply)
+    --owner, name, color, description, InviteOnly, temporary
+    local factionOwner = ply
+    local factionName = net.ReadString()
+    local factionDescription = net.ReadString()
+    local factionColor = net.ReadTable()
+    local factionInviteOnly = net.ReadBool() 
+    local factionIsTemporary = net.ReadBool() 
 
+    cfcFactions:CreateFaction(factionOwner, factionName, factionColor, factionDescription, factionInviteOnly, factionIsTemporary)
 end
 
 net.Receive("CFC_Fac_RequestFactionSubmit", RequestFactionCreation)
+
+--If Requested, Send Faction details to client to edit 
+local function SendFactionDetails(len, ply)
+
+
+end
+net.Receive("CFC_Fac_RequestFactionEdit", SendFactionDetails)
