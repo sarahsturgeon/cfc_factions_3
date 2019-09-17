@@ -62,9 +62,16 @@ end
 
 --TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
 function cfcFactions:SendNotifcation(msg, mtype, player)
-    if type(msg) == "number" then msg = cfcFactions.ErrorMessages
-[msg] and cfcFactions.ErrorMessages
-[msg] or "" end
+
+
+    if type(msg) == "number" then 
+        msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or "" 
+    end
+
+    if not player:IsValid() then
+        return
+    end
+
     print(string.format("Sending notifcation for %s, msg=%s, type=%s", (player:Nick() and player:Nick() or "InvalidPlayer"), msg, mtype))
     
     --only 4 types of error types. 

@@ -19,6 +19,9 @@ local NamedNetworkVars = {
     --Checks for submitting faction
     "CFC_Fac_SendFactionSubmit",
     "CFC_Fac_RequestFactionSubmit",
+    --Editing
+    "CFC_Fac_SendFactionEdit",
+    "CFC_Fac_RequestFactionEdit",
     --News
     "CFC_Fac_SendNews",
     "CFC_Fac_RequestNews",
