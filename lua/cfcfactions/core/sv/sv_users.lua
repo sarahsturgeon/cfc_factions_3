@@ -54,7 +54,7 @@ function cfcuser:registeruser(user, factionid, rank)
 		--Error out, already exsists
 		return
 	end
-	print("Regitering " .. user:Nick())
+
 	local PreUserTable = {
 		["DisplayName"] = user:Nick(),
 		["DateAdded"] = cfcFactions:TimeStamp(),
