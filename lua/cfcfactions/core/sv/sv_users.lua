@@ -59,7 +59,7 @@ function cfcuser:registeruser(user, factionid, rank)
 		["DisplayName"] = user:Nick(),
 		["DateAdded"] = cfcFactions:TimeStamp(),
 		["LastOnline"] = cfcFactions:TimeStamp(),
-		["FactionID"] = factionid and factionid or nil,
+		["FactionID"] = factionid and factionid or 0,
 		["Kills"] = 0, 
 		["Deaths"] = 0,
 		["FactionRank"] = rank and rank or nil,
