@@ -65,7 +65,8 @@ function cfcuser:registeruser(user, factionid, rank)
 		["FactionRank"] = rank and rank or nil,
 		["HoursInFaction"] = nil,
 		["CFCPermissions"] = {},
-		["InternalFactionPermissions"] = nil
+		["InternalFactionPermissions"] = nil,
+		["PendingInvites"] = {}
 
 	}
 	cfcuser[user:SteamID64()] = PreUserTable
@@ -129,11 +130,6 @@ function cfcuser:RemoveUserRank(user)
 end
 
 function cfcuser:RemoveUserFaction(user)
-
-end
-
---incomplete till factions is finished
-function cfcuser:RemoveUserContract(user)
 
 end
 
