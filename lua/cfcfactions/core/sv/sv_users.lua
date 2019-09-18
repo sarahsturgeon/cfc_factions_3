@@ -88,9 +88,30 @@ function cfcuser:UserExists(user)
 	end
 end
 
+local function IsValidAndOfType(item, t)
+    return item ~= nil and type(item) == t
+end
+
+local function IsValidNumber(num)
+    return IsValidAndOfType(num, 'number')
+end
+
+local function IsValidString(str)
+    return IsValidAndOfType(str, 'string')
+end
 
 function cfcuser:UpdateUser(user, lastonline, factionid, kills, deaths, factionrank, hoursinfaction)
+    if not cfcuser:UserExists( user ) then return end
 
+    local userTable = cfcuser[user:SteamID64()]
+    if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
+    if IsValidNumber( factionId ) and cfcFactions:IsValidFaction( factionid ) then 
+        userTable["FactionId"] = factionid 
+    end    
+    if IsValidNumber( kills ) then userTable["Kills"] = kills end
+    if IsValidNumber( deaths ) then userTable["Deaths"] = deaths end
+    if IsValidString( factionrank ) then userTable["FactionRank"] = factionrank end
+    if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 then userTable["HoursInFaction"] = hoursinfaction end
 end
 
 function cfcuser:UpdateStats(user, lastonline, kills, deaths, hoursinfaction)
