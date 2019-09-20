@@ -14,6 +14,7 @@ local util = util
 local table = table
 local fpm = cfcFactions.fpm
 local cfg = cfcFactions.Config.Server
+local cfcuser = cfcFactions.Users 
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
@@ -72,11 +73,6 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
         return
     end
 
-    if factionOwner:IsInFaction() then
-        --SendAlert -> Already in a Faction
-        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
-    end
-
     --[Permissions]
     if not fpm:hasPermission(factionOwner, "CanCreateFaction") then
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["faction-ban"], 1, owner)
@@ -85,9 +81,8 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
     end
 
     --IsInFaction Check
-
     if cfcuser:IsInFaction(factionOwner) == true then 
-        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, owner)
+        cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["is-in-faction"], 1, Owner)
         return 
     end
 
@@ -119,15 +114,12 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
         ["LastSaved"] = nil,
         ["NeedsCleanUp"] = false,
         ["Allies"] = {},
-        ["Enemies"] = {},
-        ["Contracts"] = {}
+        ["Enemies"] = {}
     }
 
-    local owner = fpm.Users[factionOwner:SteamID64()]
+    cfcuser:registeruser(factionOwner, factionid, "Leader")
 
-    --set user id and rank using ply:Set functions
-    owner.FactionID = TmpUnqID
-    owner.FactionRank = cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
+    --cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
 
     --function cfcFactions:SaveFaction(factionid)
     --function cfcFactions:SaveUser(userid)
@@ -240,7 +232,22 @@ net.Receive("CFC_Fac_RequestNews", requestFactionNews)
 
 --Tie into cl_faction derma to create a faction from vgui
 local function RequestFactionCreation(len, ply)
+    --owner, name, color, description, InviteOnly, temporary
+    local factionOwner = ply
+    local factionName = net.ReadString()
+    local factionDescription = net.ReadString()
+    local factionColor = net.ReadTable()
+    local factionInviteOnly = net.ReadBool() 
+    local factionIsTemporary = net.ReadBool() 
 
+    cfcFactions:CreateFaction(factionOwner, factionName, factionColor, factionDescription, factionInviteOnly, factionIsTemporary)
 end
 
 net.Receive("CFC_Fac_RequestFactionSubmit", RequestFactionCreation)
+
+--If Requested, Send Faction details to client to edit 
+local function SendFactionDetails(len, ply)
+
+
+end
+net.Receive("CFC_Fac_RequestFactionEdit", SendFactionDetails)

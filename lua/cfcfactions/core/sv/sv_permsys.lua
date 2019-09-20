@@ -9,7 +9,7 @@ Global Tables: fpm.Permissions, fpm.Users.AuthUsers
 cfcFactions.fpm = cfcFactions.fpm or {}
 local fpm = cfcFactions.fpm
 fpm.Permissions = {}
-fpm.Users = {}
+local cfcuser = cfcFactions.Users
 
 fpm.Permissions.CorePermissions = {
         --  NamedKey = table(description, all_caps_string_followed_by_underscores_for_spaces)
@@ -108,7 +108,7 @@ end
 --Revokes a user's permissions, essentiall removing them from cfcFaction's permission system
 function fpm:revokeUser(player)
     if player:IsPlayer() and IsValid(player) then
-        fpm.Users[player:SteamID64()] = nil
+        cfcuser[player:SteamID64()].CFCPermissions = nil
         return true
     end
 
@@ -128,14 +128,18 @@ end
 function fpm:authUser(player)
     print("Authenticating user " .. player:SteamID())
     --Checks and balances
-    if not player:IsPlayer() or not IsValid(player) then return end
-
-    if not fpm.Users[player:SteamID64()] == nil then 
-        player:ChatPrint("User already has proper permissions table.")
+    if not player:IsPlayer() then 
         return 
     end
 
-    fpm.Users[player:SteamID64()] = {["Permissions"] = {}}
+    if cfcuser:UserExists(player) then
+        if ( not ( cfcuser[player:SteamID64()].CFCPermissions == nil ) ) then 
+            --Error out, player already has proper permissions for authentication
+            return 
+        end      
+    end
+
+    cfcuser:registeruser(player, nil, nil)
 
     --Basic, core permissions (almost) every user should require in order to properly use factions.
     local AuthUserPerms = {
@@ -167,7 +171,7 @@ function fpm:hasPermission(player, permission)
     --Handling normal permissions now
     --if fpm.Users[player:SteamID64()].Permissions["IsDeveloper" ~= nil] then return true end
 
-    for _, perms in pairs(fpm.Users[player:SteamID64()].Permissions) do
+    for _, perms in pairs(cfcuser[player:SteamID64()].CFCPermissions) do
         if perms == permission then
             return true 
         end
@@ -186,19 +190,21 @@ function fpm:addPermission(player, permission)
     --add a permission based of key string
     -- "TestPerm" would be a valid key, look that up, set the trailing table to what ever TestPerm is
 
-    local usr = fpm.Users[player:SteamID64()]
+
+    --cfcuser[player:SteamID64()].Permissions
+    local usr = cfcuser[player:SteamID64()]
 
     --Permissions["key"] = "Key"[Value]
-    table.insert(usr.Permissions, permission)
+    table.insert(usr.CFCPermissions, permission)
     return true
 end
 
 --Revokes a permission(s) from the player. True if success, false if otherwise
 function fpm:revokePermission(player, permission)
-    local usr = fpm.Users[player:SteamID64()]
-    for k, perms in pairs(usr.Permissions) do
+    local usr = cfcuser[player:SteamID64()]
+    for k, perms in pairs(usr.CFCPermissions) do
         if perms == permission then
-            usr.Permissions[k] = nil
+            usr.CFCPermissions[k] = nil
             return true
         end
         
