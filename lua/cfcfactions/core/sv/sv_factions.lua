@@ -232,15 +232,16 @@ net.Receive("CFC_Fac_RequestNews", requestFactionNews)
 
 --Tie into cl_faction derma to create a faction from vgui
 local function RequestFactionCreation(len, ply)
-    --owner, name, color, description, InviteOnly, temporary
-    local factionOwner = ply
-    local factionName = net.ReadString()
-    local factionDescription = net.ReadString()
-    local factionColor = net.ReadTable()
-    local factionInviteOnly = net.ReadBool() 
-    local factionIsTemporary = net.ReadBool() 
 
-    cfcFactions:CreateFaction(factionOwner, factionName, factionColor, factionDescription, factionInviteOnly, factionIsTemporary)
+    local fOwner = ply
+    local fName = net.ReadString()
+    local fDescription = net.ReadString()
+    local fIsInviteOnly = net.ReadBool()
+    local fIsTemporary = net.ReadBool()
+    local fColorSelected = net.ReadTable()
+
+    cfcFactions:CreateFaction(fOwner, fName, fColorSelected, fDescription, fIsInviteOnly, fIsTemporary)
+
 end
 
 net.Receive("CFC_Fac_RequestFactionSubmit", RequestFactionCreation)

@@ -110,8 +110,9 @@ function Panel:Init()
     self.CreateFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
     self.CreateFaction:SetText("Create Faction")
     self.CreateFaction:Dock(LEFT)
-    CreateFaction.DoClick = function()
+    self.CreateFaction.DoClick = function()
         --create cl_faccreate.lua, process, submit to server
+        local CreateFactionMiniPanel = vgui.Create("D_cfcfactioncreate")
     end
 
     self.EditFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)

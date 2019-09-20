@@ -53,7 +53,7 @@ end
 --Gets a player's faction as a table. Returns an empty table if not in one
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
-    if self:IsInFaction() then
+    if self:IsInFaction() then end
 
     end
     if cfcFactions.Factions[self:GetFactionID()] ~= 0 then

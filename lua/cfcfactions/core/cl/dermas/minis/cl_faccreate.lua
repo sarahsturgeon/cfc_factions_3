@@ -81,7 +81,17 @@ function Panel:Init()
     self.submit:SetText( "Submit" )
 
     self.submit.DoClick = function()
-        --stuff
+        net.Start("CFC_Fac_RequestFactionSubmit")
+        net.WriteString(self.nameLabel:GetValue())
+        net.WriteString(self.descEntry:GetValue())
+        --[ERROR] addons/cfc_factions_3/lua/cfcfactions/core/sv/sv_factions.lua:246: attempt to call field 'ReadBoolean' (a nil value)
+        net.WriteBool(self.inviteBool:GetChecked())
+        net.WriteBool(self.tempBool:GetChecked())
+        --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
+
+        net.WriteTable(self.colSelection:GetColor())
+        net.SendToServer()
+        self.mainFrame:Clear()
     end
 end
 
