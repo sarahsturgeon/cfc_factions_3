@@ -9,8 +9,9 @@ local MaxQuery = 15
 
 cfcFactions:RegisterDermaMenu("View Factions", Panel, 1)
 
-local function addFactions(panel, locked, name, description, owner, kd, id)
+local function addFactions(locked, name, description, owner, kd, id)
     --no need to constantly add to the view if factions remains the same
+
     local tmpLock
     if locked == 1 then
         --tmpLock = vgui.Create("DImage", panel)
@@ -19,8 +20,8 @@ local function addFactions(panel, locked, name, description, owner, kd, id)
         tmpLock = ""
     end
 
-    panel.Factionsview:AddLine(tmpLock, name, description, owner, kd, id)
-    panel.Factionsview:DataLayout()
+    Panel.Factionsview:AddLine(tmpLock, name, description, owner, kd, id)
+    Panel.Factionsview:DataLayout()
 end
 
 function Panel:Init()
@@ -112,7 +113,9 @@ function Panel:Init()
     self.CreateFaction:Dock(LEFT)
     self.CreateFaction.DoClick = function()
         --create cl_faccreate.lua, process, submit to server
+
         local CreateFactionMiniPanel = vgui.Create("D_cfcfactioncreate")
+        --Make sure we delete the FactionMiniPanel when finished
     end
 
     self.EditFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
@@ -182,11 +185,19 @@ vgui.Register('D_cfcfactionsderma', Panel)
 
 --TODO:  tie into being actually used
 
-local function factionCreated()
-
+local function factionCreated(len, ply)
+    local fOwner = net.ReadString()
+    local fName = net.WriteString()
+    local fColor = net.WriteColor()
+    local fDescription = net.WriteString()
+    local fInviteOnly = net.writeBool()
+    local fIsTemporary = net.writeBool()
+    
+    --fixed with proper stats (missing locked, missing kd, missing id)
+    addFactions(fInviteOnly, fName, fDescription, fOwner, 0, 1)
 end
 
-net.Receive("CFC_Fac_FactionCreated", factionCreated)
+net.Receive("CFC_Fac_SendFactionSubmit", factionCreated)
 
 local function factionEdited()
     

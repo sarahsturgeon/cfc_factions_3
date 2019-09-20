@@ -9,7 +9,7 @@ but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 ]]--
 
 meta = FindMetaTable("Player")
-local fusers= cfcFactions.Users
+local fusers = cfcFactions.Users
 
 function meta:CFCToggleMenu()
     net.Start('CFC_Fac_ToggleDerma')
@@ -53,9 +53,11 @@ end
 --Gets a player's faction as a table. Returns an empty table if not in one
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
-    if self:IsInFaction() then end
-
+    if not self:IsInFaction() then 
+        return false
     end
+
+
     if cfcFactions.Factions[self:GetFactionID()] ~= 0 then
         return cfcFactions.Factions[self:GetFactionID()]
     end
