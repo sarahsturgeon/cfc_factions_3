@@ -9,40 +9,7 @@ cfcFactions.Users = cfcFactions.Users or {}
 local cfcuser = cfcFactions.Users 
 local fpm = cfcFactions.fpm
 
-
-
---Any user who so much as touches factions will be registered
---User data should (probably) contain these elements
-
---[[
-	SteamID64
-		Last Display Name
-		Date Added
-		Faction ID
-		Kills
-		Deaths
-		Rank
-		Hours In Faction
-
-
-]]--
-
---Example
-
---[[
-
-	8932482391201
-		Display Name = Phatso
-		Date Added = 4:43 PM 9/14/2019
-		Faction ID = 92013218
-		Kills = 0
-		Deaths = 69
-		Rank = Leader
-		Hours In Faction = 56
-
-
-]]
---Core functions missing: RegisterUser, RemoveUser, Update User, Save User (to mysql)
+--Registers a new user to be accessible by factions
 function cfcuser:registeruser(user, factionid, rank)
 
 	if not user:IsPlayer() then 
@@ -59,7 +26,7 @@ function cfcuser:registeruser(user, factionid, rank)
 		["DisplayName"] = user:Nick(),
 		["DateAdded"] = cfcFactions:TimeStamp(),
 		["LastOnline"] = cfcFactions:TimeStamp(),
-		["FactionID"] = factionid and factionid or 0,
+		["FactionID"] = factionid and factionid or nil,
 		["Kills"] = 0, 
 		["Deaths"] = 0,
 		["FactionRank"] = rank and rank or nil,
@@ -100,6 +67,7 @@ local function IsValidString(str)
     return IsValidAndOfType(str, 'string')
 end
 
+--Used to update a player's table of associated variables
 function cfcuser:UpdateUser(user, lastonline, factionid, kills, deaths, factionrank, hoursinfaction)
     if not cfcuser:UserExists( user ) then return end
 
@@ -114,8 +82,15 @@ function cfcuser:UpdateUser(user, lastonline, factionid, kills, deaths, factionr
     if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 then userTable["HoursInFaction"] = hoursinfaction end
 end
 
+--Used to update values that may change quickly
 function cfcuser:UpdateStats(user, lastonline, kills, deaths, hoursinfaction)
+    if not cfcuser:UserExists( user ) then return end
 
+    local userTable = cfcuser[user:SteamID64()]
+    if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
+    if IsValidNumber( kills ) then userTable["Kills"] = kills end
+    if IsValidNumber( deaths ) then userTable["Deaths"] = deaths end
+    if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 and IsInFaction(user) then userTable["HoursInFaction"] = hoursinfaction end
 end
 --
 
