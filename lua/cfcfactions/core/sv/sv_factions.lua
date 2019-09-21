@@ -19,17 +19,11 @@ local cfcuser = cfcFactions.Users
 cfcFactions.Factions = cfcFactions.Factions or {}
 
 
---Sends a freshly baked faction to client to enjoy
-local function SendFaction(owner, name, color, description, InviteOnly, temporary)
-
-end
-
-
-function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, temporary)
+function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, temporary)
     local TmpUnqID = cfcFactions:UUID()
     local factionOwner = owner
     local factionName = name
-    local factionColor = Color
+    local factionColor = color
     local factionDescription = description
     local factionInviteOnly = inviteOnly
     local factionIsTemporary = temporary
@@ -56,7 +50,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
         return
     end
 
-    if not type(factionColor) == "table" then
+    if not type(factionColor) == "Color" then
         --Send Alert -> Not a valid ColorType
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-table-type"], 1, owner)
         return
@@ -101,7 +95,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
 
     if not type(factionIsTemporary) == "boolean" then
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-int-type"], 1, owner)
-        factionIsTemporary = 0
+        factionIsTemporary = false
     end
 
     --What should a faction contain? 
@@ -137,14 +131,21 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
     
     --Tell clients a new faction was created
 
+    local FinishedFaction = cfcFactions.Factions[TmpUnqID]
 
     net.Start("CFC_Fac_SendFactionSubmit")
-    net.WriteString(factionOwner:Nick())
-    net.WriteString(factionName)
-    net.WriteColor(factionColor)
-    net.WriteString(factionDescription)
-    net.writeBool(factionInviteOnly)
-    net.writeBool(factionIsTemporary)
+    net.WriteString(FinishedFaction.ID)
+    net.WriteString(FinishedFaction.Name)
+    net.WriteString(FinishedFaction.Owner)
+    net.WriteString(FinishedFaction.Description)
+    net.WriteColor(FinishedFaction.Color)
+    net.WriteBool(FinishedFaction.Invite)
+    net.WriteInt(FinishedFaction.Kills, 32)
+    net.WriteInt(FinishedFaction.Deaths, 32)
+    net.WriteString(FinishedFaction.Created)
+    net.WriteString(FinishedFaction.Edited)
+    net.WriteTable(FinishedFaction.Allies)
+    net.WriteTable(FinishedFaction.Enemies)
     net.Broadcast()
 
     ---Returns the newly created faction as a table

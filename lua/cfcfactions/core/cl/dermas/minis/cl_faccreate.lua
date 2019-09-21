@@ -88,8 +88,10 @@ function Panel:Init()
         net.WriteBool(self.inviteBool:GetChecked())
         net.WriteBool(self.tempBool:GetChecked())
         --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
+        local SelectedColor = self.colSelection:GetColor()
+        local TableToColor = Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a)
+        net.WriteColor(TableToColor)
 
-        net.WriteColor(self.colSelection:GetColor())
         net.SendToServer()
         self.submit:SetEnabled(false)
     end

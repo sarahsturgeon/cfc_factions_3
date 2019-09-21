@@ -1,7 +1,7 @@
 if not CLIENT then return end
 
 cfcFactions.FactionsView = nil
-
+cfcFactions.Factions = cfcFactions.Factions or {}
 local Panel = {}
 local cfg = cfcFactions.Config.Client
 local MinQuery = 1
@@ -9,56 +9,9 @@ local MaxQuery = 15
 
 cfcFactions:RegisterDermaMenu("View Factions", Panel, 1)
 
-local function addFactions(locked, name, description, owner, kd, id)
-    --no need to constantly add to the view if factions remains the same
 
-    local tmpLock
-    if locked == 1 then
-        --tmpLock = vgui.Create("DImage", panel)
-        tmpLock = "L"
-    else 
-        tmpLock = ""
-    end
-
-    Panel.Factionsview:AddLine(tmpLock, name, description, owner, kd, id)
-    Panel.Factionsview:DataLayout()
-end
 
 function Panel:Init()
-    --[[
-    Structing of a faction's view and internal panel layout
-    
-        Panel
-        {
-            MainContainer
-            {
-                Factionsview 
-                {
-    
-
-                }
-                BottomPanel 
-                {
-                    BottomContainerTop{
-                        BottomButtonsControlPanel
-                        {
-        
-                        }
-
-                    }
-                    BottomContainerBottom 
-                    {
-                        BottomsContainer
-                        {
-                                                    {LEFT | RIGHT}
-                        }       
-                    }                   
-                }
-            }
-        }   
-
-
-    ]]--
 
     cfcFactions.FactionsView=1
     self:SetSize(math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ))
@@ -67,8 +20,7 @@ function Panel:Init()
 
     self.Factionsview = vgui.Create("DListView", self.MainContainer)
     self.Factionsview:Dock(FILL)
-    --self.Factionsview:SetTall(5)
-    
+
     self.BottomPanel = vgui.Create("DPanel", self.MainContainer)
     self.BottomPanel:Dock(BOTTOM)
     self.BottomPanel:SetBackgroundColor(Color(0,0,0,0))
@@ -168,7 +120,7 @@ function Panel:Init()
     self.privcol:SetWide(5)
     self.killcol:SetWide(5)
     self.idcol:SetWide(20)
-    
+
 end
 
 function Panel:Paint(w, h)
@@ -179,22 +131,63 @@ function Panel:Think()
 
 end
 
-vgui.Register('D_cfcfactionsderma', Panel)
-
 --TODO: FactionRemoved
 
 --TODO:  tie into being actually used
+local function addFaction(id, name, owner, description, color, invite, kills, deaths, created, edited, allies, enemies)
+    
+
+    --Add faction to clientside table
+    if cfcFactions.Factions[id] == nil then
+        cfcFactions.Factions[id] = {
+            ["ID"] = id,
+            ["Name"] = name,
+            ["Owner"] = owner, 
+            ["Description"] = description,
+            ["Color"] = color,
+            ["Invite"] = invite,
+            ["Kills"] = kills,
+            ["Deaths"] = deaths,
+            ["Created"] = created,
+            ["Edited"] = edited,
+            ["Allies"] = allies,
+            ["Enemies"] = enemies
+        }
+
+        local Faction = cfcFactions.Factions[id]
+        local tmpLock
+        if Faction.Invite == 1 then
+            tmpLock = "L"
+        else 
+            tmpLock = ""
+        end
+
+        --Display to Panels->Factionsview
+        
+        --<FactionViewPanel>:AddLine(tmpLock, Faction.Name, Faction.Description, Faction.Owner, (Faction.Kills .. "/"..Faction.Deaths), Faction.ID)
+        --<FactionViewPanel>:DataLayout()
+        
+    end 
+end
 
 local function factionCreated(len, ply)
+
+    local fID = net.ReadString()
+    local fName = net.ReadString()
     local fOwner = net.ReadString()
-    local fName = net.WriteString()
-    local fColor = net.WriteColor()
-    local fDescription = net.WriteString()
-    local fInviteOnly = net.writeBool()
-    local fIsTemporary = net.writeBool()
-    
+    local fDescription = net.ReadString()
+    local fColor = net.ReadColor()
+    local fInviteOnly = net.ReadBool()
+    local fKills = net.ReadInt(32)
+    local fDeaths = net.ReadInt(32)
+    local fCreated = net.ReadString()
+    local fEdited = net.ReadString()
+    local fAllies = net.ReadTable()
+    local fEnemies = net.ReadTable()
+
     --fixed with proper stats (missing locked, missing kd, missing id)
-    addFactions(fInviteOnly, fName, fDescription, fOwner, 0, 1)
+    addFaction(fID, fName, fOwner, fDescription, fColor, fInviteOnly, fKills, fDeaths, fCreated, fEdited, fAllies, fEnemies)
+
 end
 
 net.Receive("CFC_Fac_SendFactionSubmit", factionCreated)
@@ -216,3 +209,5 @@ local function factionDeleted()
 end
 
 net.Receive("CFC_Fac_FactionDeleted", factionDeleted)
+
+vgui.Register('D_cfcfactionsderma', Panel)
