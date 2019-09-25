@@ -82,16 +82,15 @@ function Panel:Init()
 
     self.submit.DoClick = function()
         net.Start("CFC_Fac_RequestFactionSubmit")
-        net.WriteString(self.nameEntry:GetValue())
-        net.WriteString(self.descEntry:GetValue())
-        --[ERROR] addons/cfc_factions_3/lua/cfcfactions/core/sv/sv_factions.lua:246: attempt to call field 'ReadBoolean' (a nil value)
-        net.WriteBool(self.inviteBool:GetChecked())
-        net.WriteBool(self.tempBool:GetChecked())
-        --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
-        local SelectedColor = self.colSelection:GetColor()
-        local TableToColor = Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a)
-        net.WriteColor(TableToColor)
-
+            net.WriteString(self.nameEntry:GetValue())
+            net.WriteString(self.descEntry:GetValue())
+            --[ERROR] addons/cfc_factions_3/lua/cfcfactions/core/sv/sv_factions.lua:246: attempt to call field 'ReadBoolean' (a nil value)
+            net.WriteBool(self.inviteBool:GetChecked())
+            net.WriteBool(self.tempBool:GetChecked())
+            --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
+            local SelectedColor = self.colSelection:GetColor()
+            local TableToColor = Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a)
+            net.WriteColor(TableToColor)
         net.SendToServer()
         self.submit:SetEnabled(false)
     end

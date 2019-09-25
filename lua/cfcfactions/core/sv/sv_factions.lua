@@ -134,18 +134,18 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
     local FinishedFaction = cfcFactions.Factions[TmpUnqID]
 
     net.Start("CFC_Fac_SendFactionSubmit")
-    net.WriteString(FinishedFaction.ID)
-    net.WriteString(FinishedFaction.Name)
-    net.WriteString(FinishedFaction.Owner)
-    net.WriteString(FinishedFaction.Description)
-    net.WriteColor(FinishedFaction.Color)
-    net.WriteBool(FinishedFaction.Invite)
-    net.WriteInt(FinishedFaction.Kills, 32)
-    net.WriteInt(FinishedFaction.Deaths, 32)
-    net.WriteString(FinishedFaction.Created)
-    net.WriteString(FinishedFaction.Edited)
-    net.WriteTable(FinishedFaction.Allies)
-    net.WriteTable(FinishedFaction.Enemies)
+        net.WriteString(FinishedFaction.ID)
+        net.WriteString(FinishedFaction.Name)
+        net.WriteString(FinishedFaction.Owner)
+        net.WriteString(FinishedFaction.Description)
+        net.WriteColor(FinishedFaction.Color)
+        net.WriteBool(FinishedFaction.Invite)
+        net.WriteInt(FinishedFaction.Kills, 32)
+        net.WriteInt(FinishedFaction.Deaths, 32)
+        net.WriteString(FinishedFaction.Created)
+        net.WriteString(FinishedFaction.Edited)
+        net.WriteTable(FinishedFaction.Allies)
+        net.WriteTable(FinishedFaction.Enemies)
     net.Broadcast()
 
     ---Returns the newly created faction as a table
@@ -246,8 +246,8 @@ end
 local function requestFactionNews(len, ply)
     for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
-        net.WriteString(v .. "\n")
-        net.WriteString(ply:Nick())
+            net.WriteString(v .. "\n")
+            net.WriteString(ply:Nick())
         net.Send(ply)
     end
 end

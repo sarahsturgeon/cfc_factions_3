@@ -89,8 +89,8 @@ local function cfcOnPlayerInitialSpawn(ply)
 
     for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
-        net.WriteString(v .. "\n")
-        net.WriteString(ply:Nick())
+            net.WriteString(v .. "\n")
+            net.WriteString(ply:Nick())
         net.Send(ply)
     end
     --ply:FetchUserData()

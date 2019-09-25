@@ -98,9 +98,9 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
         if #msg <= 256 then
             if IsValid(player) and player:IsPlayer() then
                 net.Start("CFC_Fac_SendServerTextAlert")
-                net.WriteString(msg)
-                net.WriteInt(mtype, 4)
-                net.WriteEntity(player)
+                    net.WriteString(msg)
+                    net.WriteInt(mtype, 4)
+                    net.WriteEntity(player)
                 net.Send(player)
             else
                 MsgN(msg)
