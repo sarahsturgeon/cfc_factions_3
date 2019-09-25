@@ -70,8 +70,7 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
     if not player:IsValid() then
         return
     end
-    print(string.format("Sending notifcation for %s, msg=%s, type=%s", (player:Nick() and player:Nick() or "InvalidPlayer"), msg, mtype))
-    
+
     --only 4 types of error types. 
     if mtype == nil then mtype = 1 end
     if mtype > 4 then mtype = 1 end
@@ -97,7 +96,7 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
 
     if SERVER then
         if #msg <= 256 then
-            if player:IsPlayer() and IsValid(player) then
+            if IsValid(player) and player:IsPlayer() then
                 net.Start("CFC_Fac_SendServerTextAlert")
                 net.WriteString(msg)
                 net.WriteInt(mtype, 4)

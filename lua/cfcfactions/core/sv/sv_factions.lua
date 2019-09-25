@@ -18,11 +18,12 @@ local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
-function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, temporary)
+
+function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, temporary)
     local TmpUnqID = cfcFactions:UUID()
     local factionOwner = owner
     local factionName = name
-    local factionColor = Color
+    local factionColor = color
     local factionDescription = description
     local factionInviteOnly = inviteOnly
     local factionIsTemporary = temporary
@@ -49,7 +50,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
         return
     end
 
-    if not type(factionColor) == "table" then
+    if not type(factionColor) == "Color" then
         --Send Alert -> Not a valid ColorType
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-table-type"], 1, owner)
         return
@@ -94,7 +95,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
 
     if not type(factionIsTemporary) == "boolean" then
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["invalid-int-type"], 1, owner)
-        factionIsTemporary = 0
+        factionIsTemporary = false
     end
 
     --What should a faction contain? 
@@ -121,9 +122,32 @@ function cfcFactions:CreateFaction(owner, name, color, description, InviteOnly, 
 
     --cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
 
+    --SQL: Save to database
     --function cfcFactions:SaveFaction(factionid)
     --function cfcFactions:SaveUser(userid)
+
+    --Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, owner)
+    
+    --Tell clients a new faction was created
+
+    local FinishedFaction = cfcFactions.Factions[TmpUnqID]
+
+    net.Start("CFC_Fac_SendFactionSubmit")
+    net.WriteString(FinishedFaction.ID)
+    net.WriteString(FinishedFaction.Name)
+    net.WriteString(FinishedFaction.Owner)
+    net.WriteString(FinishedFaction.Description)
+    net.WriteColor(FinishedFaction.Color)
+    net.WriteBool(FinishedFaction.Invite)
+    net.WriteInt(FinishedFaction.Kills, 32)
+    net.WriteInt(FinishedFaction.Deaths, 32)
+    net.WriteString(FinishedFaction.Created)
+    net.WriteString(FinishedFaction.Edited)
+    net.WriteTable(FinishedFaction.Allies)
+    net.WriteTable(FinishedFaction.Enemies)
+    net.Broadcast()
+
     ---Returns the newly created faction as a table
     return cfcFactions.Factions[TmpUnqID]
 end
@@ -232,15 +256,16 @@ net.Receive("CFC_Fac_RequestNews", requestFactionNews)
 
 --Tie into cl_faction derma to create a faction from vgui
 local function RequestFactionCreation(len, ply)
-    --owner, name, color, description, InviteOnly, temporary
-    local factionOwner = ply
-    local factionName = net.ReadString()
-    local factionDescription = net.ReadString()
-    local factionColor = net.ReadTable()
-    local factionInviteOnly = net.ReadBool() 
-    local factionIsTemporary = net.ReadBool() 
 
-    cfcFactions:CreateFaction(factionOwner, factionName, factionColor, factionDescription, factionInviteOnly, factionIsTemporary)
+    local fOwner = ply
+    local fName = net.ReadString()
+    local fDescription = net.ReadString()
+    local fIsInviteOnly = net.ReadBool()
+    local fIsTemporary = net.ReadBool()
+    local fColorSelected = net.ReadColor()
+
+    cfcFactions:CreateFaction(fOwner, fName, fColorSelected, fDescription, fIsInviteOnly, fIsTemporary)
+
 end
 
 net.Receive("CFC_Fac_RequestFactionSubmit", RequestFactionCreation)
@@ -251,3 +276,4 @@ local function SendFactionDetails(len, ply)
 
 end
 net.Receive("CFC_Fac_RequestFactionEdit", SendFactionDetails)
+
