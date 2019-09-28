@@ -99,7 +99,12 @@ function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly,
         ["ID"] = TmpUnqID,
         ["Name"] = factionName,
         ["Ranks"] = cfcFactions.fpm.defaultRanks,
-        ["Owner"] = factionOwner:SteamID64(),
+        ["Owner"] = 
+        {
+            ["ID64"] = factionOwner:SteamID64(),
+            ["ID32"] = factionOwner:SteamID(),
+            ["LastDisplayName"] = factionOwner:Nick()
+        },
         ["Description"] = factionDescription,
         ["Color"] = factionColor,
         ["Invite"] = factionInviteOnly,

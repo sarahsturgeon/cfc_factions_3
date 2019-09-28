@@ -1,13 +1,16 @@
 local Panel = {}
 
 function Panel:Init()
+
     self:SetSize( 500, 510 )
+    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
     self:Center()
-    
-    self.mainFrame = vgui.Create( "DFrame", self )
+
+    self.mainFrame = vgui.Create( "DFrame", self)
     self.mainFrame:Dock( FILL )
     self.mainFrame:SetTitle( "Create Faction" )
     self.mainFrame:MakePopup()
+    self.mainFrame:SetDraggable( true )
 
     self.miniPanel = vgui.Create( "DPanel", self.mainFrame )
     self.miniPanel:Dock( FILL )
@@ -21,7 +24,7 @@ function Panel:Init()
     self.nameEntry = vgui.Create( "DTextEntry", self.miniPanel )
     self.nameEntry:Dock( TOP )
     self.nameEntry:DockMargin( 15, 5, 15, 0 )
-    self.nameEntry:SetPlaceholderText( "Enter a faction name within 3-?? characters..." )
+    self.nameEntry:SetPlaceholderText( "Enter a faction name within 3-255 characters..." )
 
     self.inviteBool = vgui.Create( "DCheckBoxLabel", self.miniPanel )
     self.inviteBool:SetTextColor( Color( 0, 0, 0 ) )
@@ -82,17 +85,19 @@ function Panel:Init()
 
     self.submit.DoClick = function()
         net.Start( "CFC_Fac_RequestFactionSubmit" )
-            net.WriteString( self.nameEntry:GetValue() )
-            net.WriteString( self.descEntry:GetValue() )
-            --[ERROR] addons/cfc_factions_3/lua/cfcfactions/core/sv/sv_factions.lua:246: attempt to call field 'ReadBoolean' ( a nil value )
-            net.WriteBool( self.inviteBool:GetChecked() )
-            net.WriteBool( self.tempBool:GetChecked() )
-            --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
-            local SelectedColor = self.colSelection:GetColor()
-            local TableToColor = Color( SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a )
-            net.WriteColor( TableToColor )
+        net.WriteString( self.nameEntry:GetValue() )
+        net.WriteString( self.descEntry:GetValue() )
+        --[ERROR] addons/cfc_factions_3/lua/cfcfactions/core/sv/sv_factions.lua:246: attempt to call field 'ReadBoolean' (a nil value)
+        net.WriteBool( self.inviteBool:GetChecked() )
+        net.WriteBool( self.tempBool:GetChecked() )
+        --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
+        local SelectedColor = self.colSelection:GetColor()
+        local TableToColor = Color( SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a )
+        net.WriteColor( TableToColor )
+
         net.SendToServer()
         self.submit:SetEnabled( false )
+        self:Remove()
     end
 end
 
