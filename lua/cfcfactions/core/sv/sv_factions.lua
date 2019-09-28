@@ -18,7 +18,6 @@ local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
-
 function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, temporary)
     local TmpUnqID = cfcFactions:UUID()
     local factionOwner = owner
@@ -112,7 +111,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
         ["Currency"] = 0,
         ["Created"] = cfcFactions:TimeStamp(),
         ["Edited"] = cfcFactions:TimeStamp(),
-        ["LastSaved"] = nil,
+        ["LastSaved"] = "",
         ["NeedsCleanUp"] = false,
         ["Allies"] = {},
         ["Enemies"] = {}
@@ -131,21 +130,14 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
     
     --Tell clients a new faction was created
 
-    local FinishedFaction = cfcFactions.Factions[TmpUnqID]
+    local CopyOfFactionToSend = table.Copy(cfcFactions.Factions[TmpUnqID])
+    CopyOfFactionToSend.LastSaved = nil
+    CopyOfFactionToSend.NeedsCleanUp = nil
 
+    
+    local FactionTableJsonified = util.TableToJSON(CopyOfFactionToSend,false) 
     net.Start("CFC_Fac_SendFactionSubmit")
-        net.WriteString(FinishedFaction.ID)
-        net.WriteString(FinishedFaction.Name)
-        net.WriteString(FinishedFaction.Owner)
-        net.WriteString(FinishedFaction.Description)
-        net.WriteColor(FinishedFaction.Color)
-        net.WriteBool(FinishedFaction.Invite)
-        net.WriteInt(FinishedFaction.Kills, 32)
-        net.WriteInt(FinishedFaction.Deaths, 32)
-        net.WriteString(FinishedFaction.Created)
-        net.WriteString(FinishedFaction.Edited)
-        net.WriteTable(FinishedFaction.Allies)
-        net.WriteTable(FinishedFaction.Enemies)
+        net.WriteString(FactionTableJsonified)
     net.Broadcast()
 
     ---Returns the newly created faction as a table
