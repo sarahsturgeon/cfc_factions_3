@@ -56,7 +56,9 @@ fpm.Permissions.CorePermissions = {
         ["CanHireMercs"] = {Description="Allows a user to hire mercenaries."},
         ["CanFireMercs"] ={Description="Allows a user to fire mercenaries."},
         ["CanSendInvite"] = {Description="Allows a user to send out faction invites."},
-        ["CanRevokeInvite"] = {Description="Allows a user to revoke a faction invite."}
+        ["CanRevokeInvite"] = {Description="Allows a user to revoke a faction invite."},
+        ["CanDamageAllies"] = {Description="Allows a user to damage allies."},
+        ["CanDamageTeammates"] = {Description="Allows a user to damage teammates."}
 }
 
 --super special permissions not used by factions specifically
