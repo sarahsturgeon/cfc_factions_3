@@ -25,7 +25,7 @@ fpm.Permissions.CorePermissions = {
         ["CanEditDescription"] = {Description="Allows a user to edit the faction's description."},
         ["CanEditName"] = {Description="Allows a user to edit the faction's name."},
         ["CanEditColor"] = {Description="Allows a user to edit the faction's color."},
-        ["CanEditInvite"] = {Description="Allows a user to edit the faction's invite status."}
+        ["CanEditInvite"] = {Description="Allows a user to edit the faction's invite status."},
 
 
         --permssions
