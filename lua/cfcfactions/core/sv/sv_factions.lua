@@ -129,11 +129,13 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
     cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, owner)
     
     --Tell clients a new faction was created
-
+    --Package the table and send to clients
     local CopyOfFactionToSend = table.Copy(cfcFactions.Factions[TmpUnqID])
+    --Some details should be omitted before sending, so we'll create a copy of the table and remove as needed 
     CopyOfFactionToSend.LastSaved = nil
     CopyOfFactionToSend.NeedsCleanUp = nil
 
+      
     
     local FactionTableJsonified = util.TableToJSON(CopyOfFactionToSend,false) 
     net.Start("CFC_Fac_SendFactionSubmit")
