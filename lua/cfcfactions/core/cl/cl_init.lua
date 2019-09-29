@@ -1,12 +1,3 @@
--- local root = "cfcfactions/core/cl/"
--- local tree = {}
--- table.insert(tree, "cl_clientstartup.lua")
--- table.insert(tree, "cl_utilities.lua")
--- for key, string in pairs(file.Find( root .. "*", "LUA" )) do
---  include("")
-
--- end
-
 include("cfcfactions/core/cl/cl_clientstartup.lua")
 include("cfcfactions/core/sh/sh_init.lua")
 include("cfcFactions/config/cl_config.lua")

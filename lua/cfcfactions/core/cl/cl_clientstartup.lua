@@ -7,7 +7,6 @@ cfcFactions.CurrentTab = nil
 cfcFactions.News = ""
 
 --Registers items to be placed into the menubar at loadtime
---TODO: possibly rework cl_init so this is completely clientside
 function cfcFactions:RegisterDermaMenu(name, panel, ranking)
     if not CLIENT then return end
 
