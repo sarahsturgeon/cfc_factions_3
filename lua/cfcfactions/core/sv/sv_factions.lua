@@ -27,10 +27,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
     local factionDescription = description
     local factionInviteOnly = inviteOnly
     local factionIsTemporary = temporary
-    ----------------
-    --TODO: remove
-    --Testing notifcations
-    ----------------
+
     if nil then
         cfcFactions:SendNotifcation(cfcFactions.ErrorMessages["generalError"], 1, nil)
     end
@@ -120,16 +117,12 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
 
     cfcuser:registeruser(factionOwner, factionid, "Leader")
 
-    --cfcFactions.Factions[TmpUnqID].Ranks["Leader"]
-
     --SQL: Save to database
     --function cfcFactions:SaveFaction(factionid)
     --function cfcFactions:SaveUser(userid)
 
     --Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, owner)
-    
-    --Tell clients a new faction was created
 
     local FinishedFaction = cfcFactions.Factions[TmpUnqID]
 
@@ -185,14 +178,13 @@ end
 
 --Edits a faction based on ID, player is who ever is editing it
 function cfcFactions:EditFaction(id, name, color, description, inviteOnly, player)
-    --Can't edit a non valid faction
+
     if not cfcFactions:IsValidFaction(id) then
 
     end
     local faction = cfcFactions.Factions[id]
 
-    --Check if user can edit the faction, 
-
+    --Check if user has proper permission to edit each part of a faction
     --CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
 
 
@@ -244,6 +236,7 @@ function cfcFactions:RemoveFaction(ply, id)
 end
 
 local function requestFactionNews(len, ply)
+    --Look into a better way of sending faction news to client
     for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews())) do
         net.Start("CFC_Fac_SendNews")
         net.WriteString(v .. "\n")
@@ -254,7 +247,7 @@ end
 
 net.Receive("CFC_Fac_RequestNews", requestFactionNews)
 
---Tie into cl_faction derma to create a faction from vgui
+--When client submits a faction to create, we receive it here
 local function RequestFactionCreation(len, ply)
 
     local fOwner = ply

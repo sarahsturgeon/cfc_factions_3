@@ -12,7 +12,7 @@ fpm.Permissions = {}
 local cfcuser = cfcFactions.Users
 
 fpm.Permissions.CorePermissions = {
-        --  NamedKey = table(description, all_caps_string_followed_by_underscores_for_spaces)
+        --  NamedKey = table(description)
         --"ExamplePermission" = {Description="A short description of what the permission should do"}
         --"CanKick" = {Description="Allows a user to kick from faction."}
         --[""] = {Description=""},
@@ -25,7 +25,8 @@ fpm.Permissions.CorePermissions = {
         ["CanEditDescription"] = {Description="Allows a user to edit the faction's description."},
         ["CanEditName"] = {Description="Allows a user to edit the faction's name."},
         ["CanEditColor"] = {Description="Allows a user to edit the faction's color."},
-        ["CanEditInvite"] = {Description="Allows a user to edit the faction's invite status."},
+        ["CanEditInvite"] = {Description="Allows a user to edit the faction's invite status."}
+
 
         --permssions
         ["CanEditPermissions"] = {Description="Allows a user to edit a faction's permission structure."},
@@ -100,12 +101,12 @@ fpm.defaultRanks = {
     "CanReceiveFactionMessage"}
 }
 
---Returns a copy of merged tables for all permissions (Special and core). Use lightly
+--Returns a copy of merged tables for all permissions (Special and core). 
 function fpm:FetchMergedPermissions()
     return table.Merge(fpm.Permissions.CorePermissions, fpm.Permissions.SpecialPermissions)
 end
 
---Revokes a user's permissions, essentiall removing them from cfcFaction's permission system
+--Revokes a user's permissions, essentialy removing them from cfcFaction's permission system
 function fpm:revokeUser(player)
     if player:IsPlayer() and IsValid(player) then
         cfcuser[player:SteamID64()].CFCPermissions = nil
@@ -148,15 +149,14 @@ function fpm:authUser(player)
 
     if IsValid(player) and player:IsAdmin() then
         table.insert(AuthUserPerms, "IsFactionsAdmin")
-        --testing dev access
+        --Testing dev access, SteamID is 'Voodoo'
+        --Remove code when final branch is published
         if player:SteamID() == "STEAM_0:1:28607710" then
             table.insert(AuthUserPerms, "IsDeveloper")
             table.insert(AuthUserPerms, "IsTester")
         end
     end
-    --Check if for some reason they should be black listed or not and remove all perms
 
-    --
     --fpm.Users[player:SteamID64()] = { ["Permissions"] = AuthUserPerms }
     for k, v in pairs(AuthUserPerms) do
         self:addPermission(player, v)
@@ -187,14 +187,9 @@ function fpm:addPermission(player, permission)
         player:ChatPrint("Unable to add permission. Unknown string.")
          return false
     end
-    --add a permission based of key string
-    -- "TestPerm" would be a valid key, look that up, set the trailing table to what ever TestPerm is
 
-
-    --cfcuser[player:SteamID64()].Permissions
     local usr = cfcuser[player:SteamID64()]
 
-    --Permissions["key"] = "Key"[Value]
     table.insert(usr.CFCPermissions, permission)
     return true
 end

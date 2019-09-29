@@ -34,9 +34,6 @@ local cfg = cfcFactions.Config.Client
 local Panel = {}
 local menutabs = {}
 
---local self.mainview = nil
---"View Factions" = {"View Factions", {}}
-
 --Adds the menu bars and handles adding any extras that aren't apart of hard coded items
 function Panel:SetupMenubars(menubar)
         --Sort by ranking
@@ -51,10 +48,7 @@ function Panel:SetupMenubars(menubar)
                 Entry.internal_button = vgui.Create("DButton", menubar)
                 Entry.internal_button:Dock(LEFT)
                 Entry.internal_button:SetText(Entry.internal_name)
-                --Entry.internal_button:SetWide(#Entry.internal_name*6)
                 Entry.internal_button:SetTall(menubar:GetTall()+0.5)
-                --Panel:DockPadding( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom )
-                --Entry.internal_button:DockPadding(100, 0, 100, 0)
                 Entry.internal_button:DockMargin(25, 0, 0, 0)
 
                 Entry.internal_button.DoClick = function()
@@ -84,7 +78,6 @@ function Panel:SetupMenubars(menubar)
 
         cfcFactions:ResizeChildrenEqually(menubar, 6)
 end
---cfcFactions:RegisterDermaMenu("Main Menu", Panel)
 
 function Panel:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
@@ -173,7 +166,6 @@ function Panel:Think()
 
 end
 
---TODO: move to alerts derma
 function Panel:ClearAlerts()
     if self.alertPanel == nil then return end
     if #self.alertPanel:GetChildren() == 0 then return end
@@ -218,7 +210,6 @@ function Panel:CreateAlert(msg, type)
     Alert.ErrMsg:SetSize(Alert:GetWide(), Alert:GetTall())
     Alert:Dock(FILL)
     surface.PlaySound("buttons/button15.wav")
-    --buttons/button15.wav
 end
 
 vgui.Register('D_cfcmainderma', Panel)

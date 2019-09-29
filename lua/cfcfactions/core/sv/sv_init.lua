@@ -34,6 +34,7 @@ AddCSLuaFile("cfcfactions/core/cl/dermas/cl_logsderma.lua")
 resource.AddFile("resource/fonts/coolvetica.ttf")
 
 function cfcFactions:LoadNews()
+    --Future proofing, load from phatso's github
     if not file.Exists("cfcfactions/news.txt", "DATA" ) then print("Unable to load news") return end
     local NewsFile = file.Read("cfcfactions/news.txt", "DATA" )
     return NewsFile
