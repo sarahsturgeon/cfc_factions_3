@@ -184,7 +184,7 @@ end
 
 --Adds a permission to the player. True if success, false if otherwise
 function fpm:addPermission(player, permission)
-    if not IsValid( player ) or not player:IsPlayer() then print("Unable to add permission, invalid player") return false end
+    if not IsValid( player ) or not player:IsPlayer() then print( "Unable to add permission, invalid player" ) return false end
     if not fpm:IsValidPermission( permission ) then 
         player:ChatPrint("Unable to add permission. Unknown string.")
          return false
