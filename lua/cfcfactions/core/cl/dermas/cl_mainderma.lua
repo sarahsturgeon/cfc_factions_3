@@ -90,7 +90,7 @@ function Panel:Init()
     self.closeButton.Paint = function() end
     self.closeButton:SetColor(Color(255, 255, 255))
     self.closeButton:SetSize(32, 32)
-    self.closeButton:SetPos( self:GetWide( ) - 35, 5)
+    self.closeButton:SetPos( self:GetWide() - 35, 5 )
 
     self.closeButton.DoClick = function()
         cfcFactions:DisplayMenu()
