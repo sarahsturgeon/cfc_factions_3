@@ -3,15 +3,41 @@ File Name: sh_sharedutils.lua
 
 Purpose: Shared functions that contain various useful tables and functions used across cfcFactions
 
-Global Tables: cfcFactions.Dermas,cfcFactions.Alerts, cfcFactions.ErrorMessages
+Global Tables: cfcFactions.Dermas,cfcFactions.Alerts, cfcFactions.ErrorMessages, cfcFactions.Credits
 
 ]]--
 
 local net = net
 local string = string
 local table = table
-
+cfcFactions.Credits = cfcFactions.Credits or {}
 --Sends a notifaction msg:string, mtype:number, player:entity
+
+--Table of anyone who wants credit in developing factions. Names are changed dynamically if they are on the SERVER
+--For extra effect, pull their name from their steam page directly. 
+cfcFactions.Credits.Developers = {
+    ["STEAM_0:1:74678877"] = "Bleck",
+    ["STEAM_0:0:21170873"] = "Phatso",
+    ["STEAM_0:1:77453431"] = "hmmm",
+    ["STEAM_0:1:28482516"] = "iLikeYoBraids",
+    ["STEAM_0:1:115301653"] = "Periapsis",
+    ["STEAM_0:1:28607710"] = "Vivian Von Voodoo"
+}
+
+--If someone who helped code factions is on, change the hardcoded name to match their current display name (steamid)
+function cfcFactions.Credits:GenerateDeveloperNames()
+    for KEY, ID in pairs(cfcFactions.Credits.Developers) do
+
+        for KEY2, PLAYER in pairs(player.GetHumans()) do
+            if KEY == PLAYER:SteamID() then
+                print("Changing " .. PLAYER:Nick() .. "'s name.")
+                cfcFactions.Credits.Developers[KEY] = PLAYER:Nick()
+            end
+        end
+    end
+    return cfcFactions.Credits.Developers
+end
+
 
 cfcFactions.ErrorMessages = {
     ["general-error"]         = "An unknown error occured",
