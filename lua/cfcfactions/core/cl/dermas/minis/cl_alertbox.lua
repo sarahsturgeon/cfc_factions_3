@@ -12,7 +12,7 @@ function Panel:Init()
     if not type( msgtype ) == "table" then msgtype = cfg.MsgType.Msg end
 
     self.MiniPanel = vgui.Create("DPanel", self)
-    self.MiniPanel:SetSize( self:GetWide( ), self:GetTall( ) )
+    self.MiniPanel:SetSize( self:GetWide(), self:GetTall() )
     self.MiniPanel:Dock( FILL )
     self.MiniPanel:SetBackgroundColor(Color(0, 0, 0, 0))
     self.err_icon = vgui.Create( "DImage", self.MiniPanel)   -- Add image to Frame
