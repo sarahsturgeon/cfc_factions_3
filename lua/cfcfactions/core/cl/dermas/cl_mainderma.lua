@@ -113,7 +113,7 @@ function Panel:Init()
     self.container:DockMargin(0, 0, 0, 0)
     self.container:Dock( TOP )
     self.container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
-    self.container:SetPos( (self:GetWide( ) / 2) - ( self.container:GetWide( ) / 2), 120)
+    self.container:SetPos( ( self:GetWide() / 2 ) - ( self.container:GetWide() / 2 ), 120 )
     self.container:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --Status Bar
