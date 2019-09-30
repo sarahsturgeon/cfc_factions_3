@@ -35,7 +35,7 @@ function Panel:Init()
 
     self.BottomContainerBottom = vgui.Create("DPanel", self.BottomPanel)
     self.BottomContainerBottom:Dock( BOTTOM )
-    self.BottomContainerBottom:SetBackgroundColor( ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255) )
+    self.BottomContainerBottom:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     --Bottom Panel - Contains buttons to interact with factions
     self.BottomButtonsControlPanel = vgui.Create("DPanel", self.BottomContainerBottom)
