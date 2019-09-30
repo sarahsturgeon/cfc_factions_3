@@ -143,7 +143,7 @@ end
 --Checks a specifc string to see if it is unique amongst other factions.
 function cfcFactions:isUniqueName( faction_name )
     for k, v in pairs( cfcFactions.Factions ) do
-        if string.lower( string.Trim(v.Name) ) == string.lower( string.Trim(faction_name) ) then
+        if string.lower( string.Trim( v.Name ) ) == string.lower( string.Trim( faction_name ) ) then
             return false
         end
     end
