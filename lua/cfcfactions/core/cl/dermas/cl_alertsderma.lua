@@ -26,7 +26,7 @@ local function drawAlertsTable( main_panel )
     if (#cfcFactions.Alerts ~= lastCount) or (lastCount == -1) then
         main_panel.logview:Clear()
         for k, logs in pairs( cfcFactions.Alerts ) do
-            main_panel.logview:AddLine(logs.Time, logs.Message,printyprint( logs.Type) )
+            main_panel.logview:AddLine( logs.Time, logs.Message,printyprint( logs.Type) )
             
         end
         lastCount = #cfcFactions.Alerts
