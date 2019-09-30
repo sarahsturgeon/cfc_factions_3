@@ -239,4 +239,4 @@ function fpm:IsFactionAdmin( player )
     return false
 end
 
-hook.Add("Initialize", "cfcInitializeUsers", fpm:authAllUsers( ) )
+hook.Add( "Initialize", "cfcInitializeUsers", fpm:authAllUsers() )
