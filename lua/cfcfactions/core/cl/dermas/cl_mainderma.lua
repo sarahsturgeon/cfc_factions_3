@@ -81,7 +81,7 @@ end
 
 function Panel:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ( ScrW( ) / 2) - ( self:GetWide( ) / 2) ), ( (ScrH( ) / 2) - ( self:GetTall( ) / 2) ) )
+    self:SetPos( ( ( ScrW( ) / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
     --window buttons
     self.closeButton = vgui.Create('DButton', self)
