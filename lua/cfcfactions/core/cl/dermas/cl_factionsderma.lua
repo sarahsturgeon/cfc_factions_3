@@ -46,7 +46,7 @@ function Panel:Init()
     self.ButtonsContainer = vgui.Create("DPanel", self.BottomContainerTop)
     self.ButtonsContainer:Dock( RIGHT )
     self.ButtonsContainer:InvalidateParent( true )
-    self.ButtonsContainer:SetBackgroundColor( ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255) )
+    self.ButtonsContainer:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     -- self.ButtonsContainer:SetWide( 210 )
 
