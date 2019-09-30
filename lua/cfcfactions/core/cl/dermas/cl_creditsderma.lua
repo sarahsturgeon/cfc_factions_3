@@ -16,7 +16,7 @@ function Panel:Init()
     	TextBlock = TextBlock .. (Developer .. "(" .. KEY .. ")\n")
     end
     self.TextBox:SetText( TextBlock )
-    self.TextBox:SetColor( Color(0,0,0,255) )
+    self.TextBox:SetColor( Color( 0, 0, 0, 255 ) )
 
 end
 
