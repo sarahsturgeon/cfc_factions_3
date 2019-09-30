@@ -120,7 +120,7 @@ function Panel:Init()
     self.statusbar = vgui.Create("DPanel", self)
     self.statusbar:DockMargin(0, 0, 0, 0)
     self.statusbar:Dock( BOTTOM )
-    self.statusbar:SetSize( self:GetWide( ), self:GetTall( )-750 )
+    self.statusbar:SetSize( self:GetWide(), self:GetTall() - 750 )
     self.statusbar:SetBackgroundColor(Color(0, 0, 0, 0))
 
     --alertbox
