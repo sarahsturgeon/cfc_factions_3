@@ -129,7 +129,7 @@ end
 --Auths a user and allows them to use factions properly. If not, things make explode
 --Or simply just don't want them using it
 function fpm:authUser( player )
-    print("Authenticating user " .. player:SteamID( ) )
+    print( "Authenticating user " .. player:SteamID() )
     --Checks and balances
     if not player:IsPlayer() then 
         return 
