@@ -104,4 +104,4 @@ local function cfcPlayerSpawn( ply )
     if not IsValid( ply ) then return end
     ply:FetchUserData()
 end
-hook.Add("PlayerSpawn", "cfcPlayerSpawn", cfcPlayerSpawn( ply) )
+hook.Add( "PlayerSpawn", "cfcPlayerSpawn", cfcPlayerSpawn( ply ) )
