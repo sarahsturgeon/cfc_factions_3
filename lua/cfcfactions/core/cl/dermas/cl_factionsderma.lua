@@ -31,7 +31,7 @@ function Panel:Init()
 
     self.BottomContainerTop = vgui.Create("DPanel", self.BottomPanel)
     self.BottomContainerTop:Dock( TOP )
-    self.BottomContainerTop:SetBackgroundColor( ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255) )
+    self.BottomContainerTop:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     self.BottomContainerBottom = vgui.Create("DPanel", self.BottomPanel)
     self.BottomContainerBottom:Dock( BOTTOM )
