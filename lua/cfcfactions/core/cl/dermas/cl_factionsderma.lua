@@ -39,7 +39,7 @@ function Panel:Init()
 
     --Bottom Panel - Contains buttons to interact with factions
     self.BottomButtonsControlPanel = vgui.Create("DPanel", self.BottomContainerBottom)
-    self.BottomButtonsControlPanel:SetBackgroundColor( ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255) )
+    self.BottomButtonsControlPanel:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
     self.BottomButtonsControlPanel:Dock( BOTTOM )
 
     --Factions View buttons (Changing pages)
