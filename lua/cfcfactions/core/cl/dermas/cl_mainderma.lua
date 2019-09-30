@@ -207,7 +207,7 @@ function Panel:CreateAlert(msg, type)
     end
 
     Alert.ErrMsg:SetColor( cfg.MsgType[type] )
-    Alert.ErrMsg:SetSize( Alert:GetWide( ), Alert:GetTall( ) )
+    Alert.ErrMsg:SetSize( Alert:GetWide(), Alert:GetTall() )
     Alert:Dock( FILL )
     surface.PlaySound( "buttons/button15.wav" )
 end
