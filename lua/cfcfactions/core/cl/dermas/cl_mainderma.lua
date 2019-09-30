@@ -159,7 +159,7 @@ function Panel:Paint(w, h)
         surface.DrawOutlinedRect(0, 0, w, h)
 
         --surface.DrawOutlinedRect(0, 0, w, h)
-        draw.SimpleText(string.format(cfg.DermaHeaderTitle, LocalPlayer( ):Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText) 
+        draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText ) 
 end
 
 function Panel:Think()
