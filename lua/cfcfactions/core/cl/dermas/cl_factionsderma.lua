@@ -57,7 +57,7 @@ function Panel:Init()
     self.ButtonsPanelRight = vgui.Create("DPanel", self.ButtonsContainer)
     self.ButtonsPanelRight:Dock( RIGHT )
     self.ButtonsPanelRight:InvalidateParent( true )
-    self.ButtonsPanelRight:SetBackgroundColor( ColorAlpha(cfg.ColorSchemes.BackgroundPanel,255) )
+    self.ButtonsPanelRight:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     --Create, Edit, Delete, View
     self.CreateFaction = vgui.Create("DButton", self.BottomButtonsControlPanel)
