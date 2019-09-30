@@ -8,12 +8,12 @@ but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 
 ]]--
 
-meta = FindMetaTable("Player")
+meta = FindMetaTable( "Player" )
 local fusers = cfcFactions.Users
 
 function meta:CFCToggleMenu()
-    net.Start('CFC_Fac_ToggleDerma')
-    net.Send(self)
+    net.Start( 'CFC_Fac_ToggleDerma' )
+    net.Send( self )
 end
 
 --[[
@@ -25,7 +25,7 @@ function meta:IsInFaction()
     if self:IsMerc() == true then return true end
     
     local userHasFaction = nil
-    if ( not (self:GetFactionID() == nil ) ) then
+    if ( not ( self:GetFactionID( ) == nil ) ) then
         userHasFaction = true
     else
         userHasFaction = false
@@ -64,12 +64,12 @@ function meta:GetFaction()
 end
 
 --Sets a player's faction based on given id. ply being who is doing the setting
-function meta:SetFactionID(id)
+function meta:SetFactionID( id )
     fpm.Users[self:SteamID64()].FactionID = id
 
 end
 
-function meta:SetFactionRank(rank)
+function meta:SetFactionRank( rank )
     fpm.Users[self:SteamID64()].FactionRank = rank
 
 end
@@ -78,7 +78,7 @@ function meta:IsMerc()
     return fpm[self:SteamID64()].IsMerc or false
 end
 
--- function player:SetRank(rank)
+-- function player:SetRank( rank )
 
 -- end
 
@@ -87,6 +87,6 @@ end
 -- end
 
 
--- function player:Ban(ply)
+-- function player:Ban( ply )
 
 -- end

@@ -17,7 +17,7 @@ function cfcuser:registeruser(user, factionid, rank)
 		return 
 	end
 
-	if cfcuser:UserExists(user) then
+	if cfcuser:UserExists( user ) then
 		--Error out, already exsists
 		return
 	end
@@ -41,14 +41,14 @@ function cfcuser:registeruser(user, factionid, rank)
 end
 
 --Checks if a user is already registered
-function cfcuser:UserExists(user)
+function cfcuser:UserExists( user )
 
 	if not user:IsPlayer() then 
 		--Error out, not a player
 		return 
 	end
 
-	if table.HasValue(cfcuser, user:SteamID64()) then
+	if table.HasValue(cfcuser, user:SteamID64( ) ) then
 		return true
 	else
 		return false
@@ -56,14 +56,14 @@ function cfcuser:UserExists(user)
 end
 
 local function IsValidAndOfType(item, t)
-    return item ~= nil and type(item) == t
+    return item ~= nil and type( item ) == t
 end
 
-local function IsValidNumber(num)
+local function IsValidNumber( num )
     return IsValidAndOfType(num, 'number')
 end
 
-local function IsValidString(str)
+local function IsValidString( str )
     return IsValidAndOfType(str, 'string')
 end
 
@@ -90,7 +90,7 @@ function cfcuser:UpdateStats(user, lastonline, kills, deaths, hoursinfaction)
     if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
     if IsValidNumber( kills ) then userTable["Kills"] = kills end
     if IsValidNumber( deaths ) then userTable["Deaths"] = deaths end
-    if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 and IsInFaction(user) then userTable["HoursInFaction"] = hoursinfaction end
+    if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 and IsInFaction( user ) then userTable["HoursInFaction"] = hoursinfaction end
 end
 --
 
@@ -105,7 +105,7 @@ function cfcuser:SetUserFaction(user, id, rank)
 		return 
 	end
 
-	if not cfcFactions:IsValidFaction(id) then
+	if not cfcFactions:IsValidFaction( id ) then
 		--Error out, invalid faction
 		return
 	end
@@ -121,11 +121,11 @@ function cfcuser:SetUserContract(user, contract)
 
 end
 
-function cfcuser:RemoveUserRank(user)
+function cfcuser:RemoveUserRank( user )
 
 end
 
-function cfcuser:RemoveUserFaction(user)
+function cfcuser:RemoveUserFaction( user )
 
 end
 
@@ -137,7 +137,7 @@ function cfcuser:RemoveUserInvite(user, id, revoker)
 
 end
 
-function cfcuser:IsInFaction(user) 
+function cfcuser:IsInFaction( user ) 
 	if not user:IsPlayer() then
 		return
 	end

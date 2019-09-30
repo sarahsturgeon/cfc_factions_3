@@ -34,7 +34,7 @@ local function safeLog(log, msg, type, args, parse, sve, time)
 ]]--
     local t = cfcFactions.LogTypes
     local tmpLogTable = {}
-    if type(log) == "table" then
+    if type( log ) == "table" then
         if log[Checked] == nil then
             log[Checked] = true
         else
@@ -66,7 +66,7 @@ local function safeLog(log, msg, type, args, parse, sve, time)
         end
 
         --if not a table, we'll need to properly form a table for the string to be recorded. 
-    elseif type(log) == "string" then
+    elseif type( log ) == "string" then
 
     end
     
@@ -75,9 +75,9 @@ end
 
 
 --main function to transcribe a log based on a table of data
-function cfcFactions:TransLog(table)
-    if type(table) ~= table then
-        if type(table) == "string" then
+function cfcFactions:TransLog( table )
+    if type( table ) ~= table then
+        if type( table ) == "string" then
 
         end
     end

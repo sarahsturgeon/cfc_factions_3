@@ -28,23 +28,23 @@ end
 --Displays and handles closing (an already open) menu derma. 
 function cfcFactions:DisplayMenu()
     if not cfcFactions.MainDerma or cfcFactions.MainDerma == nil then
-        cfcFactions.MainDerma = vgui.Create("D_cfcmainderma")
-        cfcFactions.MainDerma:SetVisible(false)
+        cfcFactions.MainDerma = vgui.Create( "D_cfcmainderma" )
+        cfcFactions.MainDerma:SetVisible( false )
     end
 
     if not cfcFactions.MainDerma:IsVisible() then
         cfcFactions.MainDerma:ClearAlerts()
         cfcFactions.MainDerma:Show()
-        gui.EnableScreenClicker(true)
+        gui.EnableScreenClicker( true )
     else
         cfcFactions.MainDerma:Hide()
-        gui.EnableScreenClicker(false)
+        gui.EnableScreenClicker( false )
     end 
 end
 
 --If the defined key is properly set, users can use that specific key to also open/close the derma
 local function menuKeyDown(ply, button)
-    if input.GetKeyName(button) == cfcFactions.Config.CLIENT_KEY then
+    if input.GetKeyName( button ) == cfcFactions.Config.CLIENT_KEY then
         cfcFactions:DisplayMenu()
     end
 end
@@ -66,7 +66,7 @@ net.Receive('CFC_Fac_SendMessage', sendFactionMessage)
 
 local function sendServerTextAlert(len, ply)
     local msg = net.ReadString()
-    local mtype = net.ReadInt(4)
+    local mtype = net.ReadInt( 4 )
     local ment = net.ReadEntity()
 
     if cfcFactions.MainDerma ~= nil then
