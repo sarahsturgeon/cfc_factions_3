@@ -182,7 +182,7 @@ function Panel:SetMainView( panel )
     end
 
     local mview = vgui.CreateFromTable(panel, self.mainview, nil)
-    mview:SetSize( self.mainview:GetWide( ), self.mainview:GetTall( ) )
+    mview:SetSize( self.mainview:GetWide(), self.mainview:GetTall() )
 end
 
 function Panel:OnMousePressed( key )
