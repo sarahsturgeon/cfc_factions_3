@@ -127,7 +127,7 @@ function Panel:Init()
     if self.alertPanel == nil then
         self.alertPanel = vgui.Create('DPanel', self.container)
         self.alertPanel:Dock( TOP )
-        self.alertPanel:SetSize( self.container:GetWide( ), 55)
+        self.alertPanel:SetSize( self.container:GetWide(), 55 )
         self.alertPanel:SetBackgroundColor(Color(0, 0, 0, 0))
     end
 
