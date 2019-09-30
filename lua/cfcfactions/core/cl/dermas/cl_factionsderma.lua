@@ -99,7 +99,7 @@ function Panel:Init()
     self.LastPage:SetText( ">>" )
     self.LastPage:Dock( RIGHT )
 
-    self.ButtonsPanelLeft:SetWide( self.FirstPage:GetWide( ) + self.NextPage:GetWide( ) )
+    self.ButtonsPanelLeft:SetWide( self.FirstPage:GetWide() + self.NextPage:GetWide() )
     self.ButtonsPanelRight:SetWide( self.NextPage:GetWide( ) + self.LastPage:GetWide( ) )
     --self.ButtonsContainer:SetWide( self.FirstPage:GetWide( ) + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide( ) )
     cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
