@@ -135,7 +135,7 @@ function Panel:Init()
     self.mainview = vgui.Create("DPanel", self.container)
     self.mainview:DockMargin(15, 15, 15, 15)
     self.mainview:Dock( TOP )
-    self.mainview:SetSize( self:GetWide( ) - 20, self:GetTall() - 230)
+    self.mainview:SetSize( self:GetWide() - 20, self:GetTall() - 230 )
     self.mainview:SetPos( (self:GetWide( ) / 2) - ( self.mainview:GetWide( ) / 2), 120)
     self.mainview:SetBackgroundColor(Color(0, 0, 0, 0))
 
