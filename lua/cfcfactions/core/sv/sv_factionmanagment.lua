@@ -300,7 +300,7 @@ concommand.Add("fpvp_testpermsys", factionTestPermSys)
 
 local function factionDebugTest(ply, cmd, args)
     if fpm:IsDev( ply ) then
-         cfcFactions:RemoveFaction(ply, ply:GetFactionID( ) )
+         cfcFactions:RemoveFaction( ply, ply:GetFactionID() )
          ply:concommand( "fpvp_createfaction" )
     end
 end
