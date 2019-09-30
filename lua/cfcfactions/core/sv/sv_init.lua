@@ -66,7 +66,7 @@ function cfcFactions:InitializeFactions()
     --load news
     cfcFactions:LoadNews()
 end
-hook.Add("Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions( ) )
+hook.Add( "Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions() )
 
 --Player Say Hook
 --Handles if a player wishes to open the faction menu by typing the command
