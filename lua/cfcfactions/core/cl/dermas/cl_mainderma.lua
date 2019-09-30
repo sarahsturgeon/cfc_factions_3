@@ -102,7 +102,7 @@ function Panel:Init()
     self.menubar = vgui.Create("DPanel", self)
     self.menubar:DockMargin(0, 45, 0, 0)
     self.menubar:Dock( TOP )
-    self.menubar:SetSize( self:GetWide( ) - 0.1, self:GetTall() - 745)
+    self.menubar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
     self.menubar:SetBackgroundColor( cfg.ColorSchemes.BackgroundPanel )
 
     --Load the registered dermas into the menubar
