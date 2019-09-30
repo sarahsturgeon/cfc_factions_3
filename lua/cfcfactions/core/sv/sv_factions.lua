@@ -232,7 +232,7 @@ end
 
 local function requestFactionNews(len, ply)
     --Look into a better way of sending faction news to client
-    for k, v in pairs(string.Explode("\n", cfcFactions:LoadNews( )) ) do
+    for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
         net.Start( "CFC_Fac_SendNews" )
             net.WriteString(v .. "\n")
             net.WriteString( ply:Nick() )
