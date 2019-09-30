@@ -172,19 +172,10 @@ end
 
 local function factionCreated(len, ply)
 
-    local fID = net.ReadString()
-    local fName = net.ReadString()
-    local fOwner = net.ReadString()
-    local fDescription = net.ReadString()
-    local fColor = net.ReadColor()
-    local fInviteOnly = net.ReadBool()
-    local fKills = net.ReadInt(32)
-    local fDeaths = net.ReadInt(32)
-    local fCreated = net.ReadString()
-    local fEdited = net.ReadString()
-    local fAllies = net.ReadTable()
-    local fEnemies = net.ReadTable()
-
+    local ClientsideFactionJsonified = net.ReadString()
+    local FactionTable = util.JSONToTable(ClientsideFactionJsonified)
+    cfcFactions.Factions[FactionTable.ID] = FactionTable
+    
     --fixed with proper stats (missing locked, missing kd, missing id)
     addFaction(fID, fName, fOwner, fDescription, fColor, fInviteOnly, fKills, fDeaths, fCreated, fEdited, fAllies, fEnemies)
 

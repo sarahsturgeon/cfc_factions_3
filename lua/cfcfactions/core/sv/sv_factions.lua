@@ -18,7 +18,6 @@ local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
-
 function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, temporary)
     local TmpUnqID = cfcFactions:UUID()
     local factionOwner = owner
@@ -109,7 +108,7 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
         ["Currency"] = 0,
         ["Created"] = cfcFactions:TimeStamp(),
         ["Edited"] = cfcFactions:TimeStamp(),
-        ["LastSaved"] = nil,
+        ["LastSaved"] = "",
         ["NeedsCleanUp"] = false,
         ["Allies"] = {},
         ["Enemies"] = {}
@@ -124,21 +123,17 @@ function cfcFactions:CreateFaction(owner, name, color, description, inviteOnly, 
     --Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation(string.format("Successfully created \"%s\" with ID [%s]", cfcFactions.Factions[TmpUnqID].Name, cfcFactions.Factions[TmpUnqID].ID), 1, owner)
 
-    local FinishedFaction = cfcFactions.Factions[TmpUnqID]
-
+    --Tell clients a new faction was created
+    --Package the table and send to clients
+    local CopyOfFactionToSend = table.Copy(cfcFactions.Factions[TmpUnqID])
+    --Some details should be omitted before sending, so we'll create a copy of the table and remove as needed 
+    CopyOfFactionToSend.LastSaved = nil
+    CopyOfFactionToSend.NeedsCleanUp = nil
+  
+    local FactionTableJsonified = util.TableToJSON(CopyOfFactionToSend,false) 
+  
     net.Start("CFC_Fac_SendFactionSubmit")
-        net.WriteString(FinishedFaction.ID)
-        net.WriteString(FinishedFaction.Name)
-        net.WriteString(FinishedFaction.Owner)
-        net.WriteString(FinishedFaction.Description)
-        net.WriteColor(FinishedFaction.Color)
-        net.WriteBool(FinishedFaction.Invite)
-        net.WriteInt(FinishedFaction.Kills, 32)
-        net.WriteInt(FinishedFaction.Deaths, 32)
-        net.WriteString(FinishedFaction.Created)
-        net.WriteString(FinishedFaction.Edited)
-        net.WriteTable(FinishedFaction.Allies)
-        net.WriteTable(FinishedFaction.Enemies)
+        net.WriteString(FactionTableJsonified)
     net.Broadcast()
 
     ---Returns the newly created faction as a table
