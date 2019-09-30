@@ -23,7 +23,7 @@ function Panel:Init()
 
     self.BottomPanel = vgui.Create("DPanel", self.MainContainer)
     self.BottomPanel:Dock( BOTTOM )
-    self.BottomPanel:SetBackgroundColor( Color(0,0,0,0) )
+    self.BottomPanel:SetBackgroundColor( Color(0, 0, 0, 0) )
     self.BottomPanel:SetWide( self:GetWide() )
     self.BottomPanel:SetTall( 50 )
     self.BottomPanel:InvalidateParent( true )
