@@ -12,7 +12,7 @@ fpm.Permissions = {}
 local cfcuser = cfcFactions.Users
 
 fpm.Permissions.CorePermissions = {
-        --  NamedKey = table(description)
+        --  NamedKey = table( description )
         --"ExamplePermission" = {Description="A short description of what the permission should do"}
         --"CanKick" = {Description="Allows a user to kick from faction."}
         --[""] = {Description=""},
@@ -103,14 +103,14 @@ fpm.defaultRanks = {
     "CanReceiveFactionMessage"}
 }
 
---Returns a copy of merged tables for all permissions (Special and core). 
+--Returns a copy of merged tables for all permissions ( Special and core ). 
 function fpm:FetchMergedPermissions()
-    return table.Merge(fpm.Permissions.CorePermissions, fpm.Permissions.SpecialPermissions)
+    return table.Merge( fpm.Permissions.CorePermissions, fpm.Permissions.SpecialPermissions )
 end
 
 --Revokes a user's permissions, essentialy removing them from cfcFaction's permission system
-function fpm:revokeUser(player)
-    if player:IsPlayer() and IsValid(player) then
+function fpm:revokeUser( player )
+    if player:IsPlayer() and IsValid( player ) then
         cfcuser[player:SteamID64()].CFCPermissions = nil
         return true
     end
@@ -121,59 +121,59 @@ end
 
 --forces init for all current humans connected
 function fpm:authAllUsers()
-    for _, players in pairs (player.GetHumans()) do
-        fpm:authUser(players)
+    for _, players in pairs ( player.GetHumans() ) do
+        fpm:authUser( players )
     end
 end
 
 --Auths a user and allows them to use factions properly. If not, things make explode
 --Or simply just don't want them using it
-function fpm:authUser(player)
-    print("Authenticating user " .. player:SteamID())
+function fpm:authUser( player )
+    print( "Authenticating user " .. player:SteamID() )
     --Checks and balances
     if not player:IsPlayer() then 
         return 
     end
 
-    if cfcuser:UserExists(player) then
+    if cfcuser:UserExists( player ) then
         if ( not ( cfcuser[player:SteamID64()].CFCPermissions == nil ) ) then 
             --Error out, player already has proper permissions for authentication
             return 
         end      
     end
 
-    cfcuser:registeruser(player, nil, nil)
+    cfcuser:registeruser( player, nil, nil )
 
-    --Basic, core permissions (almost) every user should require in order to properly use factions.
+    --Basic, core permissions ( almost ) every user should require in order to properly use factions.
     local AuthUserPerms = {
         "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
     }
 
-    if IsValid(player) and player:IsAdmin() then
-        table.insert(AuthUserPerms, "IsFactionsAdmin")
+    if IsValid( player ) and player:IsAdmin() then
+        table.insert( AuthUserPerms, "IsFactionsAdmin" )
         --Testing dev access, SteamID is 'Voodoo'
         --Remove code when final branch is published
         if player:SteamID() == "STEAM_0:1:28607710" then
-            table.insert(AuthUserPerms, "IsDeveloper")
-            table.insert(AuthUserPerms, "IsTester")
+            table.insert( AuthUserPerms, "IsDeveloper" )
+            table.insert( AuthUserPerms, "IsTester" )
         end
     end
 
     --fpm.Users[player:SteamID64()] = { ["Permissions"] = AuthUserPerms }
-    for k, v in pairs(AuthUserPerms) do
-        self:addPermission(player, v)
+    for k, v in pairs( AuthUserPerms ) do
+        self:addPermission( player, v )
     end
 end
 
---Checks to see if a player has a  specific permission(s)
-function fpm:hasPermission(player, permission)
+--Checks to see if a player has a  specific permission( s )
+function fpm:hasPermission( player, permission )
 
     --If developer, pretty much free control over everything
-    --if table.HasValue(fpm.Users[player:SteamID64()].Permissions, "IsDeveloper") then return true end
+    --if table.HasValue( fpm.Users[player:SteamID64()].Permissions, "IsDeveloper" ) then return true end
     --Handling normal permissions now
     --if fpm.Users[player:SteamID64()].Permissions["IsDeveloper" ~= nil] then return true end
 
-    for _, perms in pairs(cfcuser[player:SteamID64()].CFCPermissions) do
+    for _, perms in pairs( cfcuser[player:SteamID64()].CFCPermissions ) do
         if perms == permission then
             return true 
         end
@@ -183,23 +183,23 @@ function fpm:hasPermission(player, permission)
 end
 
 --Adds a permission to the player. True if success, false if otherwise
-function fpm:addPermission(player, permission)
-    if not IsValid(player) or not player:IsPlayer() then print("Unable to add permission, invalid player") return false end
-    if not fpm:IsValidPermission(permission) then 
-        player:ChatPrint("Unable to add permission. Unknown string.")
+function fpm:addPermission( player, permission )
+    if not IsValid( player ) or not player:IsPlayer() then print( "Unable to add permission, invalid player" ) return false end
+    if not fpm:IsValidPermission( permission ) then 
+        player:ChatPrint( "Unable to add permission. Unknown string." )
          return false
     end
 
     local usr = cfcuser[player:SteamID64()]
 
-    table.insert(usr.CFCPermissions, permission)
+    table.insert( usr.CFCPermissions, permission )
     return true
 end
 
---Revokes a permission(s) from the player. True if success, false if otherwise
-function fpm:revokePermission(player, permission)
+--Revokes a permission( s ) from the player. True if success, false if otherwise
+function fpm:revokePermission( player, permission )
     local usr = cfcuser[player:SteamID64()]
-    for k, perms in pairs(usr.CFCPermissions) do
+    for k, perms in pairs( usr.CFCPermissions ) do
         if perms == permission then
             usr.CFCPermissions[k] = nil
             return true
@@ -210,33 +210,33 @@ function fpm:revokePermission(player, permission)
 end
 
 --Returns a list of permissions the player currently has
-function fpm:getPermissionList(player)
+function fpm:getPermissionList( player )
     return fpm.Users.AuthUsers[player:SteamID64()]
 end
 
-function fpm:IsValidPermission(cmd)
-    for k, v in pairs(fpm.Permissions.CorePermissions) do
-        if string.lower(k) == string.lower(cmd) then
+function fpm:IsValidPermission( cmd )
+    for k, v in pairs( fpm.Permissions.CorePermissions ) do
+        if string.lower( k ) == string.lower( cmd ) then
             return true
         end
 
     end
 
-    for n, m in pairs(fpm.Permissions.SpecialPermissions) do
-        if string.lower(n) == string.lower(cmd) then
+    for n, m in pairs( fpm.Permissions.SpecialPermissions ) do
+        if string.lower( n ) == string.lower( cmd ) then
             return true
         end
     end
 end
 
-function fpm:IsDev(player)
-    if self:hasPermission(player, "IsDeveloper") then return true end
+function fpm:IsDev( player )
+    if self:hasPermission( player, "IsDeveloper" ) then return true end
     return false
 end
 
-function fpm:IsFactionAdmin(player)
-    if self:hasPermission(player, "IsFactionsAdmin") then return true end
+function fpm:IsFactionAdmin( player )
+    if self:hasPermission( player, "IsFactionsAdmin" ) then return true end
     return false
 end
 
-hook.Add("Initialize", "cfcInitializeUsers", fpm:authAllUsers())
+hook.Add( "Initialize", "cfcInitializeUsers", fpm:authAllUsers() )

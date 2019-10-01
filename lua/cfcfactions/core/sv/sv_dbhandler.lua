@@ -1,7 +1,7 @@
 --[[]
 File Name: sv_dbhandler.lua
 
-Purpose: Core database handler to save/load from ether mysql or sql (external/internal)
+Purpose: Core database handler to save/load from ether mysql or sql ( external/internal )
 
 Global Tables: cfcFactions.DB
 ]]--
@@ -29,7 +29,7 @@ function DB:SaveUsers()
 
 end
 
-function DB:SaveUser(id)
+function DB:SaveUser( id )
 
 end
 
@@ -39,7 +39,7 @@ function DB:LoadUsers()
 end
 
 --id can be player, steamid, steamid64, or unqui
-function DB:LoadUser(id)
+function DB:LoadUser( id )
 
 end
 --[[
@@ -47,7 +47,7 @@ end
 ]]--
 
 --Saveing factions to mysql_db
-function DB:SaveFaction(factionid)
+function DB:SaveFaction( factionid )
 
 end
 
@@ -56,7 +56,7 @@ function DB:SaveFactions()
 end
 
 --Loading factions to mysql_db
-function DB:LoadFaction(factionid)
+function DB:LoadFaction( factionid )
 
 end
 
