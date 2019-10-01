@@ -233,11 +233,11 @@ end
 --  if( ply == nil ) then ply = "( RCON )" end
 --  if( type( ply ) == "Player" ) then ply = ply:SteamID64() end
 --  local qstz = [[
---     INSERT INTO `cfcadminlog` ( playerid, factionid, setting, state,time )
+--     INSERT INTO `cfcadminlog` ( playerid, factionid, setting, state, time )
 --     VALUES ( '%s', '%s', '%s', '%s', '%s' )
 --     ]]
---     --!-- Color is a structure but can be converted to a string ( json ) IE: 255 255 255 0 becoems "255,255,255,0"
---     qstz = string.format( qstz,ply, factionid, setting, state, os.date( "%H:%M:%S - %d/%m/%Y" , os.time() ) )
+--     --!-- Color is a structure but can be converted to a string ( json ) IE: 255 255 255 0 becoems "255, 255, 255, 0"
+--     qstz = string.format( qstz, ply, factionid, setting, state, os.date( "%H:%M:%S - %d/%m/%Y" , os.time() ) )
 
 --     local q = sql_db:query( qstz )
 
@@ -258,7 +258,7 @@ end
 
 -- --get logs ether by ply or factionid
 -- --sort by time
--- function sql_db:GetLogs( min,max, callback )
+-- function sql_db:GetLogs( min, max, callback )
 --  if ply == nil then return end
 
 --  local qs = [[
@@ -302,8 +302,8 @@ end
 
 --  --rework in order to store json ( with a single uniquieid )
 --  local qstz = [[
---      INSERT INTO `cfcfactions_data` ( uniqueid, name, description, color, invite, owner, created, edited,extras )
---      VALUES ( '%s', '%s', '%s', '%s', '%s','0','0','%s','[]' )
+--      INSERT INTO `cfcfactions_data` ( uniqueid, name, description, color, invite, owner, created, edited, extras )
+--      VALUES ( '%s', '%s', '%s', '%s', '%s', '0', '0', '%s', '[]' )
 --      ON DUPLICATE KEY UPDATE
 --          name = VALUES( name ),
 --          description = VALUES( description ),
@@ -317,7 +317,7 @@ end
 --          #extras = VALUES( extras )
 
 --      ]]
---  qstz = string.format( qstz,id,sql_db:escape( name ),sql_db:escape( description ),color,invite,timestamp )
+--  qstz = string.format( qstz, id, sql_db:escape( name ), sql_db:escape( description ), color, invite, timestamp )
 --   local q = sql_db:query( qstz )
 --   print( qstz )
 --  function q:onError( err, sql )
@@ -338,7 +338,7 @@ end
 
 -- --Sets all Factions from a given table
 -- --best not to directly inject into the table
--- function sql_db:SetFaction( id, name, description, color, invite, owner,created, edited, extras )
+-- function sql_db:SetFaction( id, name, description, color, invite, owner, created, edited, extras )
 --  local timestamp = os.date( "%H:%M:%S - %d/%m/%Y" , os.time() )
 --  if extras == nil then extras = {} end
 --      if type( color ) == "table" then color = util.TableToJSON( color ) end
@@ -349,7 +349,7 @@ end
 --  --rework in order to store json ( with a single uniquieid )
 --  local qstz = [[
 --      INSERT INTO `cfcfactions_data` ( uniqueid, name, description, color, invite, owner, created, edited, extras )
---      VALUES ( '%s','%s','%s','%s','%s','%s','%s','%s','%s' )
+--      VALUES ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 --          ON DUPLICATE KEY UPDATE
 --          name = VALUES( name ),
 --          description = VALUES( description ),
@@ -358,8 +358,8 @@ end
 --          edited = VALUES( edited ),
 --          extras = VALUES( extras )
 --      ]]
---  qstz = string.format( qstz,id,sql_db:escape( name ),sql_db:escape( description ),color,
---      invite,owner,created,edited, extras )
+--  qstz = string.format( qstz, id, sql_db:escape( name ), sql_db:escape( description ), color,
+--      invite, owner, created, edited, extras )
 --   local q = sql_db:query( qstz )
 
 --  function q:onError( err, sql )
@@ -393,9 +393,9 @@ end
 --      if #data > 0 then
 --          local onlineusers = {}
 --          local offlineusers = {}  
---          for k,d in pairs( data ) do
+--          for k, d in pairs( data ) do
 --              local row = data[k]
---              for _,p in pairs( player.GetHumans() ) do
+--              for _, p in pairs( player.GetHumans() ) do
 --                  if ( table.HasValue( row, p:SteamID64() ) ) then 
 
 --                      table.insert( onlineusers, p )
@@ -406,7 +406,7 @@ end
 --              end
 --          end
             
---          callback( data, onlineusers,offlineusers )
+--          callback( data, onlineusers, offlineusers )
 --      else
 --          ErrorNoHalt( '[GetUsersByFaction] Unable to fetch anything but still succeeded' )
 --      end
@@ -438,7 +438,7 @@ end
 --      --PrintTable( q )
 --      function q:onSuccess( data )
 --          if #data > 0 then
---              for k,v in pairs( data ) do
+--              for k, v in pairs( data ) do
 --                  if table.HasValue( name ) then
 --                      net.Start( "IsFactionNameUniqueSend" )
 --                      net.WriteBit( 1 )
@@ -475,7 +475,7 @@ end
 -- --Gets factions by min_number, max_number from DB and sends over net individually [1] Faction1 [2]Faction2 [3]...
 -- --Takes range1 to range2 to return results. 5-10, 11-19, etc
 -- --Returns by callback( data )
--- function sql_db:GetFactions( r1,r2, callback )
+-- function sql_db:GetFactions( r1, r2, callback )
 --  local min = tonumber( r1 )
 --  local max = tonumber( r2 )
 --  if min <= 0 then min = 0 end
@@ -484,10 +484,10 @@ end
 --  local qs = [[
 --      SELECT *
 --      FROM `cfcfactions_data`
---      LIMIT %s,%s
+--      LIMIT %s, %s
 --  ]]
 --  local q = sql_db:query( qs )
---  local qstz = string.format( q, min,max )
+--  local qstz = string.format( q, min, max )
 --  --PrintTable( q )
 --  function q:onSuccess( data )
 --      if #data > 0 then
@@ -552,7 +552,7 @@ end
 -- --Sets all users from a given table
 -- --best not to directly inject into the table
 -- function sql_db:SetUser( plyid, factionid, rank, extras )
---      MsgN( string.format( "Passed %s - %s - %s - %s \n",plyid, factionid, rank, extras ) )
+--      MsgN( string.format( "Passed %s - %s - %s - %s \n", plyid, factionid, rank, extras ) )
 --      if extras == nil then extras = {} end
 --  --if player is passed, just convert into proper string format
 
@@ -731,14 +731,14 @@ end
 -- end
 
 -- --see SetUserExtras for detailed notes on how this should work.
--- function sql_db:SetFactionExtras( factionid,extras )
+-- function sql_db:SetFactionExtras( factionid, extras )
 --  if( extras == nil ) then return end
 --  sql_db:GetUserExtras( playerid, function( factionextras )
 --      local tmpTable = util.JSONToTable( factionextras )
 --      if factionextras == nil then return end
 --          local qs = [[
 --          INSERT INTO `cfcfactions_data` ( uniqueid, name, description, color, invite, owner, created, edited, extras )
---          VALUES ( '%s', '0', '0','0','0','0','0','%s' '%s' )
+--          VALUES ( '%s', '0', '0', '0', '0', '0', '0', '%s' '%s' )
 --          ON DUPLICATE KEY UPDATE
 --              edited = VALUES( edited ),
 --              extras = VALUES( extras )
@@ -809,8 +809,8 @@ end
 --  local q = sql_db:query( qs, id )
 
 --     function q:onSuccess()
---      sql_db:GetUsersByFactionID( id, function( data,online,offline )
---          for k,v in pairs( data ) do
+--      sql_db:GetUsersByFactionID( id, function( data, online, offline )
+--          for k, v in pairs( data ) do
 --              print( data[k].playerid )
 --              sql_db:DeleteUser( data[k].playerid )
 --          end

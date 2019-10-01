@@ -3,7 +3,7 @@ File Name: sh_sharedutils.lua
 
 Purpose: Shared functions that contain various useful tables and functions used across cfcFactions
 
-Global Tables: cfcFactions.Dermas,cfcFactions.Alerts, cfcFactions.ErrorMessages, cfcFactions.Credits
+Global Tables: cfcFactions.Dermas, cfcFactions.Alerts, cfcFactions.ErrorMessages, cfcFactions.Credits
 
 ]]--
 

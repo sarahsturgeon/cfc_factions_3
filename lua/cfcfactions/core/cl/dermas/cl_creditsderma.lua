@@ -1,7 +1,7 @@
 if not CLIENT then return end
 
 local Panel = {}
---cfcFactions.Dermas["View Credits"] = {10,Panel}
+--cfcFactions.Dermas["View Credits"] = {10, Panel}
 cfcFactions:RegisterDermaMenu( "View Credits", Panel, 10 )
 
 function Panel:Init()
@@ -16,7 +16,7 @@ function Panel:Init()
     	TextBlock = TextBlock .. ( Developer .. "( " .. KEY .. " )\n" )
     end
     self.TextBox:SetText( TextBlock )
-    self.TextBox:SetColor( Color( 0,0,0,255 ) )
+    self.TextBox:SetColor( Color( 0, 0, 0, 255 ) )
 
 end
 

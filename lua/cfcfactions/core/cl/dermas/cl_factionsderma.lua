@@ -23,41 +23,41 @@ function Panel:Init()
 
     self.BottomPanel = vgui.Create( "DPanel", self.MainContainer )
     self.BottomPanel:Dock( BOTTOM )
-    self.BottomPanel:SetBackgroundColor( Color( 0,0,0,0 ) )
+    self.BottomPanel:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
     self.BottomPanel:SetWide( self:GetWide() )
     self.BottomPanel:SetTall( 50 )
     self.BottomPanel:InvalidateParent( true )
-    self.BottomPanel:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.BottomPanel:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     self.BottomContainerTop = vgui.Create( "DPanel", self.BottomPanel )
     self.BottomContainerTop:Dock( TOP )
-    self.BottomContainerTop:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.BottomContainerTop:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     self.BottomContainerBottom = vgui.Create( "DPanel", self.BottomPanel )
     self.BottomContainerBottom:Dock( BOTTOM )
-    self.BottomContainerBottom:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.BottomContainerBottom:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     --Bottom Panel - Contains buttons to interact with factions
     self.BottomButtonsControlPanel = vgui.Create( "DPanel", self.BottomContainerBottom )
-    self.BottomButtonsControlPanel:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.BottomButtonsControlPanel:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
     self.BottomButtonsControlPanel:Dock( BOTTOM )
 
     --Factions View buttons ( Changing pages )
     self.ButtonsContainer = vgui.Create( "DPanel", self.BottomContainerTop )
     self.ButtonsContainer:Dock( RIGHT )
     self.ButtonsContainer:InvalidateParent( true )
-    self.ButtonsContainer:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.ButtonsContainer:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     -- self.ButtonsContainer:SetWide( 210 )
 
     self.ButtonsPanelLeft = vgui.Create( "DPanel", self.ButtonsContainer )
     self.ButtonsPanelLeft:Dock( LEFT )
     self.ButtonsPanelLeft:InvalidateParent( true )
-    self.ButtonsPanelLeft:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.ButtonsPanelLeft:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
     self.ButtonsPanelRight = vgui.Create( "DPanel", self.ButtonsContainer )
     self.ButtonsPanelRight:Dock( RIGHT )
     self.ButtonsPanelRight:InvalidateParent( true )
-    self.ButtonsPanelRight:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel,255 ) )
+    self.ButtonsPanelRight:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
     --Create, Edit, Delete, View
     self.CreateFaction = vgui.Create( "DButton", self.BottomButtonsControlPanel )
@@ -80,7 +80,7 @@ function Panel:Init()
     self.ViewFaction:SetText( "View Faction" )
     self.ViewFaction:Dock( LEFT )
     cfcFactions:ResizeParentFromChildren( self.BottomButtonsControlPanel )
-    cfcFactions:ResizeChildrenEqually( self.BottomButtonsControlPanel,6 )
+    cfcFactions:ResizeChildrenEqually( self.BottomButtonsControlPanel, 6 )
 
     --First Page, Previous Page, Next Page, Last Page
     self.FirstPage = vgui.Create( "DButton", self.ButtonsPanelLeft )
