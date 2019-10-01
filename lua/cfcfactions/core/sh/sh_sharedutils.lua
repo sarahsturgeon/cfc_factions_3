@@ -75,7 +75,7 @@ cfcFactions.ErrorMessages = {
 }
 
 function cfcFactions:TimeStamp()
-    return os.date( "%H:%M:%S - %d/%m/%Y", os.time( ) )
+    return os.date( "%H:%M:%S - %d/%m/%Y", os.time() )
 end
 
 function cfcFactions:UUID()
