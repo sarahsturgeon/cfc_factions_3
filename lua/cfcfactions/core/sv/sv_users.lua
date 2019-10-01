@@ -27,7 +27,7 @@ function cfcuser:registeruser( user, factionid, rank )
 		["DateAdded"] = cfcFactions:TimeStamp(),
 		["LastOnline"] = cfcFactions:TimeStamp(),
 		["FactionID"] = factionid and factionid or "",
-		["Kills"] = 0, 
+		["Kills"] = 0,
 		["Deaths"] = 0,
 		["FactionRank"] = rank and rank or "",
 		["HoursInFaction"] = nil,

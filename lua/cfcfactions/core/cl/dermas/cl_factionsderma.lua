@@ -142,7 +142,7 @@ local function addFaction( id, name, owner, description, color, invite, kills, d
         cfcFactions.Factions[id] = {
             ["ID"] = id,
             ["Name"] = name,
-            ["Owner"] = owner, 
+            ["Owner"] = owner,
             ["Description"] = description,
             ["Color"] = color,
             ["Invite"] = invite,

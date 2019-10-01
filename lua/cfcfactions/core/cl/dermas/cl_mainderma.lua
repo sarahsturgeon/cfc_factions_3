@@ -1,4 +1,4 @@
-surface.CreateFont( "CFC_Normal", 
+surface.CreateFont( "CFC_Normal",
     { 
         font = "arial",
         size = 18,
@@ -6,7 +6,7 @@ surface.CreateFont( "CFC_Normal",
     }
 )
 
-surface.CreateFont( "CFC_Special", 
+surface.CreateFont( "CFC_Special",
     { 
         font = "coolvetica",
         size = 25,
@@ -14,7 +14,7 @@ surface.CreateFont( "CFC_Special",
     }
 )
 
-surface.CreateFont( "CFC_Alert", 
+surface.CreateFont( "CFC_Alert",
     { 
         font = "Arial",
         size = 45,
@@ -22,7 +22,7 @@ surface.CreateFont( "CFC_Alert",
     }
 )
 
-surface.CreateFont( "CFC_Alert_Small", 
+surface.CreateFont( "CFC_Alert_Small",
     { 
         font = "Arial",
         size = 20,

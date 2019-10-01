@@ -13,7 +13,7 @@ Global Tables: cfcFactions.Logs
 cfcFactions.Logs = cfcFactions or {}
 cfcFactions.LogTypes = {
     MESSAGE = "MESSAGE",
-    ERROR = "ERROR", 
+    ERROR = "ERROR",
     WARNING = "WARNING",
     DEBUG = "DEBUG",
 }
