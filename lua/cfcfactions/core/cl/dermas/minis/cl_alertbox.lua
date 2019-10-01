@@ -26,7 +26,7 @@ function Panel:Init()
     self.ErrMsg:SetText( msg and msg ~= nil or cfcFactions.ErrorMessages["general-error"] )
 
     self.CreationTime = CurTime()
-    self.MiniPanel:SetWide( #self.ErrMsg:GetText()*6 )
+    self.MiniPanel:SetWide( #self.ErrMsg:GetText() * 6 )
 end
 
 function Panel:Paint()
@@ -36,7 +36,7 @@ function Panel:Paint()
     self.CreationTime = CurTime()
     self:Remove()
     
-    AlertInc = AlertInc +1
+    AlertInc = AlertInc + 1
 end
 
 --ui/chat_display_text.wav

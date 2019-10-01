@@ -1,5 +1,5 @@
 surface.CreateFont( "CFC_Normal",
-    { 
+    {
         font = "arial",
         size = 18,
         weight = 500
@@ -7,7 +7,7 @@ surface.CreateFont( "CFC_Normal",
 )
 
 surface.CreateFont( "CFC_Special",
-    { 
+    {
         font = "coolvetica",
         size = 25,
         weight = 500
@@ -48,7 +48,7 @@ function Panel:SetupMenubars( menubar )
                 Entry.internal_button = vgui.Create( "DButton", menubar )
                 Entry.internal_button:Dock( LEFT )
                 Entry.internal_button:SetText( Entry.internal_name )
-                Entry.internal_button:SetTall( menubar:GetTall()+0.5 )
+                Entry.internal_button:SetTall( menubar:GetTall() + 0.5 )
                 Entry.internal_button:DockMargin( 25, 0, 0, 0 )
 
                 Entry.internal_button.DoClick = function()
