@@ -46,8 +46,8 @@ local NamedNetworkVars = {
 }
 
 --loop through and auto gens netvar names
-for _, v in pairs(NamedNetworkVars) do
-    util.AddNetworkString(v)
+for _, v in pairs( NamedNetworkVars ) do
+    util.AddNetworkString( v )
 end
 
 

@@ -24,13 +24,13 @@ cfcFactions.Credits.Developers = {
     ["STEAM_0:1:28607710"] = "Vivian Von Voodoo"
 }
 
---If someone who helped code factions is on, change the hardcoded name to match their current display name (steamid)
+--If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
 function cfcFactions.Credits:GenerateDeveloperNames()
-    for KEY, ID in pairs(cfcFactions.Credits.Developers) do
+    for KEY, ID in pairs( cfcFactions.Credits.Developers ) do
 
-        for KEY2, PLAYER in pairs(player.GetHumans()) do
+        for KEY2, PLAYER in pairs( player.GetHumans() ) do
             if KEY == PLAYER:SteamID() then
-                print("Changing " .. PLAYER:Nick() .. "'s name.")
+                print( "Changing " .. PLAYER:Nick() .. "'s name." )
                 cfcFactions.Credits.Developers[KEY] = PLAYER:Nick()
             end
         end
@@ -75,21 +75,21 @@ cfcFactions.ErrorMessages = {
 }
 
 function cfcFactions:TimeStamp()
-    return os.date( "%H:%M:%S - %d/%m/%Y", os.time())
+    return os.date( "%H:%M:%S - %d/%m/%Y", os.time() )
 end
 
 function cfcFactions:UUID()
     local template ='xxxxxxxxxxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and math.random(0, 9) or math.random(0, 9)
-        return string.format('%x', v)
-    end)
+    return string.gsub( template, '[xy]', function ( c )
+        local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
+        return string.format( '%x', v )
+    end )
 end
 
 --TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
-function cfcFactions:SendNotifcation(msg, mtype, player)
+function cfcFactions:SendNotifcation( msg, mtype, player )
 
-    if type(msg) == "number" then 
+    if type( msg ) == "number" then 
         msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or "" 
     end
 
@@ -105,16 +105,16 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
     if CLIENT then
         if #msg <= 256 then
             if not player:IsPlayer() then
-                MsgN(msg, mtype)
+                MsgN( msg, mtype )
                 return
             end
-            net.Start("CFC_Fac_SendTextAlert")
-            net.WriteString(msg)
-            net.WriteInt(mtype, 4)
+            net.Start( "CFC_Fac_SendTextAlert" )
+            net.WriteString( msg )
+            net.WriteInt( mtype, 4 )
             if player:IsPlayer() then
-                net.WriteEntity(player)
+                net.WriteEntity( player )
             else
-                net.WriteEntity(nil)
+                net.WriteEntity( nil )
             end
             net.SendToServer()
         end
@@ -122,14 +122,14 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
 
     if SERVER then
         if #msg <= 256 then
-            if IsValid(player) and player:IsPlayer() then
-                net.Start("CFC_Fac_SendServerTextAlert")
-                    net.WriteString(msg)
-                    net.WriteInt(mtype, 4)
-                    net.WriteEntity(player)
-                net.Send(player)
+            if IsValid( player ) and player:IsPlayer() then
+                net.Start( "CFC_Fac_SendServerTextAlert" )
+                    net.WriteString( msg )
+                    net.WriteInt( mtype, 4 )
+                    net.WriteEntity( player )
+                net.Send( player )
             else
-                MsgN(msg)
+                MsgN( msg )
             end
         end
     end
