@@ -21,7 +21,8 @@ cfcFactions.Credits.Developers = {
     ["STEAM_0:1:77453431"] = "hmmm",
     ["STEAM_0:1:28482516"] = "iLikeYoBraids",
     ["STEAM_0:1:115301653"] = "Periapsis",
-    ["STEAM_0:1:28607710"] = "Vivian Von Voodoo"
+    ["STEAM_0:1:39801724"] = "Decline",
+    ["STEAM_0:1:13693373"] = "Lego1042"
 }
 
 --If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
