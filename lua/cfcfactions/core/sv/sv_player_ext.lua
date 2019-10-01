@@ -2,7 +2,7 @@
 File Name: sv_player_ext.lua
 
 Purpose: Player table data that contain generic server-side only functions and not shared.
-Note: Many of these functions need to be rewritten under sv_users.lua and then 
+Note: Many of these functions need to be rewritten under sv_users.lua and then
 adjusted here to use it. We should still be able to access player:IsInFaction for example,
 but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 
@@ -43,8 +43,8 @@ end
 
 --Obtains the player's rank if in a faction. Returns empty string if not
 function meta:GetFactionRank()
-    if self:IsInFaction() then 
-        return fpm[self:SteamID64()].FactionRank 
+    if self:IsInFaction() then
+        return fpm[self:SteamID64()].FactionRank
     else
         return ""
     end
@@ -53,7 +53,7 @@ end
 --Gets a player's faction as a table. Returns an empty table if not in one
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
-    if not self:IsInFaction() then 
+    if not self:IsInFaction() then
         return false
     end
 

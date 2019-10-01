@@ -14,7 +14,7 @@ local util = util
 local table = table
 local fpm = cfcFactions.fpm
 local cfg = cfcFactions.Config.Server
-local cfcuser = cfcFactions.Users 
+local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
@@ -78,13 +78,13 @@ function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly,
     end
 
     --IsInFaction Check
-    if cfcuser:IsInFaction( factionOwner ) == true then 
+    if cfcuser:IsInFaction( factionOwner ) == true then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["is-in-faction"], 1, Owner )
-        return 
+        return
     end
 
     --UniqueName Check
-    if not cfcFactions:isUniqueName( factionName ) then 
+    if not cfcFactions:isUniqueName( factionName ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["is-in-faction"], 1, owner )
         return
     end
@@ -94,7 +94,7 @@ function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly,
         factionIsTemporary = false
     end
 
-    --What should a faction contain? 
+    --What should a faction contain?
     cfcFactions.Factions[TmpUnqID] = {
         ["ID"] = TmpUnqID,
         ["Name"] = factionName,
@@ -126,11 +126,11 @@ function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly,
     --Tell clients a new faction was created
     --Package the table and send to clients
     local CopyOfFactionToSend = table.Copy( cfcFactions.Factions[TmpUnqID] )
-    --Some details should be omitted before sending, so we'll create a copy of the table and remove as needed 
+    --Some details should be omitted before sending, so we'll create a copy of the table and remove as needed
     CopyOfFactionToSend.LastSaved = nil
     CopyOfFactionToSend.NeedsCleanUp = nil
   
-    local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false ) 
+    local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false )
   
     net.Start( "CFC_Fac_SendFactionSubmit" )
         net.WriteString( FactionTableJsonified )
@@ -188,7 +188,7 @@ function cfcFactions:EditFaction( id, name, color, description, inviteOnly, play
         
     else
         --else check for normal permissions
-        --ONLY IF, that specific element is being edited. 
+        --ONLY IF, that specific element is being edited.
 
         if not fpm:hasPermission( player, "CanEditAll" ) then
 
@@ -258,7 +258,7 @@ end
 
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 
---If Requested, Send Faction details to client to edit 
+--If Requested, Send Faction details to client to edit
 local function SendFactionDetails( len, ply )
 
 

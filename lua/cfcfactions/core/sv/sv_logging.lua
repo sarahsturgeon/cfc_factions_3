@@ -1,7 +1,7 @@
 --[[]
 File Name: sv_logging.lua
 
-Purpose: Logging functions to show when events happen and variables 
+Purpose: Logging functions to show when events happen and variables
 change that are important to the end user. Differs from notifcations since these
 are mostly back end things such as factions created, edited ( Name, descriptions, etc ), users
 join or leave but are never shown to the user. ( While a notifcation ) can affect the same
@@ -18,7 +18,7 @@ cfcFactions.LogTypes = {
     DEBUG = "DEBUG",
 }
 
---parses and correctly displays a log from arg:table into proper format, returns a table 
+--parses and correctly displays a log from arg:table into proper format, returns a table
 local function safeLog( log, msg, type, args, parse, sve, time )
 --[[
     --Internal structure of what is passed into a logging session
@@ -65,7 +65,7 @@ local function safeLog( log, msg, type, args, parse, sve, time )
             log[Time] = cfcFactions:TimeStamp()
         end
 
-        --if not a table, we'll need to properly form a table for the string to be recorded. 
+        --if not a table, we'll need to properly form a table for the string to be recorded.
     elseif type( log ) == "string" then
 
     end

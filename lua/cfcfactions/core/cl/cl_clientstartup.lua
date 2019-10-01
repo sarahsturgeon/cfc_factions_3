@@ -25,7 +25,7 @@ function cfcFactions:AddAlert( msg, mtype )
     hook.Call( "CFC_FAC_AlertAdded", _, msg, mtype )
 end
 
---Displays and handles closing ( an already open ) menu derma. 
+--Displays and handles closing ( an already open ) menu derma.
 function cfcFactions:DisplayMenu()
     if not cfcFactions.MainDerma or cfcFactions.MainDerma == nil then
         cfcFactions.MainDerma = vgui.Create( "D_cfcmainderma" )
@@ -39,7 +39,7 @@ function cfcFactions:DisplayMenu()
     else
         cfcFactions.MainDerma:Hide()
         gui.EnableScreenClicker( false )
-    end 
+    end
 end
 
 --If the defined key is properly set, users can use that specific key to also open/close the derma

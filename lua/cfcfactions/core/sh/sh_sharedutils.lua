@@ -14,7 +14,7 @@ cfcFactions.Credits = cfcFactions.Credits or {}
 --Sends a notifaction msg:string, mtype:number, player:entity
 
 --Table of anyone who wants credit in developing factions. Names are changed dynamically if they are on the SERVER
---For extra effect, pull their name from their steam page directly. 
+--For extra effect, pull their name from their steam page directly.
 cfcFactions.Credits.Developers = {
     ["STEAM_0:1:74678877"] = "Bleck",
     ["STEAM_0:0:21170873"] = "Phatso",
@@ -87,18 +87,18 @@ function cfcFactions:UUID()
     end )
 end
 
---TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
+--TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing.
 function cfcFactions:SendNotifcation( msg, mtype, player )
 
-    if type( msg ) == "number" then 
-        msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or "" 
+    if type( msg ) == "number" then
+        msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or ""
     end
 
     if not player:IsValid() then
         return
     end
 
-    --only 4 types of error types. 
+    --only 4 types of error types.
     if mtype == nil then mtype = 1 end
     if mtype > 4 then mtype = 1 end
     if mtype < 1 then mytype = 1 end

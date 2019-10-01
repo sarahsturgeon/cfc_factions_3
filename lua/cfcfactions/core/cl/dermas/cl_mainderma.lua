@@ -1,5 +1,5 @@
 surface.CreateFont( "CFC_Normal",
-    { 
+    {
         font = "arial",
         size = 18,
         weight = 500
@@ -7,7 +7,7 @@ surface.CreateFont( "CFC_Normal",
 )
 
 surface.CreateFont( "CFC_Special",
-    { 
+    {
         font = "coolvetica",
         size = 25,
         weight = 500
@@ -15,7 +15,7 @@ surface.CreateFont( "CFC_Special",
 )
 
 surface.CreateFont( "CFC_Alert",
-    { 
+    {
         font = "Arial",
         size = 45,
         weight = 100
@@ -23,7 +23,7 @@ surface.CreateFont( "CFC_Alert",
 )
 
 surface.CreateFont( "CFC_Alert_Small",
-    { 
+    {
         font = "Arial",
         size = 20,
         weight = 100
@@ -96,7 +96,7 @@ function Panel:Init()
         cfcFactions:DisplayMenu()
     end
     
-    --self.menubar : Contains the autoloaded elements defined in 
+    --self.menubar : Contains the autoloaded elements defined in
     --  cfcFactions:RegisterDermaMenu( string )
     --      cfcFactions.Dermas
     self.menubar = vgui.Create( "DPanel", self )
@@ -159,7 +159,7 @@ function Panel:Paint( w, h )
         surface.DrawOutlinedRect( 0, 0, w, h )
 
         --surface.DrawOutlinedRect( 0, 0, w, h )
-        draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText ) 
+        draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText )
 end
 
 function Panel:Think()

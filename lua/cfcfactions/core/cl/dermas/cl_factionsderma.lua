@@ -95,7 +95,7 @@ function Panel:Init()
     self.NextPage:SetText( ">" )
     self.NextPage:Dock( LEFT )
 
-    self.LastPage = vgui.Create( "DButton", self.ButtonsPanelRight ) 
+    self.LastPage = vgui.Create( "DButton", self.ButtonsPanelRight )
     self.LastPage:SetText( ">>" )
     self.LastPage:Dock( RIGHT )
 
@@ -158,7 +158,7 @@ local function addFaction( id, name, owner, description, color, invite, kills, d
         local tmpLock
         if Faction.Invite == 1 then
             tmpLock = "L"
-        else 
+        else
             tmpLock = ""
         end
 
@@ -167,7 +167,7 @@ local function addFaction( id, name, owner, description, color, invite, kills, d
         --<FactionViewPanel>:AddLine( tmpLock, Faction.Name, Faction.Description, Faction.Owner, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
         --<FactionViewPanel>:DataLayout()
         
-    end 
+    end
 end
 
 local function factionCreated( len, ply )

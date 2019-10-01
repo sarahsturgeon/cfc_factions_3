@@ -17,7 +17,7 @@ function Panel:Init()
     self.MiniPanel:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
     self.err_icon = vgui.Create( "DImage", self.MiniPanel )   -- Add image to Frame
     self.err_icon:SetPos( 10, 35 )  -- Move it into frame
-    self.err_icon:SetSize( 555, 150 )   
+    self.err_icon:SetSize( 555, 150 )
     self.err_icon:Dock( LEFT )
 
     self.ErrMsg = vgui.Create( "DLabel", self.MiniPanel )

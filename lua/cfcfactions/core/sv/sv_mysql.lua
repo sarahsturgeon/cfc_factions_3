@@ -140,12 +140,12 @@ function sql_db:initilize()
 end
 
 --------------------------------------------------------------------------------------------------------------
---General Fetching 
+--General Fetching
 --------------------------------------------------------------------------------------------------------------
 
 function sql_db:CountFactions()
     local qs = [[
-    SELECT COUNT( * ) 
+    SELECT COUNT( * )
     FROM cfcfactions_data
     ]]
     local q = sql_db:query( qs )
@@ -153,7 +153,7 @@ end
 
 function sql_db:CountUsers()
     local qs = [[
-    SELECT COUNT( * ) 
+    SELECT COUNT( * )
     FROM cfcusers_data
     ]]
     local q = sql_db:query( qs )
@@ -161,7 +161,7 @@ end
 
 function sql_db:CountLogs()
     local qs = [[
-    SELECT COUNT( * ) 
+    SELECT COUNT( * )
     FROM cfcadminlog
     ]]
     local q = sql_db:query( qs )
@@ -177,7 +177,7 @@ end
 
 function sql_db:saveFaction()
     local qs = [[
-    SELECT  
+    SELECT
     FROM cfcfactions_data
     ]]
     local q = sql_db:query( qs )
@@ -185,7 +185,7 @@ end
 
 function sql_db:saveFactions()
     local qs = [[
-    SELECT  
+    SELECT
     FROM cfcfactions_data
     ]]
     local q = sql_db:query( qs )
@@ -193,7 +193,7 @@ end
 
 function sql_db:loadFaction()
     local qs = [[
-    SELECT  
+    SELECT
     FROM cfcfactions_data
     ]]
     local q = sql_db:query( qs )
@@ -201,7 +201,7 @@ end
 
 function sql_db:loadFactions()
     local qs = [[
-    SELECT  
+    SELECT
     FROM cfcfactions_data
     ]]
     local q = sql_db:query( qs )
@@ -209,7 +209,7 @@ end
 
 function sql_db:removeFaction()
     local qs = [[
-    SELECT  
+    SELECT
     FROM cfcfactions_data
     ]]
     local q = sql_db:query( qs )
@@ -262,7 +262,7 @@ end
 --  if ply == nil then return end
 
 --  local qs = [[
---      SELECT * 
+--      SELECT *
 --      FROM `cfcadminlog`
 --      ORDERBY time
 --  ]]
@@ -332,7 +332,7 @@ end
 --         MsgN( 'CFCFactions: Query Failed with ' .. err .. ' ( ' .. sql .. ' )' )
 --         q:start()
 --  end
---  q:start()   
+--  q:start()
 -- end
 
 
@@ -374,14 +374,14 @@ end
 --         MsgN( 'CFCFactions: Query Failed with ' .. err .. ' ( ' .. sql .. ' )' )
 --         q:start()
 --  end
---  q:start()   
+--  q:start()
 -- end
 
 
 -- function sql_db:GetUsersByFactionID( factionid, callback )
 
 --  local qs = [[
---      SELECT * 
+--      SELECT *
 --      FROM `cfcusers_data`
 --      WHERE factionid = '%s'
 --  ]]
@@ -392,11 +392,11 @@ end
     
 --      if #data > 0 then
 --          local onlineusers = {}
---          local offlineusers = {}  
+--          local offlineusers = {}
 --          for k, d in pairs( data ) do
 --              local row = data[k]
 --              for _, p in pairs( player.GetHumans() ) do
---                  if ( table.HasValue( row, p:SteamID64() ) ) then 
+--                  if ( table.HasValue( row, p:SteamID64() ) ) then
 
 --                      table.insert( onlineusers, p )
 --                  else
@@ -425,7 +425,7 @@ end
 --         q:start()
 --     end
      
---     q:start()    
+--     q:start()
 -- end
 
 -- function sql_db:IsFactionNameUnique( name )
@@ -672,7 +672,7 @@ end
 
 
 -- --Several ways to properly insert and extract "extras"
--- --Extras is a table that is converted into a JSON string 
+-- --Extras is a table that is converted into a JSON string
 
 -- --Method 1:  Insert / Extract individual table key/value pairs
 -- --Method 2: Insert / Extract entire table/json

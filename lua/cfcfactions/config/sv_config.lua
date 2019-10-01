@@ -1,4 +1,4 @@
---Data Module settings 
+--Data Module settings
 cfcFactions.Config.Server = {
     --stance: MySql or SQL
         --"Mysql" is for external db connections / offsite db
@@ -9,7 +9,7 @@ cfcFactions.Config.Server = {
         sql_password = "factions",
         sql_hostname = "localhost",
         sql_database = "cfctest",
-        sql_port = 3306 
+        sql_port = 3306
     },
 }
 

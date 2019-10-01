@@ -75,7 +75,7 @@ fpm.Permissions.SpecialPermissions = {
 
 
 --//interal ranks inside a self contained faction. These will always be avaible to default to encase
---a user decides to mess up their internal ranks. 
+--a user decides to mess up their internal ranks.
 --!Best not to change these unless a core permission is needed
 fpm.defaultRanks = {
     --creator of a faction. Can do anything in their own faction
@@ -103,7 +103,7 @@ fpm.defaultRanks = {
     "CanReceiveFactionMessage"}
 }
 
---Returns a copy of merged tables for all permissions ( Special and core ). 
+--Returns a copy of merged tables for all permissions ( Special and core ).
 function fpm:FetchMergedPermissions()
     return table.Merge( fpm.Permissions.CorePermissions, fpm.Permissions.SpecialPermissions )
 end
@@ -131,15 +131,15 @@ end
 function fpm:authUser( player )
     print( "Authenticating user " .. player:SteamID() )
     --Checks and balances
-    if not player:IsPlayer() then 
-        return 
+    if not player:IsPlayer() then
+        return
     end
 
     if cfcuser:UserExists( player ) then
-        if ( not ( cfcuser[player:SteamID64()].CFCPermissions == nil ) ) then 
+        if ( not ( cfcuser[player:SteamID64()].CFCPermissions == nil ) ) then
             --Error out, player already has proper permissions for authentication
-            return 
-        end      
+            return
+        end
     end
 
     cfcuser:registeruser( player, nil, nil )
@@ -175,7 +175,7 @@ function fpm:hasPermission( player, permission )
 
     for _, perms in pairs( cfcuser[player:SteamID64()].CFCPermissions ) do
         if perms == permission then
-            return true 
+            return true
         end
     end
 
@@ -185,7 +185,7 @@ end
 --Adds a permission to the player. True if success, false if otherwise
 function fpm:addPermission( player, permission )
     if not IsValid( player ) or not player:IsPlayer() then print( "Unable to add permission, invalid player" ) return false end
-    if not fpm:IsValidPermission( permission ) then 
+    if not fpm:IsValidPermission( permission ) then
         player:ChatPrint( "Unable to add permission. Unknown string." )
          return false
     end

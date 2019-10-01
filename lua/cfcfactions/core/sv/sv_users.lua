@@ -6,15 +6,15 @@ Purpose: Core faction's functions to create, edit, and destory users who use fac
 Global Tables: cfcFactions.Users
 ]]--
 cfcFactions.Users = cfcFactions.Users or {}
-local cfcuser = cfcFactions.Users 
+local cfcuser = cfcFactions.Users
 local fpm = cfcFactions.fpm
 
 --Registers a new user to be accessible by factions
 function cfcuser:registeruser( user, factionid, rank )
 
-	if not user:IsPlayer() then 
+	if not user:IsPlayer() then
 		--Error out, not a player
-		return 
+		return
 	end
 
 	if cfcuser:UserExists( user ) then
@@ -43,9 +43,9 @@ end
 --Checks if a user is already registered
 function cfcuser:UserExists( user )
 
-	if not user:IsPlayer() then 
+	if not user:IsPlayer() then
 		--Error out, not a player
-		return 
+		return
 	end
 
 	if table.HasValue( cfcuser, user:SteamID64() ) then
@@ -73,9 +73,9 @@ function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, faction
 
     local userTable = cfcuser[user:SteamID64()]
     if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
-    if IsValidNumber( factionId ) and cfcFactions:IsValidFaction( factionid ) then 
-        userTable["FactionId"] = factionid 
-    end    
+    if IsValidNumber( factionId ) and cfcFactions:IsValidFaction( factionid ) then
+        userTable["FactionId"] = factionid
+    end
     if IsValidNumber( kills ) then userTable["Kills"] = kills end
     if IsValidNumber( deaths ) then userTable["Deaths"] = deaths end
     if IsValidString( factionrank ) then userTable["FactionRank"] = factionrank end
@@ -100,9 +100,9 @@ function cfcuser:SetUserRank( user, rank )
 end
 
 function cfcuser:SetUserFaction( user, id, rank )
-	if not user:IsPlayer() then 
+	if not user:IsPlayer() then
 		--Error out, not a player
-		return 
+		return
 	end
 
 	if not cfcFactions:IsValidFaction( id ) then
@@ -137,7 +137,7 @@ function cfcuser:RemoveUserInvite( user, id, revoker )
 
 end
 
-function cfcuser:IsInFaction( user ) 
+function cfcuser:IsInFaction( user )
 	if not user:IsPlayer() then
 		return
 	end

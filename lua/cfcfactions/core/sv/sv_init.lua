@@ -48,7 +48,7 @@ function cfcFactions:InitializeFactions()
 
 
     --Make sure tables exsist
-    if sql_db == nil then   
+    if sql_db == nil then
         Error( "Unable to initilize mysql data object. Make sure there are no errors in config." )
     end
 
