@@ -38,7 +38,7 @@ fpm.Permissions.CorePermissions = {
         --housekeeping
         ["CanViewLogs"] = {Description="Allows a user to view the faction's logs."},
         ["CanViewFactionWiki"] = {Description="Allows a user to view their faction's wiki."},
-        ["CanEditFactionWiki"] = {Description="Allows a user to edit their faction's wiki."}, 
+        ["CanEditFactionWiki"] = {Description="Allows a user to edit their faction's wiki."},
 
         --misc
         ["CanSendAllMessage"]= {Description="Allows a user to send a member to any faction member."},

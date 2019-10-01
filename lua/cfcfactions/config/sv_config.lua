@@ -8,7 +8,7 @@ cfcFactions.Config.Server = {
         sql_username = "nativeuser",
         sql_password = "factions",
         sql_hostname = "localhost",
-        sql_database = "cfctest",   
+        sql_database = "cfctest",
         sql_port = 3306 
     },
 }

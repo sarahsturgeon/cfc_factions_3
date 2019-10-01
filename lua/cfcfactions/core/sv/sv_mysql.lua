@@ -13,8 +13,8 @@ local string = string
 --TODO: changed config structure
 local config = cfcFactions.Config.Server.MySQL
 
-sql_db = mysqloo.connect( config.sql_hostname, 
-    config.sql_username, config.sql_password, 
+sql_db = mysqloo.connect( config.sql_hostname,
+    config.sql_username, config.sql_password,
     config.sql_database, config.sql_port )
 
 function sql_db:onConnected()
@@ -703,7 +703,7 @@ end
 --      table.insert( tmpTable, extras )
 
 --      --pass id::String, edited::String, extras::Table
---      qs = string.format( qs, factionid, os.date( "%H:%M:%S - %d/%m/%Y" , os.time() ), 
+--      qs = string.format( qs, factionid, os.date( "%H:%M:%S - %d/%m/%Y" , os.time() ),
 --          util.TableToJSON( tmpTable ) )
 
 
