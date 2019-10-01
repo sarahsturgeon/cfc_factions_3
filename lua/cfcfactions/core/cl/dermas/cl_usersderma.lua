@@ -1,7 +1,7 @@
 if not CLIENT then return end
 
 local Panel = {}
---cfcFactions.Dermas["View Users"] = {1,Panel}
+--cfcFactions.Dermas["View Users"] = {1, Panel}
 
 cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
 

@@ -22,7 +22,7 @@ function cfcFactions:ResizeChildrenEqually( parent, modifer )
         for k, babypanel in pairs( parent:GetChildren() ) do
             
             if babypanel:GetClassName() == "Label" then
-                --print( string.format( "Looping on: %s with size of %s",babypanel:GetText(), #babypanel:GetText() ) )
+                --print( string.format( "Looping on: %s with size of %s", babypanel:GetText(), #babypanel:GetText() ) )
                 if #babypanel:GetText() > MaxSize then
                     MaxSize = ( ( #babypanel:GetText() ) * mulmod )
                 end

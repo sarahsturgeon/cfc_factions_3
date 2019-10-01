@@ -2,7 +2,7 @@ if not CLIENT then return end
 
 local Panel = {}
 local lastCount = -1
-cfcFactions:RegisterDermaMenu( "My Alerts", Panel,3 )
+cfcFactions:RegisterDermaMenu( "My Alerts", Panel, 3 )
 
 --converts message type to a pretty string for the user
 local function printyprint( number )
@@ -26,7 +26,7 @@ local function drawAlertsTable( main_panel )
     if ( #cfcFactions.Alerts ~= lastCount ) or ( lastCount == -1 ) then
         main_panel.logview:Clear()
         for k, logs in pairs( cfcFactions.Alerts ) do
-            main_panel.logview:AddLine( logs.Time, logs.Message,printyprint( logs.Type ) )
+            main_panel.logview:AddLine( logs.Time, logs.Message, printyprint( logs.Type ) )
             
         end
         lastCount = #cfcFactions.Alerts
