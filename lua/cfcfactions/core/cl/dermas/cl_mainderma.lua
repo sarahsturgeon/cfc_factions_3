@@ -40,7 +40,7 @@ function Panel:SetupMenubars( menubar )
         table.sort( cfcFactions.Dermas, function( a, b ) return a.internal_ranking < b.internal_ranking end )
 
         --loop through tmpsorttable in order to take advantage of the internal ranking of tabs
-        for n=1, table.Count( cfcFactions.Dermas ) do
+        for n = 1, table.Count( cfcFactions.Dermas ) do
             local Entry = cfcFactions.Dermas[n]
             if Entry.internal_button ~= nil then
 
@@ -54,7 +54,7 @@ function Panel:SetupMenubars( menubar )
                 Entry.internal_button.DoClick = function()
                     cfcFactions.CurrentTab = Entry.internal_button
 
-                    for k=1, table.Count( cfcFactions.Dermas ) do
+                    for k = 1, table.Count( cfcFactions.Dermas ) do
                         local otherbuttons = cfcFactions.Dermas[k]
 
                         --If current tab == button clicked
@@ -186,7 +186,7 @@ function Panel:SetMainView( panel )
 end
 
 function Panel:OnMousePressed( key )
-    if key ==MOUSE_RIGHT then
+    if key == MOUSE_RIGHT then
         self:CreateAlert( "Test Alert was created", cfg.MsgType[2] )
     end
 end

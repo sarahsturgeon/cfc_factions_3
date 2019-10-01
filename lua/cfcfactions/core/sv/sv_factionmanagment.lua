@@ -309,7 +309,7 @@ concommand.Add( "fpvp_debugtest", factionDebugTest )
 
 local function factionDebugMsg( ply, cmd, args )
     local argstring = ""
-    for k=1, #args do
+    for k = 1, #args do
         argstring = argstring .. args[k] .. " "
     end
 

@@ -7,7 +7,7 @@ function cfcFactions:SanitizeLuaVariableName( inputstring )
     if inputstring == nil then return "" end
     local tmp = ""
 
-    for k=1, #inputstring do
+    for k = 1, #inputstring do
         tmp = string.Replace( inputstring, " ", "_" )
     end
     return string.lower( tmp )

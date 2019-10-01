@@ -13,64 +13,64 @@ local cfcuser = cfcFactions.Users
 
 fpm.Permissions.CorePermissions = {
         --  NamedKey = table( description )
-        --"ExamplePermission" = {Description="A short description of what the permission should do"}
-        --"CanKick" = {Description="Allows a user to kick from faction."}
-        --[""] = {Description=""},
+        --"ExamplePermission" = {Description = "A short description of what the permission should do"}
+        --"CanKick" = {Description = "Allows a user to kick from faction."}
+        --[""] = {Description = ""},
 
         --faction managment
-        ["CanBan"] = {Description="Allows the user to ban from their own faction."},
-        ["CanUnban"] = {Description="Allows the user to unban a member from their own faction."},
-        ["CanDisbandFaction"] = {Description="Allows a user to disband their faction."},
-        ["CanEditAll"] = {Description="Allows a user to edit any faction detail."},
-        ["CanEditDescription"] = {Description="Allows a user to edit the faction's description."},
-        ["CanEditName"] = {Description="Allows a user to edit the faction's name."},
-        ["CanEditColor"] = {Description="Allows a user to edit the faction's color."},
-        ["CanEditInvite"] = {Description="Allows a user to edit the faction's invite status."},
+        ["CanBan"] = {Description = "Allows the user to ban from their own faction."},
+        ["CanUnban"] = {Description = "Allows the user to unban a member from their own faction."},
+        ["CanDisbandFaction"] = {Description = "Allows a user to disband their faction."},
+        ["CanEditAll"] = {Description = "Allows a user to edit any faction detail."},
+        ["CanEditDescription"] = {Description = "Allows a user to edit the faction's description."},
+        ["CanEditName"] = {Description = "Allows a user to edit the faction's name."},
+        ["CanEditColor"] = {Description = "Allows a user to edit the faction's color."},
+        ["CanEditInvite"] = {Description = "Allows a user to edit the faction's invite status."},
 
 
         --permssions
-        ["CanEditPermissions"] = {Description="Allows a user to edit a faction's permission structure."},
-        ["CanAddPermissions"] = {Description="Allows a user to add a permission to a member."},
-        ["CanSetRanks"] = {Description="Allows a user to set a member's rank."},
-        ["CanRemoveRanks"] = {Description="Allows a user to remove a member's rank."},
-        ["CanRemovePermissions"] = {Description="Allows a user to remove a member's permissions."},
+        ["CanEditPermissions"] = {Description = "Allows a user to edit a faction's permission structure."},
+        ["CanAddPermissions"] = {Description = "Allows a user to add a permission to a member."},
+        ["CanSetRanks"] = {Description = "Allows a user to set a member's rank."},
+        ["CanRemoveRanks"] = {Description = "Allows a user to remove a member's rank."},
+        ["CanRemovePermissions"] = {Description = "Allows a user to remove a member's permissions."},
 
         --housekeeping
-        ["CanViewLogs"] = {Description="Allows a user to view the faction's logs."},
-        ["CanViewFactionWiki"] = {Description="Allows a user to view their faction's wiki."},
-        ["CanEditFactionWiki"] = {Description="Allows a user to edit their faction's wiki."},
+        ["CanViewLogs"] = {Description = "Allows a user to view the faction's logs."},
+        ["CanViewFactionWiki"] = {Description = "Allows a user to view their faction's wiki."},
+        ["CanEditFactionWiki"] = {Description = "Allows a user to edit their faction's wiki."},
 
         --misc
-        ["CanSendAllMessage"]= {Description="Allows a user to send a member to any faction member."},
-        ["CanReceiveAllMessage"] = {Description="Allows a user to receive a message from anyone."},
-        ["CanSendFactionMessage"] = {Description="Allows a user to send a message to their own faction."},
-        ["CanReceiveFactionMessage"] = {Description="Allows a user to receive a faction message from their own faction."},
-        ["CanSpawnXPObject"] = {Description="Allows a user to spawn a XP gathering object."},
-        ["CanDeleteXPObject"] = {Description="Allows a user to remove a XP gathering object."},
-        ["CanDeclareWar"] = {Description="Allows a user to declare war on other factions."},
-        ["CanUndeclareWar"] = {Description="Allows a user to remove a war from another faction."},
-        ["CanSetAllies"] = {Description="Allows a user to set allies."},
-        ["CanSetEnemies"] = {Description="Allows a user to set enemies."},
-        ["CanRemoveAllies"] = {Description="Allows a user to remove allies."},
-        ["CanRemoveEnemies"] = {Description="Allows a user to remove enemies."},
-        ["CanHireMercs"] = {Description="Allows a user to hire mercenaries."},
-        ["CanFireMercs"] ={Description="Allows a user to fire mercenaries."},
-        ["CanSendInvite"] = {Description="Allows a user to send out faction invites."},
-        ["CanRevokeInvite"] = {Description="Allows a user to revoke a faction invite."},
-        ["CanDamageAllies"] = {Description="Allows a user to damage allies."},
-        ["CanDamageTeammates"] = {Description="Allows a user to damage teammates."}
+        ["CanSendAllMessage"]= {Description = "Allows a user to send a member to any faction member."},
+        ["CanReceiveAllMessage"] = {Description = "Allows a user to receive a message from anyone."},
+        ["CanSendFactionMessage"] = {Description = "Allows a user to send a message to their own faction."},
+        ["CanReceiveFactionMessage"] = {Description = "Allows a user to receive a faction message from their own faction."},
+        ["CanSpawnXPObject"] = {Description = "Allows a user to spawn a XP gathering object."},
+        ["CanDeleteXPObject"] = {Description = "Allows a user to remove a XP gathering object."},
+        ["CanDeclareWar"] = {Description = "Allows a user to declare war on other factions."},
+        ["CanUndeclareWar"] = {Description = "Allows a user to remove a war from another faction."},
+        ["CanSetAllies"] = {Description = "Allows a user to set allies."},
+        ["CanSetEnemies"] = {Description = "Allows a user to set enemies."},
+        ["CanRemoveAllies"] = {Description = "Allows a user to remove allies."},
+        ["CanRemoveEnemies"] = {Description = "Allows a user to remove enemies."},
+        ["CanHireMercs"] = {Description = "Allows a user to hire mercenaries."},
+        ["CanFireMercs"] ={Description = "Allows a user to fire mercenaries."},
+        ["CanSendInvite"] = {Description = "Allows a user to send out faction invites."},
+        ["CanRevokeInvite"] = {Description = "Allows a user to revoke a faction invite."},
+        ["CanDamageAllies"] = {Description = "Allows a user to damage allies."},
+        ["CanDamageTeammates"] = {Description = "Allows a user to damage teammates."}
 }
 
 --super special permissions not used by factions specifically
 fpm.Permissions.SpecialPermissions = {
-    ["IsDeveloper"] = {Description="Gives full permissions over everything that is cfc_Factions."},
-    ["IsTester"] = {Description="A test permission to let users access experimental features."},
-    ["IsFactionsAdmin"] = {Description="Lets a user have full control over other factions. "},
-    ["CanCreateFaction"] = {Description="Lets a user create their own factions."},
-    ["CanJoinFaction"] = {Description="Lets a user join other's factions."},
-    ["AccessAll"] = {Description="Lets a user access factions and its content."},
-    ["CanLeaveFaction"] = {Description="Lets a user leave their faction."},
-    ["TestPerm"] = {Description="Test permission, please ignore."}
+    ["IsDeveloper"] = {Description = "Gives full permissions over everything that is cfc_Factions."},
+    ["IsTester"] = {Description = "A test permission to let users access experimental features."},
+    ["IsFactionsAdmin"] = {Description = "Lets a user have full control over other factions. "},
+    ["CanCreateFaction"] = {Description = "Lets a user create their own factions."},
+    ["CanJoinFaction"] = {Description = "Lets a user join other's factions."},
+    ["AccessAll"] = {Description = "Lets a user access factions and its content."},
+    ["CanLeaveFaction"] = {Description = "Lets a user leave their faction."},
+    ["TestPerm"] = {Description = "Test permission, please ignore."}
 }
 
 

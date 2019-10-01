@@ -55,7 +55,7 @@ function sql_db:initilize()
                  PRIMARY KEY ( `uniqueid` )
 
 
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+            ) ENGINE = InnoDB DEFAULT CHARSET = latin1
         ]] ),
 
         --Table to store all userdata ( playerid64:string, factionid:string, rank:string, extras:json, kills:number, deaths:number )
@@ -68,7 +68,7 @@ function sql_db:initilize()
                     flags text,
                     PRIMARY KEY( `playerid` )
 
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+                ) ENGINE = InnoDB DEFAULT CHARSET = latin1
             ]] ),
 
         --Table to log all administrative actions IE: changing name, deleting faction, deleting user
@@ -85,7 +85,7 @@ function sql_db:initilize()
                     time varchar( 32 ) NOT NULL,
                     PRIMARY KEY( id )
 
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+                ) ENGINE = InnoDB DEFAULT CHARSET = latin1
             ]] ),
 
         q4 = sql_db:query( [[
@@ -93,7 +93,7 @@ function sql_db:initilize()
                     id int NOT NULL AUTO_INCREMENT,
                     permission NOT NULL,
                     PRIMARY KEY( id )
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+                ) ENGINE = InnoDB DEFAULT CHARSET = latin1
 
             ]] ),
 
@@ -103,7 +103,7 @@ function sql_db:initilize()
                     kills int,
                     deaths int,
                     points int
-                )ENGINE=InnoDB DEFAULT CHARSET=latin1
+                )ENGINE = InnoDB DEFAULT CHARSET = latin1
             ]] ),
 
         q6 = sql_db:query( [[
@@ -112,7 +112,7 @@ function sql_db:initilize()
                     kills int,
                     deaths int,
                     points int
-                )ENGINE=InnoDB DEFAULT CHARSET=latin1
+                )ENGINE = InnoDB DEFAULT CHARSET = latin1
             ]] )
     }
 
