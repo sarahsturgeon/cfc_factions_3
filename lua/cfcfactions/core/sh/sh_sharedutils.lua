@@ -3,15 +3,42 @@ File Name: sh_sharedutils.lua
 
 Purpose: Shared functions that contain various useful tables and functions used across cfcFactions
 
-Global Tables: cfcFactions.Dermas,cfcFactions.Alerts, cfcFactions.ErrorMessages
+Global Tables: cfcFactions.Dermas, cfcFactions.Alerts, cfcFactions.ErrorMessages, cfcFactions.Credits
 
 ]]--
 
 local net = net
 local string = string
 local table = table
-
+cfcFactions.Credits = cfcFactions.Credits or {}
 --Sends a notifaction msg:string, mtype:number, player:entity
+
+--Table of anyone who wants credit in developing factions. Names are changed dynamically if they are on the SERVER
+--For extra effect, pull their name from their steam page directly. 
+cfcFactions.Credits.Developers = {
+    ["STEAM_0:1:74678877"] = "Bleck",
+    ["STEAM_0:0:21170873"] = "Phatso",
+    ["STEAM_0:1:77453431"] = "hmmm",
+    ["STEAM_0:1:28482516"] = "iLikeYoBraids",
+    ["STEAM_0:1:115301653"] = "Periapsis",
+    ["STEAM_0:1:39801724"] = "Decline",
+    ["STEAM_0:1:13693373"] = "Lego1042"
+}
+
+--If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
+function cfcFactions.Credits:GenerateDeveloperNames()
+    for KEY, ID in pairs( cfcFactions.Credits.Developers ) do
+
+        for KEY2, PLAYER in pairs( player.GetHumans() ) do
+            if KEY == PLAYER:SteamID() then
+                print( "Changing " .. PLAYER:Nick() .. "'s name." )
+                cfcFactions.Credits.Developers[KEY] = PLAYER:Nick()
+            end
+        end
+    end
+    return cfcFactions.Credits.Developers
+end
+
 
 cfcFactions.ErrorMessages = {
     ["general-error"]         = "An unknown error occured",
@@ -53,24 +80,28 @@ cfcFactions.ErrorMessages = {
 }
 
 function cfcFactions:TimeStamp()
-    return os.date( "%H:%M:%S - %d/%m/%Y", os.time())
+    return os.date( "%H:%M:%S - %d/%m/%Y", os.time() )
 end
 
 function cfcFactions:UUID()
     local template ='xxxxxxxxxxxxxxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and math.random(0, 9) or math.random(0, 9)
-        return string.format('%x', v)
-    end)
+    return string.gsub( template, '[xy]', function ( c )
+        local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
+        return string.format( '%x', v )
+    end )
 end
 
 --TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
-function cfcFactions:SendNotifcation(msg, mtype, player)
-    if type(msg) == "number" then msg = cfcFactions.ErrorMessages
-[msg] and cfcFactions.ErrorMessages
-[msg] or "" end
-    print(string.format("Sending notifcation for %s, msg=%s, type=%s", (player:Nick() and player:Nick() or "InvalidPlayer"), msg, mtype))
-    
+function cfcFactions:SendNotifcation( msg, mtype, player )
+
+    if type( msg ) == "number" then 
+        msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or "" 
+    end
+
+    if not player:IsValid() then
+        return
+    end
+
     --only 4 types of error types. 
     if mtype == nil then mtype = 1 end
     if mtype > 4 then mtype = 1 end
@@ -79,16 +110,16 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
     if CLIENT then
         if #msg <= 256 then
             if not player:IsPlayer() then
-                MsgN(msg, mtype)
+                MsgN( msg, mtype )
                 return
             end
-            net.Start("CFC_Fac_SendTextAlert")
-            net.WriteString(msg)
-            net.WriteInt(mtype, 4)
+            net.Start( "CFC_Fac_SendTextAlert" )
+            net.WriteString( msg )
+            net.WriteInt( mtype, 4 )
             if player:IsPlayer() then
-                net.WriteEntity(player)
+                net.WriteEntity( player )
             else
-                net.WriteEntity(nil)
+                net.WriteEntity( nil )
             end
             net.SendToServer()
         end
@@ -96,49 +127,15 @@ function cfcFactions:SendNotifcation(msg, mtype, player)
 
     if SERVER then
         if #msg <= 256 then
-            if player:IsPlayer() and IsValid(player) then
-                net.Start("CFC_Fac_SendServerTextAlert")
-                net.WriteString(msg)
-                net.WriteInt(mtype, 4)
-                net.WriteEntity(player)
-                net.Send(player)
+            if IsValid( player ) and player:IsPlayer() then
+                net.Start( "CFC_Fac_SendServerTextAlert" )
+                    net.WriteString( msg )
+                    net.WriteInt( mtype, 4 )
+                    net.WriteEntity( player )
+                net.Send( player )
             else
-                MsgN(msg)
+                MsgN( msg )
             end
         end
     end
 end
-
--- function cfcFactions.includeFile( filename, state )
---     if state == frile.STATE_SHARED or filename:find( "sh_" ) then
---         if SERVER then AddCSLuaFile( filename ) end
---         include( filename )
---     elseif state == frile.STATE_SERVER or SERVER and filename:find( "sv_" ) then
---         include( filename )
---     elseif state == frile.STATE_CLIENT or filename:find( "cl_" ) then
---         if SERVER then AddCSLuaFile( filename )
---         else include( filename ) end
---     end
--- end
-
--- function cfcFactions.includeFolder( currentFolder, ignoreFilesInFolder, ignoreFoldersInFolder )
---     if file.Exists( currentFolder .. "sh_frile.lua", "LUA" ) then
---         frile.includeFile( currentFolder .. "sh_frile.lua" )
-
---         return
---     end
-
---     local files, folders = file.Find( currentFolder .. "*", "LUA" )
-
---     if not ignoreFilesInFolder then
---         for _, File in ipairs( files ) do
---             frile.includeFile( currentFolder .. File )
---         end
---     end
-
---     if not ignoreFoldersInFolder then
---         for _, folder in ipairs( folders ) do
---             frile.includeFolder( currentFolder .. folder .. "/" )
---         end
---     end
--- end

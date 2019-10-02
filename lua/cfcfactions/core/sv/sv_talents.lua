@@ -56,7 +56,7 @@ Tree {
                 Var1 = 25,
                 XP = 10
             }
-    },  
+    },
     -Branch 2
     2 = {
     
@@ -66,7 +66,7 @@ Tree {
             Var1 = 10,
             Var2 = 5,
             XP = 100
-            Func = function(damage)
+            Func = function( damage )
                 local attacker = damage:GetAttacker()
                 --do logic shit
             end

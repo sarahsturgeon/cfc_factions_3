@@ -24,14 +24,14 @@ function Panel:Init()
     self.nameEntry:SetPlaceholderText( "Enter a faction name within 3-?? characters..." )
 
     self.inviteBool = vgui.Create( "DCheckBoxLabel", self.miniPanel )
-    self.inviteBool:SetTextColor( Color( 0, 0, 0) )
+    self.inviteBool:SetTextColor( Color( 0, 0, 0 ) )
     self.inviteBool:SetText( "Invite only?" )
     self.inviteBool:Dock( TOP )
     self.inviteBool:DockMargin( 15, 5, 15, 0 )
     self.inviteBool:SetValue( 0 )
 
     self.tempBool = vgui.Create( "DCheckBoxLabel", self.miniPanel )
-    self.tempBool:SetTextColor( Color( 0, 0, 0) )
+    self.tempBool:SetTextColor( Color( 0, 0, 0 ) )
     self.tempBool:SetText( "Is temporary?" )
     self.tempBool:Dock( TOP )
     self.tempBool:DockMargin( 15, 5, 15, 0 )
@@ -49,7 +49,7 @@ function Panel:Init()
     self.descEntry:SetHeight( 90 )
     self.descEntry:SetMultiline( true )
     self.descEntry:SetWrap( true )
-    self.descEntry:SetPlaceholderText( "Enter a faction description... (Optional)" )
+    self.descEntry:SetPlaceholderText( "Enter a faction description... ( Optional )" )
 
     self.colLabel = vgui.Create( "DLabel" , self.miniPanel )
     self.colLabel:SetText( "Faction color:" )
@@ -81,7 +81,18 @@ function Panel:Init()
     self.submit:SetText( "Submit" )
 
     self.submit.DoClick = function()
-        --stuff
+        net.Start( "CFC_Fac_RequestFactionSubmit" )
+            net.WriteString( self.nameEntry:GetValue() )
+            net.WriteString( self.descEntry:GetValue() )
+            --[ERROR] addons/cfc_factions_3/lua/cfcfactions/core/sv/sv_factions.lua:246: attempt to call field 'ReadBoolean' ( a nil value )
+            net.WriteBool( self.inviteBool:GetChecked() )
+            net.WriteBool( self.tempBool:GetChecked() )
+            --[ERROR] lua/includes/extensions/net.lua:74: net.WriteColor: color expected, got table
+            local SelectedColor = self.colSelection:GetColor()
+            local TableToColor = Color( SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a )
+            net.WriteColor( TableToColor )
+        net.SendToServer()
+        self.submit:SetEnabled( false )
     end
 end
 

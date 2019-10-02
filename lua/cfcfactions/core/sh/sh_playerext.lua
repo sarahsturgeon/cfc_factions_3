@@ -5,7 +5,7 @@ Purpose: Player table data that contain generic server-side OR client-side only 
 
 ]]--
 
--- player = FindMetaTable("Player")
+-- player = FindMetaTable( "Player" )
 
 -- function player:IsInFaction()
 --  if self:GetFactionID() == 0 then return false else return true end
@@ -33,10 +33,10 @@ Purpose: Player table data that contain generic server-side OR client-side only 
 -- end
 
 
--- function player:SetFaction(id)
+-- function player:SetFaction( id )
 
 
 -- end
--- function player:SetRank(rank)
+-- function player:SetRank( rank )
 
 -- end

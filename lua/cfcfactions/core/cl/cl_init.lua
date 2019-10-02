@@ -1,22 +1,13 @@
--- local root = "cfcfactions/core/cl/"
--- local tree = {}
--- table.insert(tree, "cl_clientstartup.lua")
--- table.insert(tree, "cl_utilities.lua")
--- for key, string in pairs(file.Find( root .. "*", "LUA" )) do
---  include("")
-
--- end
-
-include("cfcfactions/core/cl/cl_clientstartup.lua")
-include("cfcfactions/core/sh/sh_init.lua")
-include("cfcFactions/config/cl_config.lua")
-include("cfcfactions/core/cl/dermas/cl_mainderma.lua")
-include("cfcfactions/core/cl/dermas/cl_factionsderma.lua")
-include("cfcfactions/core/cl/dermas/cl_usersderma.lua")
-include("cfcfactions/core/cl/dermas/cl_newsderma.lua")
-include("cfcfactions/core/cl/dermas/minis/cl_alertbox.lua")
-include("cfcfactions/core/cl/dermas/minis/cl_editfac.lua")
-include("cfcfactions/core/cl/cl_utilities.lua")
-include("cfcfactions/core/cl/dermas/cl_creditsderma.lua")
-include("cfcfactions/core/cl/dermas/cl_alertsderma.lua")
-include("cfcfactions/core/cl/dermas/cl_logsderma.lua")
+include( "cfcfactions/core/cl/cl_clientstartup.lua" )
+include( "cfcfactions/core/sh/sh_init.lua" )
+include( "cfcFactions/config/cl_config.lua" )
+include( "cfcfactions/core/cl/dermas/cl_mainderma.lua" )
+include( "cfcfactions/core/cl/dermas/cl_factionsderma.lua" )
+include( "cfcfactions/core/cl/dermas/cl_usersderma.lua" )
+include( "cfcfactions/core/cl/dermas/cl_newsderma.lua" )
+include( "cfcfactions/core/cl/dermas/minis/cl_alertbox.lua" )
+include( "cfcfactions/core/cl/dermas/minis/cl_faccreate.lua" )
+include( "cfcfactions/core/cl/cl_utilities.lua" )
+include( "cfcfactions/core/cl/dermas/cl_creditsderma.lua" )
+include( "cfcfactions/core/cl/dermas/cl_alertsderma.lua" )
+include( "cfcfactions/core/cl/dermas/cl_logsderma.lua" )
