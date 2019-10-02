@@ -231,7 +231,7 @@ function cfcFactions:EditFaction( id, name, color, description, inviteOnly, play
         if fpm:hasPermission( player, "CanEditName" ) then
             faction.Name = name
         else
-            if not #name == 0 then
+            if ( ( name and #name > 0 ) or name == nil ) then
                 cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, owner )
             end
         end
@@ -239,7 +239,7 @@ function cfcFactions:EditFaction( id, name, color, description, inviteOnly, play
         if fpm:hasPermission( player, "CanEditColor" ) then
             faction.Color = color
         else
-            if not table.IsEmpty( color ) then
+            if ( ( not table.IsEmpty( color ) ) or color == nil ) then
                 cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, owner )
             end
         end
@@ -247,7 +247,7 @@ function cfcFactions:EditFaction( id, name, color, description, inviteOnly, play
         if fpm:hasPermission( player, "CanEditInvite" ) then
             faction.Invite = inviteOnly
         else
-            if not inviteOnly == nil then
+            if ( not ( inviteOnly == nil ) ) then
                 cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, owner )
             end
         end
@@ -255,7 +255,7 @@ function cfcFactions:EditFaction( id, name, color, description, inviteOnly, play
         if fpm:hasPermission( player, "CanEditDescription" ) then
             faction.Description = description
         else
-            if not #description == 0 then
+            if ( ( description and #description > 0 ) or description == nil ) then
                 cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, owner )
             end
         end
