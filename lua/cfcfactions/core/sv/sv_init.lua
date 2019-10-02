@@ -26,12 +26,14 @@ AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_factionsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_usersderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_alertbox.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_faccreate.lua" )
+AddCSLuaFile("cfcfactions/core/cl/dermas/minis/cl_editfac.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_utilities.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_newsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_creditsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_alertsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_logsderma.lua" )
 resource.AddFile( "resource/fonts/coolvetica.ttf" )
+
 
 function cfcFactions:LoadNews()
     --Future proofing, load from phatso's github
