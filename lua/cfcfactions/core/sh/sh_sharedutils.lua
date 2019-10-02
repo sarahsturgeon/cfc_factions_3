@@ -45,7 +45,11 @@ cfcFactions.ErrorMessages = {
     ["contract-accept-fail"]  = "Unable to accept contract",
     ["duplicate-name"]        = "Unable to create faction, duplicate name or too similar to exsisting faction name.",
     ["test-string"]           = "Test String, please ignore.",
-    ["contract-ban"]          = "Unable to create contract. Barred from creating contracts"
+    ["contract-ban"]          = "Unable to create contract. Barred from creating contracts",
+    ["no-permission-edit"]    = "Unable to edit faction. Missing EditFaction permission.",
+    ["no-permission-name"]    = "Unable to edit faction. Missing Editname permission.",
+    ["no-permission-color"]   = "Unable to edit faction. Missing EditColor permission.",
+    ["no-permission-invite"]  = "Unable to edit faction. Missing EditInvite permission."
 }
 
 function cfcFactions:TimeStamp()

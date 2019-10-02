@@ -167,51 +167,100 @@ function cfcFactions:RemoveEnemy(id)
 end
 
 --Edits a faction based on ID, player is who ever is editing it
-function cfcFactions:EditFaction(id, name, color, description, inviteOnly, player)
-    --Can't edit a non valid faction
-    if not cfcFactions:IsValidFaction(id) then
 
+function cfcFactions:EditFaction( id, name, color, description, inviteOnly, player )
+
+    ----------------
+    --[type checks]
+    ----------------
+    if not cfcFactions:IsValidFaction( id ) then
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["404-faction"], 1, player )
+        return false
     end
-    local faction = cfcFactions.Factions[id]
 
-    --Check if user can edit the faction, 
+    if not type( player ) == "Player" then
+        --Send Alert -> Not a valid PlayerType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
+        return false
+    end
 
+    if not type( name ) == "string" then
+        --Send Alert -> Not a valid NameType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, player )
+        return false
+    end
+
+    if not type( color ) == "Color" then
+        --Send Alert -> Not a valid ColorType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, player )
+        return false
+    end
+
+    if not type( description ) == "string" then
+        --Send Alert -> Not a valid DescriptionType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, player )
+        return false
+    end
+
+    if not type( inviteOnly ) == "boolean" then
+        --Send Alert -> Not a valid IntType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, player )
+        return false
+    end
+
+    --Check if user has proper permission to edit each part of a faction
     --CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
-
-
+    local faction = cfcFactions.Factions[id]
     --if IsAdmin or IsDeveloper, allow freely edit of a faction
-    if fpm:IsDeveloper(player) or fpm:IsFactionAdmin(player) then
-        
+    if fpm:IsDeveloper( player ) or fpm:IsFactionAdmin( player ) or fpm:hasPermission( player, "CanEditAll" ) then
+
+        faction.Name = name
+        faction.Description = description
+        faction.Color = color
+        faction.Invite = inviteOnly
+        return true
+
     else
-        --else check for normal permissions
-        --ONLY IF, that specific element is being edited. 
-
-        if not fpm:hasPermission(player, "CanEditAll") then
-
+        --We'll check if the player has the proper permission to edit each field. 
+        --If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
+        --This way clients send only the data they think they need to edit a faction, if they try to sneak around it
+        --and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
+        if fpm:hasPermission( player, "CanEditName" ) then
+            faction.Name = name
+        else
+            if not #name == 0 then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, owner )
+            end
         end
 
-        --if string ~= string then
-        if not fpm:hasPermission(player, "CanEditDescription") then
-
+        if fpm:hasPermission( player, "CanEditColor" ) then
+            faction.Color = color
+        else
+            if not table.IsEmpty( color ) then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, owner )
+            end
         end
 
-        --end
-        if not fpm:hasPermission(player, "CanEditDescription") then
-
+        if fpm:hasPermission( player, "CanEditInvite" ) then
+            faction.Invite = inviteOnly
+        else
+            if not inviteOnly == nil then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, owner )
+            end
         end
 
-        if not fpm:hasPermission(player, "CanEditDescription") then
-
-        end
-
-        if not fpm:hasPermission(player, "CanEditDescription") then
-
+        if fpm:hasPermission( player, "CanEditDescription" ) then
+            faction.Description = description
+        else
+            if not #description == 0 then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, owner )
+            end
         end
     end
 
     --save to db
 
-    --send to players
+    --Broadcast change to players
 end
 
 --Handles removing a faction(s) and its attached users properly
