@@ -268,14 +268,20 @@ end
 
 --Handles removing a faction( s ) and its attached users properly
 function cfcFactions:RemoveFaction( ply, id )
-    if fpm:IsDev( ply ) then
-        if cfcFactions.Factions[id] ~= nil then
-            cfcFactions.Factions[id] = nil
-            ply:SetFactionID( nil )
-            ply:SetFactionRank( nil )
-            --TODO: Remove all players too
+    --delete the faction and any players inside that faction.
+
+    local faction = cfcFactions.Factions[id] 
+    local factionID = id
+
+     if faction and not table.IsEmpty( faction ) then
+        faction = nil
+        for k, Player in player.GetHumans() do
+            if cfcuser:IsInFaction( ply, factionID ) then
+                cfcuser:RemoveUser( ply )
+            end
         end
-    end
+    end       
+
 end
 
 local function requestFactionNews( len, ply )
