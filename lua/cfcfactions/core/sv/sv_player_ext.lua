@@ -23,7 +23,7 @@ end
 --Checks to see if a player is currently in a faction. returns false if not in one.
 function meta:IsInFaction()
     if self:IsMerc() == true then return true end
-    
+
     local userHasFaction = nil
     if ( not ( self:GetFactionID() == nil ) ) then
         userHasFaction = true

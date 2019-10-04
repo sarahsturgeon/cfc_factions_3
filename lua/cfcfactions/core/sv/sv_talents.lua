@@ -59,7 +59,7 @@ Tree {
     },
     -Branch 2
     2 = {
-    
+
         1 = {
             Title ="Boom!, Headshot!"
             Description = "On successful headshot, do %s damage, %s ft around the afflicted player."
@@ -72,14 +72,14 @@ Tree {
             end
         },
         2 = {
-        
+
             "Key" = {
                 Title =""
                 Description = ""
                 Var1 = 0,
                 Var2 = 0,
                 XP = 0
-            
+
             },
         3 = {
             "Key" = {
@@ -88,7 +88,7 @@ Tree {
                 Var1 = 0,
                 Var2 = 0,
                 XP = 0
-            
+
             }
     }
 

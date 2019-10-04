@@ -389,7 +389,7 @@ end
 --  qs = string.format( qs, factionid )
 --  local q = sql_db:query( qs )
 --     function q:onSuccess( data )
-    
+
 --      if #data > 0 then
 --          local onlineusers = {}
 --          local offlineusers = {}  
@@ -405,7 +405,7 @@ end
 --                  end
 --              end
 --          end
-            
+
 --          callback( data, onlineusers, offlineusers )
 --      else
 --          ErrorNoHalt( '[GetUsersByFaction] Unable to fetch anything but still succeeded' )
@@ -424,7 +424,7 @@ end
 --         MsgN( 'CFCFactions: Query Failed with ' .. err .. ' ( ' .. sql .. ' )' )
 --         q:start()
 --     end
-     
+
 --     q:start()    
 -- end
 
@@ -583,7 +583,7 @@ end
 --          MsgN( 'CFCFactions: Query Failed with ' .. err .. ' ( ' .. sql .. ' )' )
 --          q:start()
 --      end
-         
+
 --      q:start()
 -- end
 
@@ -627,7 +627,7 @@ end
 --         MsgN( 'CFCFactions: Query Failed with ' .. err .. ' ( ' .. sql .. ' )' )
 --         q:start()
 --     end
-     
+
 --     q:start()
 
 -- end
@@ -665,7 +665,7 @@ end
 --         MsgN( 'CFCFactions: Query Failed with ' .. err .. ' ( ' .. sql .. ' )' )
 --         q:start()
 --     end
-     
+
 --     q:start()
 
 -- end
@@ -698,7 +698,7 @@ end
 --          ON DUPLICATE KEY UPDATE
 --              extras = VALUES( extras )
 --      ]]
-        
+
 
 --      table.insert( tmpTable, extras )
 
@@ -743,7 +743,7 @@ end
 --              edited = VALUES( edited ),
 --              extras = VALUES( extras )
 --      ]]
-        
+
 
 --      table.insert( tmpTable, extras )
 --      qs = string.format( qs, factionid, util.TableToJSON( tmpTable ) )

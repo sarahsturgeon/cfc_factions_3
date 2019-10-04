@@ -35,7 +35,7 @@ function Panel:Paint()
 
     self.CreationTime = CurTime()
     self:Remove()
-    
+
     AlertInc = AlertInc +1
 end
 

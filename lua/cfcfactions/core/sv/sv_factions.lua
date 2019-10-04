@@ -129,9 +129,9 @@ function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly,
     --Some details should be omitted before sending, so we'll create a copy of the table and remove as needed 
     CopyOfFactionToSend.LastSaved = nil
     CopyOfFactionToSend.NeedsCleanUp = nil
-  
+
     local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false ) 
-  
+
     net.Start( "CFC_Fac_SendFactionSubmit" )
         net.WriteString( FactionTableJsonified )
     net.Broadcast()

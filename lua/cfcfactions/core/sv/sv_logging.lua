@@ -69,7 +69,7 @@ local function safeLog( log, msg, type, args, parse, sve, time )
     elseif type( log ) == "string" then
 
     end
-    
+
     return tmpLogTable
 end
 

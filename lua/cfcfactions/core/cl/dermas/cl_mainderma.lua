@@ -64,7 +64,7 @@ function Panel:SetupMenubars( menubar )
                             otherbuttons.internal_button:SetEnabled( true )
                         end
                     end
-                    
+
                     --[[
                         Logic to handle showing the Panel table to subself.container to view, use and interact with the client
                         Should be parented and docked. Clicking on another tab will reset this view
@@ -95,7 +95,7 @@ function Panel:Init()
     self.closeButton.DoClick = function()
         cfcFactions:DisplayMenu()
     end
-    
+
     --self.menubar : Contains the autoloaded elements defined in 
     --  cfcFactions:RegisterDermaMenu( string )
     --      cfcFactions.Dermas

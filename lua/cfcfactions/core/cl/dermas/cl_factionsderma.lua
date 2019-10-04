@@ -135,7 +135,7 @@ end
 
 --TODO:  tie into being actually used
 local function addFaction( id, name, owner, description, color, invite, kills, deaths, created, edited, allies, enemies )
-    
+
 
     --Add faction to clientside table
     if cfcFactions.Factions[id] == nil then
@@ -163,10 +163,10 @@ local function addFaction( id, name, owner, description, color, invite, kills, d
         end
 
         --Display to Panels->Factionsview
-        
+
         --<FactionViewPanel>:AddLine( tmpLock, Faction.Name, Faction.Description, Faction.Owner, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
         --<FactionViewPanel>:DataLayout()
-        
+
     end 
 end
 
@@ -175,7 +175,7 @@ local function factionCreated( len, ply )
     local ClientsideFactionJsonified = net.ReadString()
     local FactionTable = util.JSONToTable( ClientsideFactionJsonified )
     cfcFactions.Factions[FactionTable.ID] = FactionTable
-    
+
     --fixed with proper stats ( missing locked, missing kd, missing id )
     addFaction( fID, fName, fOwner, fDescription, fColor, fInviteOnly, fKills, fDeaths, fCreated, fEdited, fAllies, fEnemies )
 
@@ -184,19 +184,19 @@ end
 net.Receive( "CFC_Fac_SendFactionSubmit", factionCreated )
 
 local function factionEdited()
-    
+
 end
 
 net.Receive( "CFC_Fac_FactionEdited", factionEdited )
 
 local function factionFetchQuery()
-    
+
 end
 
 net.Receive( "CFC_Fac_FactionFetchQuery", factionFetchQuery )
 
 local function factionDeleted()
-    
+
 end
 
 net.Receive( "CFC_Fac_FactionDeleted", factionDeleted )

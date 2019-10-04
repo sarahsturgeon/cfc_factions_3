@@ -204,7 +204,7 @@ function fpm:revokePermission( player, permission )
             usr.CFCPermissions[k] = nil
             return true
         end
-        
+
     end
     return false
 end

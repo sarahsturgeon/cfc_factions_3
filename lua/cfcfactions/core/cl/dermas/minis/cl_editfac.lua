@@ -3,7 +3,7 @@ local Panel = {}
 function Panel:Init()
     self:SetSize( 500, 510 )
     self:Center()
-    
+
     self.mainFrame = vgui.Create( "DFrame", self )
     self.mainFrame:Dock( FILL )
     self.mainFrame:SetTitle( "Edit Faction" )
