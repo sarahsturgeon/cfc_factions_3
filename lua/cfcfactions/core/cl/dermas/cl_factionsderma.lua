@@ -2,6 +2,7 @@ if not CLIENT then return end
 
 cfcFactions.FactionsView = nil
 cfcFactions.Factions = cfcFactions.Factions or {}
+cfcFactions.FactionsListView = nil
 local Panel = {}
 local cfg = cfcFactions.Config.Client
 local MinQuery = 1
@@ -18,8 +19,8 @@ function Panel:Init()
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
 
-    self.Factionsview = vgui.Create( "DListView", self.MainContainer )
-    self.Factionsview:Dock( FILL )
+    cfcFactions.FactionsListView = vgui.Create( "DListView", self.MainContainer )
+    cfcFactions.FactionsListView:Dock( FILL )
 
     self.BottomPanel = vgui.Create( "DPanel", self.MainContainer )
     self.BottomPanel:Dock( BOTTOM )
@@ -65,8 +66,7 @@ function Panel:Init()
     self.CreateFaction:Dock( LEFT )
     self.CreateFaction.DoClick = function()
         --create cl_faccreate.lua, process, submit to server
-
-        local CreateFactionMiniPanel = vgui.Create( "D_cfcfactioncreate" )
+        local CreateFactionMiniPanel = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
         --Make sure we delete the FactionMiniPanel when finished
     end
 
@@ -109,12 +109,13 @@ function Panel:Init()
     ]]--
 
     --id  - name - description - owner - InviteOnly - kills - deaths
-    self.privcol = self.Factionsview:AddColumn( " ", 1 )
-    self.namecol = self.Factionsview:AddColumn( "Name", 2 )
-    self.desccol = self.Factionsview:AddColumn( "Description", 3 )
-    self.owncol = self.Factionsview:AddColumn( "owner", 4 )
-    self.killcol = self.Factionsview:AddColumn( "K/D", 5 )
-    self.idcol = self.Factionsview:AddColumn( "ID", 6 )
+
+    self.privcol = cfcFactions.FactionsListView:AddColumn( "Private", 1 )
+    self.namecol = cfcFactions.FactionsListView:AddColumn( "Name", 2)
+    self.desccol = cfcFactions.FactionsListView:AddColumn( "Description", 3 )
+    self.owncol = cfcFactions.FactionsListView:AddColumn( "owner", 4 )
+    self.killcol = cfcFactions.FactionsListView:AddColumn( "K/D", 5 )
+    self.idcol = cfcFactions.FactionsListView:AddColumn( "ID", 6 )
 
     --sizing
     self.privcol:SetWide( 5 )
@@ -134,40 +135,17 @@ end
 --TODO: FactionRemoved
 
 --TODO:  tie into being actually used
-local function addFaction( id, name, owner, description, color, invite, kills, deaths, created, edited, allies, enemies )
+local function addFaction( tbl )
     
-
     --Add faction to clientside table
-    if cfcFactions.Factions[id] == nil then
-        cfcFactions.Factions[id] = {
-            ["ID"] = id,
-            ["Name"] = name,
-            ["Owner"] = owner,
-            ["Description"] = description,
-            ["Color"] = color,
-            ["Invite"] = invite,
-            ["Kills"] = kills,
-            ["Deaths"] = deaths,
-            ["Created"] = created,
-            ["Edited"] = edited,
-            ["Allies"] = allies,
-            ["Enemies"] = enemies
-        }
+    if not tbl then return end
+    
+    local Faction = tbl
+    local tmpLock = Faction.Invite and "L" or ""
 
-        local Faction = cfcFactions.Factions[id]
-        local tmpLock
-        if Faction.Invite == 1 then
-            tmpLock = "L"
-        else 
-            tmpLock = ""
-        end
+    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, Faction.Owner.LastDisplayName, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
+    cfcFactions.FactionsListView:DataLayout()
 
-        --Display to Panels->Factionsview
-        
-        --<FactionViewPanel>:AddLine( tmpLock, Faction.Name, Faction.Description, Faction.Owner, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
-        --<FactionViewPanel>:DataLayout()
-        
-    end 
 end
 
 local function factionCreated( len, ply )
@@ -175,9 +153,8 @@ local function factionCreated( len, ply )
     local ClientsideFactionJsonified = net.ReadString()
     local FactionTable = util.JSONToTable( ClientsideFactionJsonified )
     cfcFactions.Factions[FactionTable.ID] = FactionTable
-    
-    --fixed with proper stats ( missing locked, missing kd, missing id )
-    addFaction( fID, fName, fOwner, fDescription, fColor, fInviteOnly, fKills, fDeaths, fCreated, fEdited, fAllies, fEnemies )
+
+    addFaction( cfcFactions.Factions[FactionTable.ID] )
 
 end
 
