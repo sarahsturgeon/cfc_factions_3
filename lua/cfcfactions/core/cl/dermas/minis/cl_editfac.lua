@@ -3,7 +3,7 @@ local Panel = {}
 function Panel:Init()
     self:SetSize( 500, 510 )
     self:Center()
-    
+
     self.mainFrame = vgui.Create( "DFrame", self )
     self.mainFrame:Dock( FILL )
     self.mainFrame:SetTitle( "Edit Faction" )
@@ -24,14 +24,14 @@ function Panel:Init()
     self.nameEntry:SetPlaceholderText( "Edit your faction name" )
 
     self.inviteBool = vgui.Create( "DCheckBoxLabel", self.miniPanel )
-    self.inviteBool:SetTextColor( Color( 0, 0, 0) )
+    self.inviteBool:SetTextColor( Color( 0, 0, 0 ) )
     self.inviteBool:SetText( "Invite only?" )
     self.inviteBool:Dock( TOP )
     self.inviteBool:DockMargin( 15, 5, 15, 0 )
     self.inviteBool:SetValue( 0 )
 
     self.tempBool = vgui.Create( "DCheckBoxLabel", self.miniPanel )
-    self.tempBool:SetTextColor( Color( 0, 0, 0) )
+    self.tempBool:SetTextColor( Color( 0, 0, 0 ) )
     self.tempBool:SetText( "Is temporary?" )
     self.tempBool:Dock( TOP )
     self.tempBool:DockMargin( 15, 5, 15, 0 )
@@ -49,7 +49,7 @@ function Panel:Init()
     self.descEntry:SetHeight( 90 )
     self.descEntry:SetMultiline( true )
     self.descEntry:SetWrap( true )
-    self.descEntry:SetPlaceholderText( "Edit your faction description... (Optional)" )
+    self.descEntry:SetPlaceholderText( "Edit your faction description... ( Optional )" )
 
     self.colLabel = vgui.Create( "DLabel" , self.miniPanel )
     self.colLabel:SetText( "Faction color:" )
@@ -81,7 +81,7 @@ function Panel:Init()
     self.submit:SetText( "Submit" )
 
     self.submit.DoClick = function()
-        --stuff
+        -- stuff
     end
 end
 

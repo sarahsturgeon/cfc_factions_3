@@ -1,4 +1,4 @@
---[[]
+-- [[]
 File Name: sh_userext.lua
 
 Purpose: Shared functions to fetch users from the global table cfcFactions.Users
