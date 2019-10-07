@@ -1,6 +1,6 @@
 "PVP Factions"
 {
-	"title"		:	"PVP Factions",
+	"title"		:	"CFC Factions",
 	"version"	:	"3.0",
 	"type"		:	"ServerContent",
 	"tags"		:	[ "build", "fun" ]
