@@ -129,7 +129,7 @@ end
 --Auths a user and allows them to use factions properly. If not, things make explode
 --Or simply just don't want them using it
 function fpm:authUser( player )
-    print( "Authenticating user " .. player:SteamID() )
+    print( "Authenticating Factions user " .. player:SteamID() )
     --Checks and balances
     if not player:IsPlayer() then 
         return 
@@ -142,7 +142,7 @@ function fpm:authUser( player )
         end      
     end
 
-    cfcuser:registeruser( player, nil, nil )
+    cfcuser:registeruser( player )
 
     --Basic, core permissions ( almost ) every user should require in order to properly use factions.
     local AuthUserPerms = {

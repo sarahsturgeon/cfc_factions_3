@@ -10,7 +10,7 @@ local cfcuser = cfcFactions.Users
 local fpm = cfcFactions.fpm
 
 --Registers a new user to be accessible by factions
-function cfcuser:registeruser( user, factionid, rank )
+function cfcuser:registeruser( user )
 
 	if not user:IsPlayer() then 
 		--Error out, not a player

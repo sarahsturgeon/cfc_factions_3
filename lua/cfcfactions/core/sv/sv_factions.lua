@@ -98,22 +98,22 @@ function cfcFactions:CreateFaction( tbl )
 
     --What should a faction contain? 
     cfcFactions.Factions[TmpUnqID] = {
-        ["ID"] = TmpUnqID,
-        ["Name"] = factionName,
-        ["Ranks"] = cfcFactions.fpm.defaultRanks,
-        ["Owner"] = factionOwner:SteamID64(),
-        ["Description"] = factionDescription,
+        ["Allies"] = {},
         ["Color"] = factionColor,
+        ["Created"] = cfcFactions:TimeStamp(),
+        ["Currency"] = 0,
+        ["Deaths"] = 0,
+        ["Description"] = factionDescription,
+        ["Edited"] = cfcFactions:TimeStamp(),
+        ["Enemies"] = {},
+        ["ID"] = TmpUnqID,
         ["Invite"] = factionInviteOnly,
         ["Kills"] = 0,
-        ["Deaths"] = 0,
-        ["Currency"] = 0,
-        ["Created"] = cfcFactions:TimeStamp(),
-        ["Edited"] = cfcFactions:TimeStamp(),
         ["LastSaved"] = "",
+        ["Name"] = factionName,
         ["NeedsCleanUp"] = false,
-        ["Allies"] = {},
-        ["Enemies"] = {}
+        ["Owner"] = factionOwner:SteamID64(),
+        ["Ranks"] = cfcFactions.fpm.defaultRanks      
     }
 
     cfcuser:registeruser( factionOwner, factionid, "Leader" )
