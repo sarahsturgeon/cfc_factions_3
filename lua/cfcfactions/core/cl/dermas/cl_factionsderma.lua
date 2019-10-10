@@ -67,6 +67,7 @@ function Panel:Init()
     self.CreateFaction.DoClick = function()
         --create cl_faccreate.lua, process, submit to server
         local CreateFactionMiniPanel = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
+        CreateFactionMiniPanel:Center()
         --Make sure we delete the FactionMiniPanel when finished
     end
 
@@ -132,18 +133,25 @@ function Panel:Think()
 
 end
 
+local function RefreshFactionViewingTable()
+    cfcFactions.FactionsListView:Clear()
+    for KEY, Faction in cfcFactions.Factions do
+        addFaction( Faction )
+    end
+end
+
 --TODO: FactionRemoved
 
 --TODO:  tie into being actually used
 local function addFaction( tbl )
     
-    --Add faction to clientside table
     if not tbl then return end
     
     local Faction = tbl
     local tmpLock = Faction.Invite and "L" or ""
-
-    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, Faction.Owner.LastDisplayName, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
+    local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
+    --Add faction to clientside table
+    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
     cfcFactions.FactionsListView:DataLayout()
 
 end
@@ -154,14 +162,14 @@ local function factionCreated( len, ply )
     local FactionTable = util.JSONToTable( ClientsideFactionJsonified )
     cfcFactions.Factions[FactionTable.ID] = FactionTable
 
-    addFaction( cfcFactions.Factions[FactionTable.ID] )
+    RefreshFactionViewingTable()
 
 end
 
 net.Receive( "CFC_Fac_SendFactionSubmit", factionCreated )
 
 local function factionEdited()
-    
+    RefreshFactionViewingTable()
 end
 
 net.Receive( "CFC_Fac_FactionEdited", factionEdited )
@@ -173,7 +181,7 @@ end
 net.Receive( "CFC_Fac_FactionFetchQuery", factionFetchQuery )
 
 local function factionDeleted()
-    
+    RefreshFactionViewingTable()
 end
 
 net.Receive( "CFC_Fac_FactionDeleted", factionDeleted )
