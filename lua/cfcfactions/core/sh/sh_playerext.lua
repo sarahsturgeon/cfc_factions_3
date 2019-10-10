@@ -1,4 +1,3 @@
--- [[]
 File Name: sh_playerext.lua
 
 Purpose: Player table data that contain generic server-side OR client-side only functions.
