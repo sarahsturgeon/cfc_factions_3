@@ -197,10 +197,10 @@ function fpm:addPermission( player, permission )
 end
 
 --Revokes a permission( s ) from the player. True if success, false if otherwise
-function fpm:revokePermission( player, permission )
+function fpm:revokePermission( player, permission_string )
     local usr = cfcuser[player:SteamID64()]
-    for k, perms in pairs( usr.CFCPermissions ) do
-        if perms == permission then
+    for Key, Permission in pairs( usr.CFCPermissions ) do
+        if Permission == permission_string then
             usr.CFCPermissions[k] = nil
             return true
         end

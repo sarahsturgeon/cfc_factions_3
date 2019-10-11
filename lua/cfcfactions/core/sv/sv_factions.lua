@@ -192,13 +192,13 @@ end
 function cfcFactions:EditFaction(tbl)
 
     local Faction = tbl
-
+    local owner = player.GetBySteamID64( Faction.Owner )
     ----------------
     --[type checks]
     ----------------
     --REWORK
     if not cfcFactions:IsValidFaction( ) then
-        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["404-faction"], 1, player )
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["404-faction"], 1, owner )
         return false
     end
 
@@ -210,25 +210,25 @@ function cfcFactions:EditFaction(tbl)
 
     if not type( name ) == "string" then
         --Send Alert -> Not a valid NameType
-        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, player )
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
         return false
     end
 
     if not type( color ) == "Color" then
         --Send Alert -> Not a valid ColorType
-        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, player )
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, owner )
         return false
     end
 
     if not type( description ) == "string" then
         --Send Alert -> Not a valid DescriptionType
-        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, player )
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
         return false
     end
 
     if not type( inviteOnly ) == "boolean" then
         --Send Alert -> Not a valid IntType
-        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, player )
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, owner )
         return false
     end
 
@@ -236,7 +236,7 @@ function cfcFactions:EditFaction(tbl)
     --CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
     local faction = cfcFactions.Factions[id]
     --if IsAdmin or IsDeveloper, allow freely edit of a faction
-    if fpm:IsDeveloper( player ) or fpm:IsFactionAdmin( player ) or fpm:hasPermission( player, "CanEditAll" ) then
+    if fpm:IsDeveloper( owner ) or fpm:IsFactionAdmin( owner ) or fpm:hasPermission( owner, "CanEditAll" ) then
         faction.Name = name
         faction.Description = description
         faction.Color = color
@@ -248,7 +248,7 @@ function cfcFactions:EditFaction(tbl)
         --If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
         --This way clients send only the data they think they need to edit a faction, if they try to sneak around it
         --and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
-        if fpm:hasPermission( player, "CanEditName" ) then
+        if fpm:hasPermission( owner, "CanEditName" ) then
             faction.Name = name
         else
             if ( ( name and #name > 0 ) or name == nil ) then
@@ -272,7 +272,7 @@ function cfcFactions:EditFaction(tbl)
             end
         end
 
-        if fpm:hasPermission( player, "CanEditDescription" ) then
+        if fpm:hasPermission( owner, "CanEditDescription" ) then
             faction.Description = description
         else
             if ( ( description and #description > 0 ) or description == nil ) then
@@ -295,7 +295,7 @@ function cfcFactions:RemoveFaction( ply, id )
 
      if faction and not table.IsEmpty( faction ) then
         faction = nil
-        for k, Player in player.GetHumans() do
+        for _, Player in player.GetHumans() do
             if cfcuser:IsInFaction( ply, factionID ) then
                 cfcuser:RemoveUser( ply )
             end

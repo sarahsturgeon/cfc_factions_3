@@ -65,7 +65,7 @@ cfcFactions.ErrorMessages = {
     ["is-tester"]             = "Player is a tester",
     ["is-gay"]                = "Cannot kick Phatso. The fuck?",
     ["depreciated-key"]       = "Deprecated key permission. Removing",
-    ["faction-ban"]           = "Unable to create a faction. Banned from creating faction.",
+    ["factions-ban"]           = "Unable to use factions. Banned from using Factions.",
     ["contract-barred"]       = "Barred from creating contracts! Request an admin.",
     ["insufficient-funds"]    = "You lack the required funds to allow this contract.",
     ["excessive-kills"]       = "Too many kills requested. Set a lower number.",
@@ -92,6 +92,10 @@ function cfcFactions:UUID()
 end
 
 --TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
+--Sends a notifcation to an optional player
+--msg = string or predifined key hard coded above ( cfcFactions.ErrorMessages )
+--mtype = Number, Error being 1, Msg being 2, Alert being 3, Warning being 4
+--player to send the notifcation to. Optional
 function cfcFactions:SendNotifcation( msg, mtype, player )
 
     if type( msg ) == "number" then 
