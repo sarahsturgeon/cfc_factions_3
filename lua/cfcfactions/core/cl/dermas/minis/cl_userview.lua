@@ -12,15 +12,6 @@ local function addUserInfo( listView, data )
 end
 
 function Panel:Init()
-    self:SetSize( 500, 500 )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
-    
-    --remove frame after submission
-    local f = vgui.Create( "DFrame", self )
-    f:SetDraggable( false )
-    f:Dock( FILL )
-    f:MakePopup()
-    
     local lview = vgui.Create( "DListView", f )
     lview:Dock( FILL )
     lview:SetSortable( false )
