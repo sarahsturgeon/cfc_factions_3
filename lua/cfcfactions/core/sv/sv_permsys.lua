@@ -172,13 +172,22 @@ function fpm:hasPermission( player, permission )
     --if table.HasValue( fpm.Users[player:SteamID64()].Permissions, "IsDeveloper" ) then return true end
     --Handling normal permissions now
     --if fpm.Users[player:SteamID64()].Permissions["IsDeveloper" ~= nil] then return true end
+    if not player:IsPlayer() then return end
+    local PlayerTable = cfcuser[player:SteamID64()].CFCPermissions
+    --Can they even access factions? Then no, they don't have permission for anything
+    if not table.HasValue( PlayerTable, "AccessAll" ) then
+        return false
 
-    for _, perms in pairs( cfcuser[player:SteamID64()].CFCPermissions ) do
-        if perms == permission then
-            return true 
-        end
+    --Do they have the permission they're seeking?, sure, pass fine
+    elseif table.HasValue( PlayerTable, permission ) then
+        return true
+
+    --Are they developer? sure, why not, they have access to everything
+    elseif table.HasValue( PlayerTable, "IsDeveloper" ) then
+        return true
     end
 
+    --Nothing else, return false
     return false
 end
 

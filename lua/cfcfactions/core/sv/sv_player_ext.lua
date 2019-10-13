@@ -10,8 +10,12 @@ but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 
 meta = FindMetaTable( "Player" )
 local fusers = cfcFactions.Users
-
+local fpm = cfcFactions.fpm
 function meta:CFCToggleMenu()
+    if not fpm:hasPermission( self, "AccessAll" ) then 
+        cfcFactions:SendNotifcation( "factions-ban", mtype, player )
+        return
+    end
     net.Start( 'CFC_Fac_ToggleDerma' )
     net.Send( self )
 end
