@@ -34,8 +34,7 @@ function cfcuser:registeruser( user )
 			["Kills"] = 0,
 			["Deaths"] = 0,
 			["FactionRank"] = "",
-			["InternalFactionPermissions"] = {},
-			["HoursInFaction"] = 0
+			["InternalFactionPermissions"] = {}
 		}
 	}
 	cfcuser[user:SteamID64()] = PreUserTable
