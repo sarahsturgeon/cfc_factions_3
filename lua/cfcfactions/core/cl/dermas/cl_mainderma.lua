@@ -186,7 +186,7 @@ function Panel:SetMainView( panel )
 end
 
 function Panel:OnMousePressed( key )
-    if key = = MOUSE_RIGHT then
+    if key == MOUSE_RIGHT then
         self:CreateAlert( "Test Alert was created", cfg.MsgType[2] )
     end
 end

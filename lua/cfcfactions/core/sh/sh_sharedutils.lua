@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sh_sharedutils.lua
 
 Purpose: Shared functions that contain various useful tables and functions used across cfcFactions

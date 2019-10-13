@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sv_mysql.lua
 
 Purpose: Core functions that handle saving and loading from the mysql-db. Loads from serverside sv_config cfcFactions.Config.mysql_settings

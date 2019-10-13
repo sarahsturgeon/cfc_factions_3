@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sv_factionmanagment.lua
 
 Purpose: server-side commands to manipulate cfcFactions

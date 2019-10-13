@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sv_netvars.lua
 
 Purpose: Contains all NetworkedStrings registered on server start
