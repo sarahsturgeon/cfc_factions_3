@@ -1,8 +1,8 @@
---[[]
+--[[ ]
 File Name: sv_player_ext.lua
 
 Purpose: Player table data that contain generic server-side only functions and not shared.
-Note: Many of these functions need to be rewritten under sv_users.lua and then 
+Note: Many of these functions need to be rewritten under sv_users.lua and then
 adjusted here to use it. We should still be able to access player:IsInFaction for example,
 but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 
@@ -20,10 +20,10 @@ end
     TODO: rework a lot of this into sv_users.lua
 ]]--
 
---Checks to see if a player is currently in a faction. returns false if not in one.
+-- Checks to see if a player is currently in a faction. returns false if not in one.
 function meta:IsInFaction()
     if self:IsMerc() == true then return true end
-    
+
     local userHasFaction = nil
     if ( not ( self:GetFactionID() == nil ) ) then
         userHasFaction = true
@@ -33,7 +33,7 @@ function meta:IsInFaction()
     return userHasFaction
 end
 
---Obtains the player's faction id, or 0 if not. Bots always return 'b0t'
+-- Obtains the player's faction id, or 0 if not. Bots always return 'b0t'
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
     if self:IsPlayer() then
@@ -41,19 +41,19 @@ function meta:GetFactionID()
     end
 end
 
---Obtains the player's rank if in a faction. Returns empty string if not
+-- Obtains the player's rank if in a faction. Returns empty string if not
 function meta:GetFactionRank()
-    if self:IsInFaction() then 
-        return fpm[self:SteamID64()].FactionRank 
+    if self:IsInFaction() then
+        return fpm[self:SteamID64()].FactionRank
     else
         return ""
     end
 end
 
---Gets a player's faction as a table. Returns an empty table if not in one
+-- Gets a player's faction as a table. Returns an empty table if not in one
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
-    if not self:IsInFaction() then 
+    if not self:IsInFaction() then
         return false
     end
 
@@ -63,7 +63,7 @@ function meta:GetFaction()
     end
 end
 
---Sets a player's faction based on given id. ply being who is doing the setting
+-- Sets a player's faction based on given id. ply being who is doing the setting
 function meta:SetFactionID( id )
     fpm.Users[self:SteamID64()].FactionID = id
 

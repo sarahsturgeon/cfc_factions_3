@@ -1,7 +1,7 @@
---[[]
+--[[ ]
 File Name: sv_logging.lua
 
-Purpose: Logging functions to show when events happen and variables 
+Purpose: Logging functions to show when events happen and variables
 change that are important to the end user. Differs from notifcations since these
 are mostly back end things such as factions created, edited ( Name, descriptions, etc ), users
 join or leave but are never shown to the user. ( While a notifcation ) can affect the same
@@ -18,18 +18,18 @@ cfcFactions.LogTypes = {
     DEBUG = "DEBUG",
 }
 
---parses and correctly displays a log from arg:table into proper format, returns a table 
+-- parses and correctly displays a log from arg:table into proper format, returns a table
 local function safeLog( log, msg, type, args, parse, sve, time )
 --[[
-    --Internal structure of what is passed into a logging session
+    -- Internal structure of what is passed into a logging session
     Table = {
         Msg = "",
         Type = ERROR_TYPE,
         Args = {},
-        ShouldParse = true, --Parse args into the msg if possible
-        SaveDB = true, --Save to database?
+        ShouldParse = true, -- Parse args into the msg if possible
+        SaveDB = true, -- Save to database?
         Time = os.time(),
-        Checked = nil, --Allows us to check if this table has been sanitized before.
+        Checked = nil, -- Allows us to check if this table has been sanitized before.
     }
 ]]--
     local t = cfcFactions.LogTypes
@@ -65,16 +65,16 @@ local function safeLog( log, msg, type, args, parse, sve, time )
             log[Time] = cfcFactions:TimeStamp()
         end
 
-        --if not a table, we'll need to properly form a table for the string to be recorded. 
+        -- if not a table, we'll need to properly form a table for the string to be recorded.
     elseif type( log ) == "string" then
 
     end
-    
+
     return tmpLogTable
 end
 
 
---main function to transcribe a log based on a table of data
+-- main function to transcribe a log based on a table of data
 function cfcFactions:TransLog( table )
     if type( table ) ~= table then
         if type( table ) == "string" then
@@ -83,22 +83,22 @@ function cfcFactions:TransLog( table )
     end
 end
 
---quick function to log errors
+-- quick function to log errors
 function cfcFactions:ErrorLog( msg, args )
 
 end
 
---quick function to log debugging items
+-- quick function to log debugging items
 function cfcFactions:DebugLog( msg, args )
 
 end
 
---quick function to log messages
+-- quick function to log messages
 function cfcFactions:MessageLog( msg, args )
 
 end
 
---quick function to log virtually anything
+-- quick function to log virtually anything
 function cfcFactions:Log( msg, args )
 
 end
