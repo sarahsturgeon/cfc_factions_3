@@ -135,8 +135,10 @@ end
 
 local function RefreshFactionViewingTable()
     cfcFactions.FactionsListView:Clear()
-    for KEY, Faction in cfcFactions.Factions do
-        addFaction( Faction )
+    if table.HasValue(cfcFactions.Factions) then 
+        for KEY, Faction in cfcFactions.Factions do
+            addFaction( Faction )
+        end
     end
 end
 

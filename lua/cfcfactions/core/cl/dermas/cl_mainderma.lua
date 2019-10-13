@@ -37,31 +37,31 @@ local menutabs = {}
 --Adds the menu bars and handles adding any extras that aren't apart of hard coded items
 function Panel:SetupMenubars( Menubar )
         --Sort by ranking
-        table.sort( cfcFactions.Dermas, function( a, b ) return a.internal_ranking < b.internal_ranking end )
+        table.sort( cfcFactions.Dermas, function( a, b ) return a.InternalRanking < b.InternalRanking end )
 
         --loop through tmpsorttable in order to take advantage of the internal ranking of tabs
         for n=1, table.Count( cfcFactions.Dermas ) do
             local Entry = cfcFactions.Dermas[n]
-            if Entry.Internal_button ~= nil then
+            if Entry.InternalButton ~= nil then
 
                 --assign a button to a stripped down cleaned name
-                Entry.Internal_button = vgui.Create( "DButton", Menubar )
-                Entry.Internal_button:Dock( LEFT )
-                Entry.Internal_button:SetText( Entry.internal_name )
-                Entry.Internal_button:SetTall( Menubar:GetTall()+0.5 )
-                Entry.Internal_button:DockMargin( 25, 0, 0, 0 )
+                Entry.InternalButton = vgui.Create( "DButton", Menubar )
+                Entry.InternalButton:Dock( LEFT )
+                Entry.InternalButton:SetText( Entry.InternalName )
+                Entry.InternalButton:SetTall( Menubar:GetTall() + 0.5 )
+                Entry.InternalButton:DockMargin( 25, 0, 0, 0 )
 
-                Entry.Internal_button.DoClick = function()
-                    cfcFactions.CurrentTab = Entry.Internal_button
+                Entry.InternalButton.DoClick = function()
+                    cfcFactions.CurrentTab = Entry.InternalButton
 
                     for k=1, table.Count( cfcFactions.Dermas ) do
                         local otherbuttons = cfcFactions.Dermas[k]
 
                         --If current tab == button clicked
-                        if cfcFactions.CurrentTab == otherbuttons.Internal_button then
+                        if cfcFactions.CurrentTab == otherbuttons.InternalButton then
                             cfcFactions.CurrentTab:SetEnabled( false )
                         else
-                            otherbuttons.Internal_button:SetEnabled( true )
+                            otherbuttons.InternalButton:SetEnabled( true )
                         end
                     end
                     
@@ -69,7 +69,7 @@ function Panel:SetupMenubars( Menubar )
                         Logic to handle showing the Panel table to subself.Container to view, use and interact with the client
                         Should be parented and docked. Clicking on another tab will reset this view
                     ]]--
-                    self:SetMainview( Entry.internal_panel )
+                    self:SetMainview( Entry.InternalPanel )
                 end
             else
                 MsgN( "Unable to create a self.Menubar button!" )
@@ -140,10 +140,10 @@ function Panel:Init()
     self.Mainview:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
 
     --set main view to whatever the first Menubar item is
-    if cfcFactions.Dermas[1].internal_panel ~= nil then
-        self:SetMainview( cfcFactions.Dermas[1].internal_panel )
-        --cfcFactions.Dermas[1].Internal_button:SetToggle( true )
-        cfcFactions.Dermas[1].Internal_button:SetEnabled( false )
+    if cfcFactions.Dermas[1].InternalPanel ~= nil then
+        self:SetMainview( cfcFactions.Dermas[1].InternalPanel )
+        --cfcFactions.Dermas[1].InternalButton:SetToggle( true )
+        cfcFactions.Dermas[1].InternalButton:SetEnabled( false )
     end
 
     --Debug Status
@@ -186,7 +186,7 @@ function Panel:SetMainview( panel )
 end
 
 function Panel:OnMousePressed( key )
-    if key ==MOUSE_RIGHT then
+    if key == MOUSE_RIGHT then
         self:CreateAlert( "Test Alert was created", cfg.MsgType[2] )
     end
 end
