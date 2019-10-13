@@ -13,15 +13,6 @@ local fpm = cfcFactions.fpm
 --FACTIONS MANAGMENT COMMANDS
 --------------------------------------------------------------------------------------------------------------
 
---Creates a Faction based on "Name":string, "Color":string, "Description":string, "Invite Only":number
-local function createFaction( ply, cmd, args )
-    --TODO: create faction from here
-    cfcFactions:CreateFaction( ply, "My Faction", {255, 0, 0, 255}, "My Test Faction", 1 )
-    PrintTable( cfcFactions.Factions )
-end
-
-concommand.Add( "fpvp_createfaction", createFaction )
-
 --Sets a player's internal faction rank based on "Player name":string, "Rank":string. Autotabs complete on name and rank
 local function factionSetRank( ply, cmd, args )
 
