@@ -28,14 +28,14 @@ function cfcFactions:CreateFaction( tbl )
 
     if not tbl and table.IsEmpty( tbl ) then return end
 
-    local Faction = tbl
+    local FactionTemporaryTable = tbl
     local TmpUnqID = GenerateID()
-    local factionOwner = Faction.Owner
-    local factionName = Faction.Name
-    local factionColor = Faction.Color
-    local factionDescription = Faction.Description
-    local factionInviteOnly = Faction.InviteOnly
-    local factionIsTemporary = Faction.Temporary
+    local factionOwner = FactionTemporaryTable.Owner
+    local factionName = FactionTemporaryTable.Name
+    local factionColor = FactionTemporaryTable.Color
+    local factionDescription = FactionTemporaryTable.Description
+    local factionInviteOnly = FactionTemporaryTable.InviteOnly
+    local factionIsTemporary = FactionTemporaryTable.Temporary
 
     ----------------
     --[type checks]
