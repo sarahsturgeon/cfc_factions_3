@@ -46,7 +46,7 @@ local function safeLog( log, msg, type, args, parse, sve, time )
         end
 
         if log[Type] == nil then
-            log[Type] == t.DEBUG
+            log[Type] = t.DEBUG
         end
 
         if log[Args] == nil then
