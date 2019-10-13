@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sv_permsys.lua
 
 Purpose: Used to maintain, authorize, and check for cfcFaction permissions for various functions, utilities, and general networking

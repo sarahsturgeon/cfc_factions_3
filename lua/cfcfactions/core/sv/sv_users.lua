@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sv_users.lua
 
 Purpose: Core faction's functions to create, edit, and destory users who use factions

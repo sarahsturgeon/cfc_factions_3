@@ -1,4 +1,4 @@
---[[ ]
+--[[
 File Name: sv_logging.lua
 
 Purpose: Logging functions to show when events happen and variables
