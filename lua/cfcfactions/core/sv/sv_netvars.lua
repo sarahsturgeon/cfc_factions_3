@@ -8,7 +8,10 @@ local util = util
 local NamedNetworkVars = {
 
     --Alerts/Msgs
-    "CFC_Fac_SendTextAlert", "CFC_Fac_GetTextAlert", "CFC_Fac_SendServerTextAlert", "CFC_Fac_GetServerTextAlert",
+    "CFC_Fac_SendTextAlert", 
+    "CFC_Fac_GetTextAlert", 
+    "CFC_Fac_SendServerTextAlert", 
+    "CFC_Fac_GetServerTextAlert",
     --Notifications
     "CFC_Fac_NewFactionCreated",
     "CFC_Fac_FactionDeleted",
@@ -42,7 +45,9 @@ local NamedNetworkVars = {
     --FactionDeletion
     "CFC_Fac_RequestFactionRemoval",
     --UserLeaving
-    "CFC_Fac_FactionUserRemoval"
+    "CFC_Fac_FactionUserRemoval",
+    --FactionsRefresh
+    "CFC_Fac_FactionRefresh"
 }
 
 --loop through and auto gens netvar names
