@@ -19,13 +19,6 @@ local NamedNetworkVars = {
     "CFC_Fac_MemberJoined",
     "CFC_Fac_MemberLeft",
     "CFC_Fac_PermissionChanged",
-    --Logs
-    "CFC_Fac_RequesthLogs",
-    "CFC_Fac_RequestAdminLogs",
-    "CFC_Fac_RequestGlobalAdminLogs",
-    "CFC_Fac_SendLogs",
-    "CFC_Fac_SenddminLogs",
-    "CFC_Fac_SendGlobalAdminLogs",
     --Checks for submitting faction
     "CFC_Fac_SendFactionSubmit",
     "CFC_Fac_RequestFactionSubmit",
@@ -37,7 +30,7 @@ local NamedNetworkVars = {
     "CFC_Fac_RequestNews",
     --PlayerInfo/State
     "CFC_Fac_RequestPlayerInfo",
-    "CFC_Fac_SentPlayerInfo",
+    "CFC_Fac_SendPlayerInfo",
     --Menu
     "CFC_Fac_ToggleDerma",
     "CFC_Fac_RequestNotifcation",
