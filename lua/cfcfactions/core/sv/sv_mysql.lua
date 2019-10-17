@@ -102,6 +102,7 @@ function sql_db:initialize()
 end
 sql_db:initialize()
 
+-- Helper functions
 function sql_db:escapeQueryArgs( query, ... )
     local args = {...}
     local safeArgs = {}
@@ -121,6 +122,24 @@ function sql_db:escapeQueryArgs( query, ... )
     end
 
     return string.format(query, unpack(safeArgs))
+end
+
+local function defaultErrorCallback(self, err, sql)
+    print(err)
+    print(sql)
+end
+
+local function defaultSuccessCallback(self, data)
+    PrintTable(data)
+end
+
+function sql_db:doQuery(queryString, callback, errorCallback)
+    local query = sql_db:query( queryString )
+
+    query.onError = errorCallback or defaultErrorCallback
+
+    query.onSuccess = callback or defaultSuccessCallback
+    query:start()
 end
 --------------------------------------------------------------------------------------------------------------
 --General Fetching 
@@ -147,11 +166,7 @@ function sql_db:createFaction( faction_data )
         faction_data.invite,
         faction_data.owner
     )
-    local query = sql_db:query( q )
-    query:start()
-    function query:onError(err, sql)
-        print(err)
-    end
+    sql_db:doQuery( q )
 end
 
 
@@ -175,12 +190,7 @@ function sql_db:updateFaction( faction_data )
         faction_data.id
     )
 
-    local query = sql_db:query( q )
-
-    function query:onError(err, sql)
-        print(err)
-    end
-    query:start()
+    sql_db:doQuery( q )
 end
 
 -- returns a single faction with the given id
@@ -189,18 +199,7 @@ function sql_db:getFaction( id )
     SELECT * FROM cfcfactions_data WHERE faction_id = %s;
     ]]
     q = sql_db:escapeQueryArgs(q, id)
-    local query = sql_db:query( q )
-
-    function query:onError(err, sql)
-        print(err)
-    end
-
-    function query:onSuccess( data )
-        PrintTable(data)
-    end
-
-    query:start()
-
+    sql_db:doQuery(q)
 end
 
 -- deletes a faction
@@ -208,11 +207,7 @@ function sql_db:removeFaction( id )
     local q = "DELETE FROM cfcfactions_data WHERE faction_id = %s;"
     q = sql_db:escapeQueryArgs(q, id)
 
-    local query = sql_db:query( qs )
-    function query:onError(err, sql)
-        print(err)
-    end
-    query:start()
+    sql_db:doQuery( q )
 end
 
 function sql_db:loadFactions()
@@ -228,6 +223,7 @@ timer.Simple(5, function()
         invite = false,
         owner = 23
     }
+
     sql_db:updateFaction{
         id=24,
         name="test_faction",
