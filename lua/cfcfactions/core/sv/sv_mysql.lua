@@ -63,6 +63,7 @@ function sql_db:initialize()
                     permissions text NOT NULL,
                     PRIMARY KEY( `user_id` ),
                     FOREIGN KEY (faction) REFERENCES cfcfactions_data(faction_id)
+                    ON DELETE SET NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
         ]],
 
@@ -250,7 +251,7 @@ function sql_db:createUser( steam_id )
     local qs = [[
         INSERT IGNORE INTO cfcusers_data
         (steam_id64, permissions)
-        VALUES ('%s', %s);
+        VALUES ('%s', '%s');
         SELECT LAST_INSERT_ID();
     ]]
 end
