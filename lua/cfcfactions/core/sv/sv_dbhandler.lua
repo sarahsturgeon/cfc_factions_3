@@ -1,4 +1,4 @@
---[[]
+--[[
 File Name: sv_dbhandler.lua
 
 Purpose: Core database handler to save/load from ether mysql or sql ( external/internal )
@@ -16,7 +16,7 @@ function DB:Init()
     elseif DB_Stance == "SQL" then
 
     else
-        --sql
+        -- sql
     end
 end
 
@@ -24,7 +24,7 @@ end
     [Users DB Functions]
 ]]--
 
---Saving Users to mysql_db
+-- Saving Users to mysql_db
 function DB:SaveUsers()
 
 end
@@ -33,12 +33,12 @@ function DB:SaveUser( id )
 
 end
 
---Loading Users from mysql_db
+-- Loading Users from mysql_db
 function DB:LoadUsers()
 
 end
 
---id can be player, steamid, steamid64, or unqui
+-- id can be player, steamid, steamid64, or unqui
 function DB:LoadUser( id )
 
 end
@@ -46,7 +46,7 @@ end
     [Factions DB Functions]
 ]]--
 
---Saveing factions to mysql_db
+-- Saveing factions to mysql_db
 function DB:SaveFaction( factionid )
 
 end
@@ -55,7 +55,7 @@ function DB:SaveFactions()
 
 end
 
---Loading factions to mysql_db
+-- Loading factions to mysql_db
 function DB:LoadFaction( factionid )
 
 end
@@ -72,7 +72,7 @@ end
     [MISC DB Functions]
 ]]--
 
---Global function to refresh both users, factions, and everything in between
+-- Global function to refresh both users, factions, and everything in between
 function DB:Refresh()
 
 end

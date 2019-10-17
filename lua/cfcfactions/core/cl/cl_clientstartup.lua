@@ -6,7 +6,7 @@ cfcFactions.MainDerma = nil
 cfcFactions.CurrentTab = nil
 cfcFactions.News = ""
 
---Registers items to be placed into the menubar at loadtime
+-- Registers items to be placed into the menubar at loadtime
 function cfcFactions:RegisterDermaMenu( name, panel, ranking )
     if not CLIENT then return end
 
@@ -14,18 +14,21 @@ function cfcFactions:RegisterDermaMenu( name, panel, ranking )
     if panel == nil then panel = {} end
     if ranking == nil then ranking = 99 end
     table.insert( cfcFactions.Dermas, {
-        internal_name=name, internal_panel=panel, internal_ranking=ranking, internal_button={}
+        internal_name = name,
+        internal_panel = panel,
+        internal_ranking = ranking,
+        internal_button = {}
     } )
 end
 
 function cfcFactions:AddAlert( msg, mtype )
     if mtype == nil then mtype = MsgType.Msg end
-    table.insert( cfcFactions.Alerts, {["Message"]=msg, ["Type"]=mtype, ["Time"]=os.date( "%T ", os.time() )} )
+    table.insert( cfcFactions.Alerts, {["Message"] = msg, ["Type"] = mtype, ["Time"] = os.date( "%T ", os.time() )} )
     cfcFactions:AddToAlertPanel( msg, mtype )
     hook.Call( "CFC_FAC_AlertAdded", _, msg, mtype )
 end
 
---Displays and handles closing ( an already open ) menu derma. 
+-- Displays and handles closing ( an already open ) menu derma.
 function cfcFactions:DisplayMenu()
     if not cfcFactions.MainDerma or cfcFactions.MainDerma == nil then
         cfcFactions.MainDerma = vgui.Create( "D_cfcmainderma" )
@@ -39,10 +42,10 @@ function cfcFactions:DisplayMenu()
     else
         cfcFactions.MainDerma:Hide()
         gui.EnableScreenClicker( false )
-    end 
+    end
 end
 
---If the defined key is properly set, users can use that specific key to also open/close the derma
+-- If the defined key is properly set, users can use that specific key to also open/close the derma
 local function menuKeyDown( ply, button )
     if input.GetKeyName( button ) == cfcFactions.Config.CLIENT_KEY then
         cfcFactions:DisplayMenu()
@@ -51,7 +54,7 @@ end
 
 hook.Add( "PlayerButtonDown", "CFC_Fac_MenuKeyDown", menuKeyDown )
 
---If a user requests to display the derma from serverside
+-- If a user requests to display the derma from serverside
 local function toogleFactionDerma( len, ply )
     cfcFactions:DisplayMenu()
 end

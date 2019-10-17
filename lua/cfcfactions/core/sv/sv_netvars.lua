@@ -1,4 +1,4 @@
---[[]
+--[[
 File Name: sv_netvars.lua
 
 Purpose: Contains all NetworkedStrings registered on server start
@@ -7,45 +7,45 @@ Purpose: Contains all NetworkedStrings registered on server start
 local util = util
 local NamedNetworkVars = {
 
-    --Alerts/Msgs
+    -- Alerts/Msgs
     "CFC_Fac_SendTextAlert", "CFC_Fac_GetTextAlert", "CFC_Fac_SendServerTextAlert", "CFC_Fac_GetServerTextAlert",
-    --Notifications
+    -- Notifications
     "CFC_Fac_NewFactionCreated",
     "CFC_Fac_FactionDeleted",
     "CFC_Fac_FactionChanged",
     "CFC_Fac_MemberJoined",
     "CFC_Fac_MemberLeft",
     "CFC_Fac_PermissionChanged",
-    --Logs
+    -- Logs
     "CFC_Fac_RequesthLogs",
     "CFC_Fac_RequestAdminLogs",
     "CFC_Fac_RequestGlobalAdminLogs",
     "CFC_Fac_SendLogs",
     "CFC_Fac_SenddminLogs",
     "CFC_Fac_SendGlobalAdminLogs",
-    --Checks for submitting faction
+    -- Checks for submitting faction
     "CFC_Fac_SendFactionSubmit",
     "CFC_Fac_RequestFactionSubmit",
-    --Editing
+    -- Editing
     "CFC_Fac_SendFactionEdit",
     "CFC_Fac_RequestFactionEdit",
-    --News
+    -- News
     "CFC_Fac_SendNews",
     "CFC_Fac_RequestNews",
-    --PlayerInfo/State
+    -- PlayerInfo/State
     "CFC_Fac_RequestPlayerInfo",
     "CFC_Fac_SentPlayerInfo",
-    --Menu
+    -- Menu
     "CFC_Fac_ToggleDerma",
     "CFC_Fac_RequestNotifcation",
     "CFC_Fac_SendNotifcation",
-    --FactionDeletion
+    -- FactionDeletion
     "CFC_Fac_RequestFactionRemoval",
-    --UserLeaving
+    -- UserLeaving
     "CFC_Fac_FactionUserRemoval"
 }
 
---loop through and auto gens netvar names
+-- loop through and auto gens netvar names
 for _, v in pairs( NamedNetworkVars ) do
     util.AddNetworkString( v )
 end

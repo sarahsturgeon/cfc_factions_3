@@ -1,4 +1,4 @@
---[[]
+--[[
 File Name: sv_mysql.lua
 
 Purpose: Core functions that handle saving and loading from the mysql-db. Loads from serverside sv_config cfcFactions.Config.mysql_settings
@@ -10,7 +10,7 @@ local mysqloo = mysqloo
 local table = table
 local string = string
 
---TODO: changed config structure
+-- TODO: changed config structure
 local config = cfcFactions.Config.Server.MySQL
 
 
@@ -24,8 +24,9 @@ function sql_db:onConnectionFailed( error )
     MsgN( 'CFCFactions MySQL: An error occured when connecting. Check local settings: ' .. error )
 end
 sql_db:connect()
+
 --------------------------------------------------------------------------------------------------------------
---Core Init
+-- Core Init
 --------------------------------------------------------------------------------------------------------------
 
 --init the db and all queries revovling around creation of tables
@@ -143,7 +144,7 @@ function sql_db:doQuery(queryString, callback, errorCallback)
     query:start()
 end
 --------------------------------------------------------------------------------------------------------------
---General Fetching 
+-- General Fetching
 --------------------------------------------------------------------------------------------------------------
 
 -- just removed the count functions for now
