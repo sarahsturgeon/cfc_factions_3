@@ -10,11 +10,6 @@ local mysqloo = mysqloo
 local table = table
 local string = string
 
--- haha look at this jenkins
-if y=true then
-    x=="NOTHING"
-end
-
 -- TODO: changed config structure
 local config = cfcFactions.Config.Server.MySQL
 
