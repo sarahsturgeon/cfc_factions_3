@@ -154,7 +154,7 @@ end
 --------------------------------------------------------------------------------------------------------------
 
 -- creates a new faction
-function sql_db:createFaction( faction_data )
+function sql_db:createFaction( faction_data, onSuccess, onError )
     local q = [[
     INSERT INTO cfcfactions_data 
     (name, description, color, invite, owner)
@@ -168,12 +168,10 @@ function sql_db:createFaction( faction_data )
         faction_data.invite,
         faction_data.owner
     )
-    sql_db:doQuery( q )
+    sql_db:doQuery( q, onSuccess, onError )
 end
 
-
--- updates an existing faction
-function sql_db:updateFaction( faction_data )
+function sql_db:updateFaction( faction_data, onSuccess, onError )
     local q = [[
     UPDATE cfcfactions_data SET 
         name = '%s',
@@ -192,58 +190,38 @@ function sql_db:updateFaction( faction_data )
         faction_data.id
     )
 
-    sql_db:doQuery( q )
+    sql_db:doQuery( q, onSuccess, onError )
 end
 
--- returns a single faction with the given id
-function sql_db:getFaction( id )
+function sql_db:getFaction( id, onSuccess, onError )
     local q = [[
     SELECT * FROM cfcfactions_data WHERE faction_id = %s;
     ]]
-    q = sql_db:escapeQueryArgs(q, id)
+    q = sql_db:escapeQueryArgs(q, id, onSuccess, onError)
     sql_db:doQuery(q)
 end
 
+-- returns <amount> factions from database starting at start
+function sql_db:getFactions( start, amount, onSuccess, onError)
+    local q = [[
+    SELECT * FROM cfcfactions_data LIMIT %s, %s;
+    ]]
+    q = sql_db:escapeQueryArgs(q, start, amount)
+    sql_db:doQuery(q, onSuccess, onError )
+end
+
+
 -- deletes a faction
-function sql_db:removeFaction( id )
+function sql_db:removeFaction( id, onSuccess, onError )
     local q = "DELETE FROM cfcfactions_data WHERE faction_id = %s;"
     q = sql_db:escapeQueryArgs(q, id)
 
-    sql_db:doQuery( q )
+    sql_db:doQuery( q, onSuccess, onError )
 end
-
-function sql_db:loadFactions()
-end
-
---  testing stuff
-timer.Simple(5, function()
-
-    sql_db:createFaction{
-        name = "Some random faction",
-        description = "test",
-        color = 0xFF00FF,
-        invite = false,
-        owner = 23
-    }
-
-    sql_db:updateFaction{
-        id=24,
-        name="test_faction",
-        description = "a new description",
-        color = 0xFF0000,
-        invite = false
-    }
-
-    sql_db:getFaction(24)
-
-
-end)
-
 
 ----------------------------------------------------------------------------------------------------------
 --user_data functions
 --------------------------------------------------------------------------------------------------------------
--- creates a new user in the database returning the id
 function sql_db:createUser( steam_id )
     local qs = [[
         INSERT IGNORE INTO cfcusers_data
@@ -251,6 +229,7 @@ function sql_db:createUser( steam_id )
         VALUES ('%s', '%s');
         SELECT LAST_INSERT_ID();
     ]]
+
 end
 
 function sql_db:updateUser( user_id, rank )
@@ -273,3 +252,28 @@ function sql_db:getUserFromSteamID( steam_id )
     SELECT * FROM cfcusers_data WHERE steam_id64 = '%s';
     ]]
 end
+
+--  testing stuff
+timer.Simple(5, function()
+    for i=1, 100 do
+        sql_db:createFaction{
+            name = "test"..i,
+            description = "test",
+            color = 0xFF00FF,
+            invite = false,
+            owner = 100+i
+        }
+    end
+
+    sql_db:updateFaction{
+        id=24,
+        name="test_faction",
+        description = "a new description",
+        color = 0xFF0000,
+        invite = false
+    }
+
+    sql_db:getFaction(24)
+
+
+end)
