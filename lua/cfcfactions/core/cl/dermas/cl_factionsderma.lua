@@ -13,7 +13,6 @@ cfcFactions:RegisterDermaMenu( "View Factions", Panel, 1 )
 
 
 function Panel:Init()
-
     cfcFactions.FactionsView=1
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
@@ -170,22 +169,17 @@ end
 
 net.Receive( "CFC_Fac_SendFactionSubmit", factionCreated )
 
-local function factionEdited()
+
+
+local function FactionRefresh()
+    local IncomingJSONVar = net.ReadString()
+    local Faction = util.JSONToTable(IncomingJSONVar)
+    cfcFactions.Factions[Faction.ID] = Faction
     RefreshFactionViewingTable()
 end
 
-net.Receive( "CFC_Fac_FactionEdited", factionEdited )
+net.Receive( "CFC_Fac_FactionRefresh", FactionRefresh )
 
-local function factionFetchQuery()
-    
-end
 
-net.Receive( "CFC_Fac_FactionFetchQuery", factionFetchQuery )
-
-local function factionDeleted()
-    RefreshFactionViewingTable()
-end
-
-net.Receive( "CFC_Fac_FactionDeleted", factionDeleted )
 
 vgui.Register( 'D_cfcfactionsderma', Panel )
