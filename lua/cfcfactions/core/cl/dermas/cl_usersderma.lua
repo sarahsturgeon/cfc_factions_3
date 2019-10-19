@@ -6,7 +6,32 @@ local Panel = {}
 cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
 
 function Panel:Init()
+    --[[
+    local quickMenu = DermaMenu()
+    quickMenu:SetPos( gui.MouseX(), gui.MouseY() )
 
+    menu:AddOption( "Request Invite", function()
+        --
+    end )
+
+    menu:AddOption( "Copy ID", function()
+        --
+    end )
+
+    menu:AddOption( "Edit", function()
+        --
+    end )
+
+    menu:AddOption( "Flag for Administration", function()
+        --
+    end )
+
+    menu:AddSpacer()
+
+    menu:AddOption( "Delete", function()
+        --
+    end )
+    ]]
 end
 
 function Panel:Paint( w, h )
