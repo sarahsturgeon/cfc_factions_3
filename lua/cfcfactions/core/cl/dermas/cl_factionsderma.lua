@@ -22,6 +22,33 @@ function Panel:Init()
     cfcFactions.FactionsListView = vgui.Create( "DListView", self.MainContainer )
     cfcFactions.FactionsListView:Dock( FILL )
 
+    function cfcFactions.FactionsListView:OnRowRightClick( id, line )
+        local quickMenu = DermaMenu()
+        quickMenu:SetPos( gui.MouseX(), gui.MouseY() )
+
+        menu:AddOption( "Request Invite", function()
+            --
+        end )
+
+        menu:AddOption( "Copy ID", function()
+            --
+        end )
+
+        menu:AddOption( "Edit", function()
+            --
+        end )
+
+        menu:AddOption( "Flag for Administration", function()
+            --
+        end )
+
+        menu:AddSpacer()
+
+        menu:AddOption( "Delete", function()
+            --
+        end )
+    end
+
     self.BottomPanel = vgui.Create( "DPanel", self.MainContainer )
     self.BottomPanel:Dock( BOTTOM )
     self.BottomPanel:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
