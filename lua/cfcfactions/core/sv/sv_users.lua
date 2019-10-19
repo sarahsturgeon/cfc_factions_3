@@ -13,10 +13,8 @@ local fpm = cfcFactions.fpm
 --What a user should have when first logging into the server
 local function ReturnDefaultTable()
 	local PreUserTable = {
-		["DisplayName"] = user:Nick(),
-		["LastOnline"] = cfcFactions:TimeStamp(),
-		["PendingInvites"] = {},
 		["CFCPermissions"] = {},
+		["DisplayName"] = user:Nick(),
 		--data only pretaining to a user inside a faction
 		["FactionMetadata"] = {
 			["DateAdded"] = cfcFactions:TimeStamp(),
@@ -26,6 +24,10 @@ local function ReturnDefaultTable()
 			["FactionRank"] = "",
 			["InternalFactionPermissions"] = {}
 		}
+		["LastOnline"] = cfcFactions:TimeStamp(),
+		["PendingInvites"] = {},
+		
+
 	}
 end
 
