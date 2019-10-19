@@ -12,9 +12,9 @@ local string = string
 
 -- TODO: changed config structure
 local config = cfcFactions.Config.Server.MySQL
+PrintTable(config)
 
-
-sql_db = mysqloo.connect( "localhost", "factions_dev", "factions", "factions" )
+sql_db = mysqloo.connect( config.hostname, config.username, config.password, config.database)
 
 function sql_db:onConnected()
     MsgN( 'CFCFactions - MySql Successfully connected' )
@@ -136,6 +136,7 @@ local function defaultSuccessCallback(self, data)
 end
 
 function sql_db:doQuery(queryString, callback, errorCallback)
+    print(queryString)
     local query = sql_db:query( queryString )
 
     query.onError = errorCallback or defaultErrorCallback
@@ -222,40 +223,50 @@ end
 ----------------------------------------------------------------------------------------------------------
 --user_data functions
 --------------------------------------------------------------------------------------------------------------
-function sql_db:createUser( steam_id )
-    local qs = [[
+function sql_db:createUser( steam_id, onSuccess, onError )
+    local q = [[
         INSERT IGNORE INTO cfcusers_data
-        (steam_id64, permissions)
-        VALUES ('%s', '%s');
-        SELECT LAST_INSERT_ID();
+        (steam_id64)
+        VALUES ('%s');
     ]]
-
+    q = sql_db:escapeQueryArgs(q, steam_id)
+    sql_db:doQuery(q, onSuccess, onError)
 end
 
-function sql_db:updateUser( user_id, rank )
-    local qs =  [[
+function sql_db:updateUser( user_data, onSuccess, onError )
+    local q =  [[
     UPDATE cfcusers_data SET 
-        faction_id = %s
+        faction = %s,
         faction_rank = '%s'
-    WHERE user_id=1;
+    WHERE user_id=%s;
     ]]
+    q = sql_db:escapeQueryArgs(q,
+        user_data.faction,
+        user_data.faction_rank,
+        user_data.id
+    )
+    sql_db:doQuery(q, onSuccess, onError)
 end
 
-function sql_db:getUser( user_id )
-    local qs = [[
+function sql_db:getUser( user_id, onSuccess, onError )
+    local q = [[
     SELECT * FROM cfcusers_data WHERE user_id = %s;
     ]]
+    q = sql_db:escapeQueryArgs(q, user_id )
+    sql_db:doQuery(q, onSuccess, onError)
 end
 
-function sql_db:getUserFromSteamID( steam_id )
+function sql_db:getUserFromSteamID( steam_id, onSuccess, onError )
     local qs = [[
     SELECT * FROM cfcusers_data WHERE steam_id64 = '%s';
     ]]
+    q = sql_db:escapeQueryArgs(q, steam_id)
+    sql_db:doQuery(q, onSuccess, onError)
 end
 
 --  testing stuff
 timer.Simple(5, function()
-    for i=1, 100 do
+    --[[for i=1,100 do
         sql_db:createFaction{
             name = "test"..i,
             description = "test",
@@ -274,6 +285,15 @@ timer.Simple(5, function()
     }
 
     sql_db:getFaction(24)
+]]
+    sql_db:createUser("7656119833109623483", function(db, data) 
+        print("User created, id = "..db:lastInsert())
+    end)
 
+    sql_db:updateUser{
+        id = 10,
+        faction_rank = 10,
+        faction = 190
+    }
 
 end)
