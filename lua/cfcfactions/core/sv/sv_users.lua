@@ -52,7 +52,7 @@ end
 --Checks if a user is already registered
 function cfcuser:UserExists( user )
 
-	if not IsValid(user) and not user then 
+	if not IsValid( user ) and not user then 
 		--Error out, not a player
 		return 
 	end
@@ -78,8 +78,6 @@ end
 
 --Used to update a player's table of associated variables
 function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
-	print( "Updating User" .. user:Nick() )
-
 	local PlayerEnt = user
 	if ( not IsValid( PlayerEnt ) ) and ( not PlayerEnt:IsPlayer() ) then 
 		if ( type( PlayerEnt ) == "string" ) then
@@ -92,8 +90,6 @@ function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, faction
     	cfcuser:registeruser( user )
     end
 
-    print( "Exists" )
-
     local userTable = cfcuser[user:SteamID64()]
     local userFactionTable = userTable.FactionMetadata
 
@@ -104,10 +100,9 @@ function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, faction
     end
 
     if ( not IsValidNumber( factionid ) ) then 
-         print( "No valid faction ID" )
+
     else
     	if cfcFactions:IsValidFaction( cfcFactions.Factions[factionid] ) then
-    		print( "Valid Faction Submitted. Updating Values" )
     	    userFactionTable["FactionID"] = factionid
 		    if IsValidNumber( kills ) then  
 		    	userFactionTable["Kills"] = kills
@@ -121,7 +116,7 @@ function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, faction
 		    	userFactionTable["FactionRank"] = factionrank
 		    end	
     	else
-    		print( "No faction was found by that id" )
+
     	end
 
     end  

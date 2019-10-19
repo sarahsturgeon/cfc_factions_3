@@ -127,9 +127,7 @@ function cfcFactions:CreateFaction( tbl )
 
     --function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
 
-    cfcuser:UpdateUser( 
-        player.GetBySteamID64( FinalFaction.Owner ), FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" 
-        )
+    cfcuser:UpdateUser( player.GetBySteamID64( FinalFaction.Owner ), FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
     --SQL: Save to database
     --function cfcFactions:SaveFaction( factionid )
     --function cfcFactions:SaveUser( userid )
@@ -137,8 +135,8 @@ function cfcFactions:CreateFaction( tbl )
     --Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, player.GetBySteamID64( FinalFaction.Owner ) )
     
-    hook.Call("CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID)
-    SendFactionRefresh(FinalFaction)
+    hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
+    SendFactionRefresh( FinalFaction )
     return cfcFactions.Factions[TmpUnqID]
 end
 
