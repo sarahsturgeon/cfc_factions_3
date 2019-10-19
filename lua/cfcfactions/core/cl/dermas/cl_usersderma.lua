@@ -10,25 +10,21 @@ function Panel:Init()
     local quickMenu = DermaMenu()
     quickMenu:SetPos( gui.MouseX(), gui.MouseY() )
 
-    menu:AddOption( "Request Invite", function()
+    menu:AddOption( "Invite to Faction", function()
         --
     end )
 
-    menu:AddOption( "Copy ID", function()
+    menu:AddOption( "Copy SteamID", function()
         --
     end )
 
-    menu:AddOption( "Edit", function()
-        --
-    end )
-
-    menu:AddOption( "Flag for Administration", function()
+    menu:AddOption( "Edit Permissions", function()
         --
     end )
 
     menu:AddSpacer()
 
-    menu:AddOption( "Delete", function()
+    menu:AddOption( "Kick from Faction", function()
         --
     end )
     ]]
