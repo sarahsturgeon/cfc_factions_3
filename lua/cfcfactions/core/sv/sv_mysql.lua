@@ -78,7 +78,7 @@ function sql_db:initialize()
         end
 
         function q:onError( err, sql )
-            MsgN( string.format( 'CfcFactions MySQLOO: Query Failure: %s \n "%s" ', err, sql )
+            MsgN( string.format( 'CfcFactions MySQLOO: Query Failure: %s \n "%s" ', err, sql ) )
             MsgN( "When attempting query " )
             MsgN( q )
         end
