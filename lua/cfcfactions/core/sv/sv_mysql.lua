@@ -5,6 +5,7 @@ Purpose: Core functions that handle saving and loading from the mysql-db. Loads 
 
 ]]--
 
+
 require( 'mysqloo' )
 local mysqloo = mysqloo
 local table = table
@@ -32,7 +33,6 @@ function sql_db:initialize()
         -- factions data
         create_factions_table = sql_db:query [[
             CREATE TABLE IF NOT EXISTS `cfcfactions_data` (
-
                  faction_id bigint NOT NULL AUTO_INCREMENT,
                  name varchar( 32 ) NOT NULL UNIQUE,
                  description varchar( 300 ) NOT NULL,
@@ -42,7 +42,6 @@ function sql_db:initialize()
                  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                  edited timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                  PRIMARY KEY ( `faction_id` )
-
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1
         ]],
         -- factions users data
@@ -52,7 +51,7 @@ function sql_db:initialize()
                     steam_id64 varchar(17) NOT NULL UNIQUE,
                     faction bigint,
                     faction_rank varchar( 32 ),
-                    permissions text NOT NULL,
+                    permissions JSON NOT NULL,
                     PRIMARY KEY( `user_id` ),
                     FOREIGN KEY (faction) REFERENCES cfcfactions_data(faction_id)
                     ON DELETE SET NULL
@@ -129,6 +128,19 @@ function sql_db:doQuery( queryString, callback, errorCallback )
 
     query.onSuccess = callback or defaultSuccessCallback
     query:start()
+end
+
+function colorToInt( c ) 
+    return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
+end
+
+function intToColor(n)
+    return Color(
+        bit.band( bit.rshift( n, 16 ) ),
+        bit.band( bit.rshift( n, 8 ) ), 
+        bit.band( n ),
+        255
+    )
 end
 
 --------------------------------------------------------------------------------------------------------------
