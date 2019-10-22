@@ -17,12 +17,13 @@ cfcFactions.Credits = cfcFactions.Credits or {}
 -- For extra effect, pull their name from their steam page directly.
 cfcFactions.Credits.Developers = {
     ["STEAM_0:1:74678877"] = "Bleck",
-    ["STEAM_0:0:21170873"] = "Phatso",
+    ["STEAM_0:1:39801724"] = "Decline",
     ["STEAM_0:1:77453431"] = "hmmm",
     ["STEAM_0:1:28482516"] = "iLikeYoBraids",
+    ["STEAM_0:1:13693373"] = "Lego1042",
     ["STEAM_0:1:115301653"] = "Periapsis",
-    ["STEAM_0:1:39801724"] = "Decline",
-    ["STEAM_0:1:13693373"] = "Lego1042"
+    ["STEAM_0:0:21170873"] = "Phatso",
+    ["STEAM_0:1:28607710"] = "Voodoo"
 }
 
 -- If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
