@@ -83,13 +83,13 @@ function cfcFactions:TimeStamp()
     return os.date( "%H:%M:%S - %d/%m/%Y", os.time() )
 end
 
-function cfcFactions:UUID()
-    local template ='xxxxxxxxxxxxxxxxxxxx'
-    return string.gsub( template, '[xy]', function ( c )
-        local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
-        return string.format( '%x', v )
-    end )
-end
+-- function cfcFactions:UUID()
+--     local template ='xxxxxxxxxxxxxxxxxxxx'
+--     return string.gsub( template, '[xy]', function ( c )
+--         local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
+--         return string.format( '%x', v )
+--     end )
+-- end
 
 --TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
 --Sends a notifcation to an optional player
