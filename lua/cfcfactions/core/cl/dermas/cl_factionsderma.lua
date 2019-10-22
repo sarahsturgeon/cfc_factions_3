@@ -174,8 +174,16 @@ end
 
 local function FactionRefresh()
     local IncomingJSONVar = net.ReadString()
+    local IncomingState = net.ReadString()
+
     local Faction = util.JSONToTable(IncomingJSONVar)
-    cfcFactions.Factions[Faction.ID] = Faction
+
+    if IncomingState == "DELETED" then
+        cfcFactions.Factions[Faction.ID] = nil
+    else
+        cfcFactions.Factions[Faction.ID] = Faction
+    end
+
     RefreshFactionViewingTable()
 end
 

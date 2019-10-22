@@ -24,18 +24,29 @@ local function GenerateID()
 end
 
 --Sends a copy of the table to client
-local function SendFactionRefresh( data )
-    if data == nil or table.IsEmpty( data ) then
+--statechanged can be 1 of the possible MODIFIED, DELETED, CREATED, NOCHANGE, nil
+local function ReplicateClientsideFaction( tbl, statechanged )
+    if tbl == nil or table.IsEmpty( tbl ) then
         return
     end
+    if statechanged == nil then statechanged = "NOCHANGE" end
     --Package the table and send to clients
-    local CopyOfFactionToSend = table.Copy( data )
+    local CopyOfFactionToSend = table.Copy( tbl )
+    --Because of how bitter some clients can get, we should be careful about copying the
+    --entire faction data over to client. Here, we should carefully select what to send 
+    --and omit anything else. 
+    -- or k, v in pairs ( dest ) do
+    -- If source[k] then dest[k] = source[k] end
+    local CleanedFaction = {}
+
     local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false ) 
-  
+
     net.Start( "CFC_Fac_FactionRefresh" )
         net.WriteString( FactionTableJsonified )
+        net.WriteString( statechanged )
     net.Broadcast()
 
+    hook.Call("CFC_ReplicateClientsideFaction")
 end
 
 --function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
@@ -137,7 +148,7 @@ function cfcFactions:CreateFaction( tbl )
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, player.GetBySteamID64( FinalFaction.Owner ) )
     
     hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
-    SendFactionRefresh( FinalFaction )
+    ReplicateClientsideFaction( FinalFaction, "CREATED" )
 
     --- Returns the newly created faction as a table
     return FinalFaction
@@ -227,7 +238,7 @@ function cfcFactions:EditFaction( tbl )
 
     hook.Call("CFC_Factionhook_FactionEdited")
 
-    FactionRefresh(cfcFactions.Factions[tbl.ID])
+    ReplicateClientsideFaction(cfcFactions.Factions[tbl.ID], "MODIFIED")
 end
 
 --Handles removing a faction( s ) and its attached users properly
@@ -244,6 +255,7 @@ function cfcFactions:RemoveFaction( ply, id )
                 cfcuser:RemoveUser( ply )
             end
         end
+        ReplicateClientsideFaction(faction, "DELETED")
     end       
 
 end
@@ -298,60 +310,58 @@ end
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 
 --If Requested, Send Faction details to client to edit 
-local function RequestFactionDetails( len, ply )
+-- local function RequestFactionDetails( len, ply )
 
-    -- Check if user has proper permission to edit each part of a faction
-    -- CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
-    local faction = cfcFactions.Factions[id]
+--     -- Check if user has proper permission to edit each part of a faction
+--     -- CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
+--     local faction = cfcFactions.Factions[id]
+--     faction.Name = name
+--     faction.Description = description
+--     faction.Color = color
+--     faction.Invite = inviteOnly
 
-        faction.Name = name
-        faction.Description = description
-        faction.Color = color
-        faction.Invite = inviteOnly
-        return true
+--     -- We'll check if the player has the proper permission to edit each field.
+--     -- If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
+--     -- This way clients send only the data they think they need to edit a faction, if they try to sneak around it
+--     -- and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
+--     if fpm:hasPermission( player, "CanEditName" ) then
+--         faction.Name = name
+--     else
+--         if ( ( name and #name > 0 ) or name == nil ) then
+--             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, owner )
+--         end
+--     end
 
-        -- We'll check if the player has the proper permission to edit each field.
-        -- If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
-        -- This way clients send only the data they think they need to edit a faction, if they try to sneak around it
-        -- and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
-        if fpm:hasPermission( player, "CanEditName" ) then
-            faction.Name = name
-        else
-            if ( ( name and #name > 0 ) or name == nil ) then
-                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, owner )
-            end
-        end
+--     if fpm:hasPermission( player, "CanEditColor" ) then
+--         faction.Color = color
+--     else
+--         if ( ( not table.IsEmpty( color ) ) or color == nil ) then
+--             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, owner )
+--         end
+--     end
 
-        if fpm:hasPermission( player, "CanEditColor" ) then
-            faction.Color = color
-        else
-            if ( ( not table.IsEmpty( color ) ) or color == nil ) then
-                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, owner )
-            end
-        end
+--     if fpm:hasPermission( player, "CanEditInvite" ) then
+--         faction.Invite = inviteOnly
+--     else
+--         if ( not ( inviteOnly == nil ) ) then
+--             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, owner )
+--         end
+--     end
 
-        if fpm:hasPermission( player, "CanEditInvite" ) then
-            faction.Invite = inviteOnly
-        else
-            if ( not ( inviteOnly == nil ) ) then
-                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, owner )
-            end
-        end
+--     if fpm:hasPermission( owner, "CanEditDescription" ) then
+--         faction.Description = description
+--     else
+--         if ( ( description and #description > 0 ) or description == nil ) then
+--             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, owner )
+--         end
+--     end
+--     -- save to db
 
-        if fpm:hasPermission( owner, "CanEditDescription" ) then
-            faction.Description = description
-        else
-            if ( ( description and #description > 0 ) or description == nil ) then
-                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, owner )
-            end
-        end
-    -- save to db
-
-    -- Broadcast change to players
-end
+--     -- Broadcast change to players
+-- end
 
 
-net.Receive( "CFC_Fac_RequestFactionEdit", RequestFactionDetails )
+-- net.Receive( "CFC_Fac_RequestFactionEdit", RequestFactionDetails )
 
 -- Handles removing a faction( s ) and its attached users properly
 function cfcFactions:RemoveFaction( ply, id )
