@@ -130,19 +130,6 @@ function sql_db:doQuery( queryString, callback, errorCallback )
     query:start()
 end
 
-function colorToInt( c ) 
-    return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
-end
-
-function intToColor(n)
-    return Color(
-        bit.band( bit.rshift( n, 16 ) ),
-        bit.band( bit.rshift( n, 8 ) ), 
-        bit.band( n ),
-        255
-    )
-end
-
 --------------------------------------------------------------------------------------------------------------
 --factions_data functions
 --------------------------------------------------------------------------------------------------------------

@@ -139,3 +139,17 @@ function cfcFactions:SendNotifcation( msg, mtype, player )
         end
     end
 end
+
+
+function cfcFactions.colorToInt( c ) 
+    return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
+end
+
+function cfcFactions.intToColor(n)
+    return Color(
+        bit.band( bit.rshift( n, 16 ) ),
+        bit.band( bit.rshift( n, 8 ) ), 
+        bit.band( n ),
+        255
+    )
+end
