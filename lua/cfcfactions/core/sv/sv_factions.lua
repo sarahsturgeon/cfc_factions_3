@@ -1,4 +1,4 @@
---[[]
+--[[
 File Name: sv_factions.lua
 
 Purpose: Core faction's functions to create, edit, and destory
@@ -14,7 +14,7 @@ local util = util
 local table = table
 local fpm = cfcFactions.fpm
 local cfg = cfcFactions.Config.Server
-local cfcuser = cfcFactions.Users 
+local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
@@ -56,7 +56,7 @@ function cfcFactions:CreateFaction( tbl )
     --[type checks]
     ----------------
     if not type( factionOwner ) == "Player" then
-        --Send Alert -> Not a valid PlayerType
+        -- Send Alert -> Not a valid PlayerType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
         return
     end
@@ -86,7 +86,7 @@ function cfcFactions:CreateFaction( tbl )
     end
 
     if not factionOwner:IsPlayer() or not IsValid( factionOwner ) then
-        --SendAlert -> Not a valid player
+        -- SendAlert -> Not a valid player
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["general-error"], 1, nil )
         return
     end
@@ -102,9 +102,9 @@ function cfcFactions:CreateFaction( tbl )
         factionIsTemporary = false
     end
 
+
     local CurrentTimeStamp = cfcFactions:TimeStamp()
-    --What should a faction contain? 
-    
+    -- What should a faction contain?
     cfcFactions.Factions[TmpUnqID] = {
         ["Allies"] = {},
         ["Color"] = factionColor,
@@ -127,6 +127,7 @@ function cfcFactions:CreateFaction( tbl )
 
     --function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
 
+
     cfcuser:UpdateUser( player.GetBySteamID64( FinalFaction.Owner ), FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
     --SQL: Save to database
     --function cfcFactions:SaveFaction( factionid )
@@ -137,10 +138,12 @@ function cfcFactions:CreateFaction( tbl )
     
     hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
     SendFactionRefresh( FinalFaction )
-    return cfcFactions.Factions[TmpUnqID]
+
+    --- Returns the newly created faction as a table
+    return FinalFaction
 end
 
---Checks a specifc string to see if it is unique amongst other factions.
+-- Checks a specifc string to see if it is unique amongst other factions.
 function cfcFactions:isUniqueName( faction_name )
     for k, v in pairs( cfcFactions.Factions ) do
         if string.lower( string.Trim( v.Name ) ) == string.lower( string.Trim( faction_name ) ) then
@@ -189,6 +192,7 @@ function cfcFactions:EditFaction( tbl )
     local owner
     if not type( util.GetBySteamID64( tbl.Owner ) ) == "Player" then
         --Send Alert -> Not a valid PlayerType
+
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
         owner = player.GetBySteamID64( Faction.Owner )
     end
@@ -296,23 +300,21 @@ net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 --If Requested, Send Faction details to client to edit 
 local function RequestFactionDetails( len, ply )
 
-    --Check if user has proper permission to edit each part of a faction
-    --CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
+    -- Check if user has proper permission to edit each part of a faction
+    -- CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
     local faction = cfcFactions.Factions[id]
-    --if IsAdmin or IsDeveloper, allow freely edit of a faction
-    if fpm:IsDeveloper( owner ) or fpm:IsFactionAdmin( owner ) or fpm:hasPermission( owner, "CanEditAll" ) then
+
         faction.Name = name
         faction.Description = description
         faction.Color = color
         faction.Invite = inviteOnly
         return true
 
-    else
-        --We'll check if the player has the proper permission to edit each field. 
-        --If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
-        --This way clients send only the data they think they need to edit a faction, if they try to sneak around it
-        --and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
-        if fpm:hasPermission( owner, "CanEditName" ) then
+        -- We'll check if the player has the proper permission to edit each field.
+        -- If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
+        -- This way clients send only the data they think they need to edit a faction, if they try to sneak around it
+        -- and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
+        if fpm:hasPermission( player, "CanEditName" ) then
             faction.Name = name
         else
             if ( ( name and #name > 0 ) or name == nil ) then
@@ -343,17 +345,39 @@ local function RequestFactionDetails( len, ply )
                 cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, owner )
             end
         end
-    end
+    -- save to db
 
-    --save to db
-
-    --Broadcast change to players
+    -- Broadcast change to players
 end
+
 
 net.Receive( "CFC_Fac_RequestFactionEdit", RequestFactionDetails )
 
+-- Handles removing a faction( s ) and its attached users properly
+function cfcFactions:RemoveFaction( ply, id )
+    -- delete the faction and any players inside that faction.
 
+    local faction = cfcFactions.Factions[id]
+    local factionID = id
 
+     if faction and not table.IsEmpty( faction ) then
+        faction = nil
+        for k, Player in player.GetHumans() do
+            if cfcuser:IsInFaction( ply, factionID ) then
+                cfcuser:RemoveUser( ply )
+            end
+        end
+    end
 
+end
 
+local function requestFactionNews( len, ply )
+    -- Look into a better way of sending faction news to client
+    for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
+        net.Start( "CFC_Fac_SendNews" )
+            net.WriteString( v .. "\n" )
+            net.WriteString( ply:Nick() )
+        net.Send( ply )
+    end
+end
 

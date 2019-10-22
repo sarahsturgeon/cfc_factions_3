@@ -37,12 +37,12 @@ function Panel:Init()
     self.BottomContainerBottom:Dock( BOTTOM )
     self.BottomContainerBottom:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
-    --Bottom Panel - Contains buttons to interact with factions
+    -- Bottom Panel - Contains buttons to interact with factions
     self.BottomButtonsControlPanel = vgui.Create( "DPanel", self.BottomContainerBottom )
     self.BottomButtonsControlPanel:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
     self.BottomButtonsControlPanel:Dock( BOTTOM )
 
-    --Factions View buttons ( Changing pages )
+    -- Factions View buttons ( Changing pages )
     self.ButtonsContainer = vgui.Create( "DPanel", self.BottomContainerTop )
     self.ButtonsContainer:Dock( RIGHT )
     self.ButtonsContainer:InvalidateParent( true )
@@ -59,12 +59,12 @@ function Panel:Init()
     self.ButtonsPanelRight:InvalidateParent( true )
     self.ButtonsPanelRight:SetBackgroundColor( ColorAlpha( cfg.ColorSchemes.BackgroundPanel, 255 ) )
 
-    --Create, Edit, Delete, View
+    -- Create, Edit, Delete, View
     self.CreateFaction = vgui.Create( "DButton", self.BottomButtonsControlPanel )
     self.CreateFaction:SetText( "Create Faction" )
     self.CreateFaction:Dock( LEFT )
     self.CreateFaction.DoClick = function()
-        --create cl_faccreate.lua, process, submit to server
+        -- create cl_faccreate.lua, process, submit to server
         local CreateFactionMiniPanel = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
         CreateFactionMiniPanel:Center()
         --Make sure we delete the FactionMiniPanel when finished
@@ -82,7 +82,7 @@ function Panel:Init()
     cfcFactions:ResizeParentFromChildren( self.BottomButtonsControlPanel )
     cfcFactions:ResizeChildrenEqually( self.BottomButtonsControlPanel, 6 )
 
-    --First Page, Previous Page, Next Page, Last Page
+    -- First Page, Previous Page, Next Page, Last Page
     self.FirstPage = vgui.Create( "DButton", self.ButtonsPanelLeft )
     self.FirstPage:SetText( "<<" )
     self.FirstPage:Dock( LEFT )
@@ -95,29 +95,29 @@ function Panel:Init()
     self.NextPage:SetText( ">" )
     self.NextPage:Dock( LEFT )
 
-    self.LastPage = vgui.Create( "DButton", self.ButtonsPanelRight ) 
+    self.LastPage = vgui.Create( "DButton", self.ButtonsPanelRight )
     self.LastPage:SetText( ">>" )
     self.LastPage:Dock( RIGHT )
 
     self.ButtonsPanelLeft:SetWide( self.FirstPage:GetWide() + self.NextPage:GetWide() )
     self.ButtonsPanelRight:SetWide( self.NextPage:GetWide() + self.LastPage:GetWide() )
-    --self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
+    -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
 
     --[[
-        --Container [  Container[Name] Container[Description] -... ]
+        -- Container [  Container[Name] Container[Description] -... ]
     ]]--
 
-    --id  - name - description - owner - InviteOnly - kills - deaths
+    -- id  - name - description - owner - InviteOnly - kills - deaths
 
     self.privcol = cfcFactions.FactionsListView:AddColumn( "Private", 1 )
-    self.namecol = cfcFactions.FactionsListView:AddColumn( "Name", 2)
+    self.namecol = cfcFactions.FactionsListView:AddColumn( "Name", 2 )
     self.desccol = cfcFactions.FactionsListView:AddColumn( "Description", 3 )
     self.owncol = cfcFactions.FactionsListView:AddColumn( "owner", 4 )
     self.killcol = cfcFactions.FactionsListView:AddColumn( "K/D", 5 )
     self.idcol = cfcFactions.FactionsListView:AddColumn( "ID", 6 )
 
-    --sizing
+    -- sizing
     self.privcol:SetWide( 5 )
     self.killcol:SetWide( 5 )
     self.idcol:SetWide( 20 )
@@ -143,11 +143,10 @@ end
 
 --TODO: FactionRemoved
 
---TODO:  tie into being actually used
+-- TODO:  tie into being actually used
 local function addFaction( tbl )
-    
     if not tbl then return end
-    
+
     local Faction = tbl
     local tmpLock = Faction.Invite and "L" or ""
     local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
@@ -169,7 +168,9 @@ end
 
 net.Receive( "CFC_Fac_SendFactionSubmit", factionCreated )
 
+local function factionEdited()
 
+end
 
 local function FactionRefresh()
     local IncomingJSONVar = net.ReadString()
@@ -179,7 +180,5 @@ local function FactionRefresh()
 end
 
 net.Receive( "CFC_Fac_FactionRefresh", FactionRefresh )
-
-
 
 vgui.Register( 'D_cfcfactionsderma', Panel )

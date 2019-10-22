@@ -2,10 +2,10 @@ cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
 cfcFactions.Factions = cfcFactions.Factions or {}
 
---sh
+-- sh
 include( "cfcfactions/core/sh/sh_init.lua" )
 
---sv
+-- sv
 include( "cfcfactions/config/sv_config.lua" )
 include( "cfcfactions/core/sv/sv_netvars.lua" )
 include( "cfcfactions/core/sv/sv_users.lua" )
@@ -16,7 +16,7 @@ include( "cfcfactions/core/sv/sv_factions.lua" )
 include( "cfcfactions/core/sv/sv_factionmanagment.lua" )
 include( "cfcfactions/core/sv/sv_player_ext.lua" )
 
---cl
+-- cl
 AddCSLuaFile( "cfcfactions/core/cl/cl_clientstartup.lua" )
 AddCSLuaFile( "cfcfactions/config/cl_config.lua" )
 AddCSLuaFile( "cfcfactions/core/sh/sh_init.lua" )
@@ -26,7 +26,7 @@ AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_factionsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_usersderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_alertbox.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_faccreate.lua" )
-AddCSLuaFile("cfcfactions/core/cl/dermas/minis/cl_editfac.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_editfac.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_utilities.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_newsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_creditsderma.lua" )
@@ -36,27 +36,27 @@ resource.AddFile( "resource/fonts/coolvetica.ttf" )
 
 
 function cfcFactions:LoadNews()
-    --Future proofing, load from phatso's github
+    -- Future proofing, load from phatso's github
     if not file.Exists( "cfcfactions/news.txt", "DATA" ) then print( "Unable to load news" ) return end
     local NewsFile = file.Read( "cfcfactions/news.txt", "DATA" )
     return NewsFile
 end
 
---Core function to initilizeFactions
---Handdles making sure SQL_DB is ran
+-- Core function to initilizeFactions
+-- Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
     if not SERVER then return end
     MsgN( "Initializing cfcFactions" )
 
 
-    --Make sure tables exsist
-    if sql_db == nil then   
+    -- Make sure tables exsist
+    if sql_db == nil then
         Error( "Unable to initilize mysql data object. Make sure there are no errors in config." )
     end
 
     sql_db:initilize()
 
-    --un needed but might as well
+    -- un needed but might as well
     if not file.IsDir( 'cfcFactions', 'DATA' ) then
         file.CreateDir( 'cfcFactions', 'DATA' )
     end
@@ -65,18 +65,18 @@ function cfcFactions:InitializeFactions()
         file.Write( "cfcfactions/news.txt", "" )
     end
 
-    --load news
+    -- load news
     cfcFactions:LoadNews()
 end
 hook.Add( "Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions() )
 
---Player Say Hook
---Handles if a player wishes to open the faction menu by typing the command
+-- Player Say Hook
+-- Handles if a player wishes to open the faction menu by typing the command
 local function cfcPlayerSay( ply, msg )
     if string.len( cfcFactions.Config.CHAT_COMMAND or "" ) > 0 then
         local chatTrigger = cfcFactions.Config.CHAT_COMMAND
         if string.sub( msg, 0, #chatTrigger ) == chatTrigger then
-            --Handles both opening and closing
+            -- Handles both opening and closing
             ply:DisplayMenu()
             return ''
         end
@@ -84,7 +84,7 @@ local function cfcPlayerSay( ply, msg )
 end
 hook.Add( 'PlayerSay', 'cfcPlayerSay', cfcPlayerSay )
 
---InitialSpawn hook, fetches the data and properly sets it serverside
+-- InitialSpawn hook, fetches the data and properly sets it serverside
 local function cfcOnPlayerInitialSpawn( ply )
 
     --Always load a user as if never exsisted. Afterwards, load their proper data from source
@@ -96,12 +96,12 @@ local function cfcOnPlayerInitialSpawn( ply )
             net.WriteString( ply:Nick() )
         net.Send( ply )
     end
-    --ply:FetchUserData()
+    -- ply:FetchUserData()
 end
 hook.Add( "PlayerInitialSpawn", "cfcPlayerInitialSpawn", cfcOnPlayerInitialSpawn )
 
---PlayerSpawn hook
---handles loading the user and properly setting their faction upon entering the server
+-- PlayerSpawn hook
+-- handles loading the user and properly setting their faction upon entering the server
 local function cfcPlayerSpawn( ply )
     if not IsValid( ply ) then return end
     ply:FetchUserData()

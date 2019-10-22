@@ -1,4 +1,4 @@
---[[]
+--[[
 File Name: sh_sharedutils.lua
 
 Purpose: Shared functions that contain various useful tables and functions used across cfcFactions
@@ -11,10 +11,10 @@ local net = net
 local string = string
 local table = table
 cfcFactions.Credits = cfcFactions.Credits or {}
---Sends a notifaction msg:string, mtype:number, player:entity
+-- Sends a notifaction msg:string, mtype:number, player:entity
 
---Table of anyone who wants credit in developing factions. Names are changed dynamically if they are on the SERVER
---For extra effect, pull their name from their steam page directly. 
+-- Table of anyone who wants credit in developing factions. Names are changed dynamically if they are on the SERVER
+-- For extra effect, pull their name from their steam page directly.
 cfcFactions.Credits.Developers = {
     ["STEAM_0:1:74678877"] = "Bleck",
     ["STEAM_0:0:21170873"] = "Phatso",
@@ -25,7 +25,7 @@ cfcFactions.Credits.Developers = {
     ["STEAM_0:1:13693373"] = "Lego1042"
 }
 
---If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
+-- If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
 function cfcFactions.Credits:GenerateDeveloperNames()
     for KEY, ID in pairs( cfcFactions.Credits.Developers ) do
 
@@ -98,15 +98,15 @@ end
 --player to send the notifcation to. Optional
 function cfcFactions:SendNotifcation( msg, mtype, player )
 
-    if type( msg ) == "number" then 
-        msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or "" 
+    if type( msg ) == "number" then
+        msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or ""
     end
 
     if not player:IsValid() then
         return
     end
 
-    --only 4 types of error types. 
+    -- only 4 types of error types.
     if mtype == nil then mtype = 1 end
     if mtype > 4 then mtype = 1 end
     if mtype < 1 then mytype = 1 end

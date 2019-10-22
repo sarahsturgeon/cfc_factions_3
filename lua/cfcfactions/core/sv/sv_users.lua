@@ -1,4 +1,4 @@
---[[]
+--[[
 File Name: sv_users.lua
 
 Purpose: Core faction's functions to create, edit, and destory users who use factions
@@ -6,9 +6,8 @@ Purpose: Core faction's functions to create, edit, and destory users who use fac
 Global Tables: cfcFactions.Users
 ]]--
 cfcFactions.Users = cfcFactions.Users or {}
-local cfcuser = cfcFactions.Users 
+local cfcuser = cfcFactions.Users
 local fpm = cfcFactions.fpm
-
 
 --What a user should have when first logging into the server
 local function ReturnDefaultTable()
@@ -46,22 +45,20 @@ function cfcuser:registeruser( user )
 
 
 	cfcuser[user:SteamID64()] = ReturnDefaultTable()
-
 end
 
---Checks if a user is already registered
+-- Checks if a user is already registered
 function cfcuser:UserExists( user )
-
 	if not IsValid( user ) and not user then 
 		--Error out, not a player
 		return 
 	end
 
-	if table.HasValue( cfcuser, user:SteamID64() ) then
-		return true
-	else
-		return false
-	end
+    if table.HasValue( cfcuser, user:SteamID64() ) then
+        return true
+    else
+        return false
+    end
 end
 
 local function IsValidAndOfType( item, gtype )
@@ -75,6 +72,7 @@ end
 local function IsValidString( str )
     return IsValidAndOfType( str, 'string' )
 end
+
 
 --Used to update a player's table of associated variables
 function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
@@ -166,7 +164,6 @@ end
 function cfcuser:RemoveUser( user )
 	cfcuser[user:SteamID64()].FactionMetadata = nil
 	cfcuser[user:SteamID64()].FactionMetadata = ReturnDefaultTable.FactionMetadata
-
 end
 
 function cfcuser:HasExistingInvite( user, id )
@@ -192,9 +189,9 @@ function cfcuser:AddUserInvite( user, id, inviter )
 end
 
 function cfcuser:RemoveUserInvite( user, id )
-	if Isvalid( user ) and user:IsPlayer() then
-		cfcuser[user:SteamID64()].PendingInvites[id] =nil
-	end
+    if Isvalid( user ) and user:IsPlayer() then
+        cfcuser[user:SteamID64()].PendingInvites[id] =nil
+    end
 end
 
 function cfcuser:IsInFaction( user ) 

@@ -1,5 +1,5 @@
 surface.CreateFont( "CFC_Normal",
-    { 
+    {
         font = "arial",
         size = 18,
         weight = 500
@@ -7,7 +7,7 @@ surface.CreateFont( "CFC_Normal",
 )
 
 surface.CreateFont( "CFC_Special",
-    { 
+    {
         font = "coolvetica",
         size = 25,
         weight = 500
@@ -15,7 +15,7 @@ surface.CreateFont( "CFC_Special",
 )
 
 surface.CreateFont( "CFC_Alert",
-    { 
+    {
         font = "Arial",
         size = 45,
         weight = 100
@@ -23,7 +23,7 @@ surface.CreateFont( "CFC_Alert",
 )
 
 surface.CreateFont( "CFC_Alert_Small",
-    { 
+    {
         font = "Arial",
         size = 20,
         weight = 100
@@ -39,10 +39,11 @@ function Panel:SetupMenubars( Menubar )
         --Sort by ranking
         table.sort( cfcFactions.Dermas, function( a, b ) return a.InternalRanking < b.InternalRanking end )
 
-        --loop through tmpsorttable in order to take advantage of the internal ranking of tabs
-        for n=1, table.Count( cfcFactions.Dermas ) do
+        -- loop through tmpsorttable in order to take advantage of the internal ranking of tabs
+        for n = 1, table.Count( cfcFactions.Dermas ) do
             local Entry = cfcFactions.Dermas[n]
             if Entry.InternalButton ~= nil then
+
 
                 --assign a button to a stripped down cleaned name
                 Entry.InternalButton = vgui.Create( "DButton", Menubar )
@@ -54,8 +55,9 @@ function Panel:SetupMenubars( Menubar )
                 Entry.InternalButton.DoClick = function()
                     cfcFactions.CurrentTab = Entry.InternalButton
 
-                    for k=1, table.Count( cfcFactions.Dermas ) do
+                    for k = 1, table.Count( cfcFactions.Dermas ) do
                         local otherbuttons = cfcFactions.Dermas[k]
+
 
                         --If current tab == button clicked
                         if cfcFactions.CurrentTab == otherbuttons.InternalButton then
@@ -64,7 +66,7 @@ function Panel:SetupMenubars( Menubar )
                             otherbuttons.InternalButton:SetEnabled( true )
                         end
                     end
-                    
+
                     --[[
                         Logic to handle showing the Panel table to subself.Container to view, use and interact with the client
                         Should be parented and docked. Clicking on another tab will reset this view
@@ -81,7 +83,7 @@ end
 
 function Panel:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( (ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
     --window buttons
     self.CloseButton = vgui.Create( 'DButton', self )
@@ -158,8 +160,8 @@ function Panel:Paint( w, h )
         surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
         surface.DrawOutlinedRect( 0, 0, w, h )
 
-        --surface.DrawOutlinedRect( 0, 0, w, h )
-        draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText ) 
+        -- surface.DrawOutlinedRect( 0, 0, w, h )
+        draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText )
 end
 
 function Panel:Think()
