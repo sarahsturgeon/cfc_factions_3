@@ -147,9 +147,9 @@ end
 
 function cfcFactions.intToColor(n)
     return Color(
-        bit.band( bit.rshift( n, 16 ) ),
-        bit.band( bit.rshift( n, 8 ) ), 
-        bit.band( n ),
+        bit.band( bit.rshift( n, 16 ), 0xFF ),
+        bit.band( bit.rshift( n, 8 ), 0xFF ),
+        bit.band( n, 0xFF ),
         255
     )
 end
