@@ -13,7 +13,7 @@ local fpm = cfcFactions.fpm
 local function ReturnDefaultTable()
 	local PreUserTable = {
 		["CFCPermissions"] = {},
-		["DisplayName"] = user:Nick(),
+		["DisplayName"] = nil,
 		--data only pretaining to a user inside a faction
 		["FactionMetadata"] = {
 			["DateAdded"] = cfcFactions:TimeStamp(),
@@ -22,12 +22,11 @@ local function ReturnDefaultTable()
 			["Deaths"] = 0,
 			["FactionRank"] = "",
 			["InternalFactionPermissions"] = {}
-		}
+		},
 		["LastOnline"] = cfcFactions:TimeStamp(),
-		["PendingInvites"] = {},
-		
-
+		["PendingInvites"] = {}
 	}
+	return PreUserTable
 end
 
 --Registers a new user to be accessible by factions
@@ -43,8 +42,8 @@ function cfcuser:registeruser( user )
 		return
 	end
 
-
 	cfcuser[user:SteamID64()] = ReturnDefaultTable()
+	cfcuser[user:SteamID64()].DisplayName = user:Nick()
 end
 
 -- Checks if a user is already registered
