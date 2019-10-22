@@ -42,7 +42,7 @@ local NamedNetworkVars = {
     --UserLeaving
     "CFC_Fac_FactionUserRemoval",
     --FactionsRefresh
-    "CFC_Fac_FactionRefresh"r
+    "CFC_Fac_FactionRefresh"
 }
 
 -- loop through and auto gens netvar names
