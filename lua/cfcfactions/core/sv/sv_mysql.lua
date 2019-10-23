@@ -55,7 +55,7 @@ function sql_db:initialize()
                 ON DELETE CASCADE
             )
 
-        ]]
+        ]],
         -- factions users data
         create_users_table = sql_db:query [[
                 CREATE TABLE IF NOT EXISTS `cfcusers_data` (
