@@ -44,6 +44,18 @@ function sql_db:initialize()
                  PRIMARY KEY ( `faction_id` )
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1
         ]],
+        
+        create_ranks_table = sql_db:query [[
+            CREATE TABLE IF NOT EXISTS `cfcfactions_rank_data` (
+                faction bigint NOT NULL,
+                rank_name varchar( 100 ) NOT NULL,
+                permissions JSON NOT NULL,
+                UNIQUE KEY unique_rank_faction (rank_name,faction),
+                FOREIGN KEY (faction) REFERENCES cfcfactions_data(faction_id)
+                ON DELETE CASCADE
+            )
+
+        ]]
         -- factions users data
         create_users_table = sql_db:query [[
                 CREATE TABLE IF NOT EXISTS `cfcusers_data` (
@@ -69,6 +81,7 @@ function sql_db:initialize()
                     PRIMARY KEY( `log_id` )
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
         ]],
+
     }
 
     for k, q in pairs( queries ) do
@@ -200,6 +213,26 @@ function sql_db:removeFaction( id, onSuccess, onError )
     sql_db:doQuery( q, onSuccess, onError )
 end
 
+-- gets all the ranks in a faction
+function sql_db:getRanks( factionId, onSuccess, onError )
+    local q = "SELECT * FROM cfcfactions_data WHERE faction = %s;"
+    q = sql_db:escapeQueryArgs( q, factionId )
+
+    sql_db:doQuery( q, onSuccess, onError )
+end
+
+-- gets a users permissions in their current faction
+function sql_db:getUserFactionPermissions( userId, onSuccess, onError )
+    local q = [[
+        SELECT ranks.permissions FROM 
+        cfcfactions_rank_data ranks, cfcusers_data users WHERE 
+        users.user_id=%s AND 
+        ranks.rank_name=users.faction_rank AND 
+        ranks.faction=users.faction;
+    ]]
+    q = sql_db:escapeQueryArgs( q, userId )
+    sql_db:doQuery( q, onSuccess, onError)
+end
 ----------------------------------------------------------------------------------------------------------
 --user_data functions
 --------------------------------------------------------------------------------------------------------------
