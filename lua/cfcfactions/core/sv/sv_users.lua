@@ -250,12 +250,12 @@ local function getOnlineUserInfo()
 end
 
 -- Send online users player info to specific player
-local function updateClientPlayerInfo( player )
+local function updateClientPlayerInfo( ply )
 	local out = getOnlineUserInfo()
 	local data = util.TableToJSON(out)
 	net.Start( "CFC_Fac_SendPlayerInfo" )
 	net.WriteString( data )
-	net.Send( callPly )
+	net.Send( ply or player.GetAll() )
 end
 
 -- Send online users player info to all players - Separate for clarity
