@@ -110,7 +110,11 @@ function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, faction
 		    end
 
 		    if IsValidString( factionrank ) then
+		    	local prevRank = userFactionTable["FactionRank"]
 		    	userFactionTable["FactionRank"] = factionrank
+		    	if ( prevRank ~= factionrank ) then -- Rank changed
+		    		updateAllClientsPlayerInfo()
+		    	end
 		    end	
     	else
 
@@ -163,6 +167,7 @@ end
 function cfcuser:RemoveUser( user )
 	cfcuser[user:SteamID64()].FactionMetadata = nil
 	cfcuser[user:SteamID64()].FactionMetadata = ReturnDefaultTable.FactionMetadata
+	updateAllClientsPlayerInfo()
 end
 
 function cfcuser:HasExistingInvite( user, id )
@@ -172,7 +177,7 @@ function cfcuser:HasExistingInvite( user, id )
 		else
 			return false
 		end
-		return
+		return -- <- is this needed?
 	end
 end
 
@@ -183,6 +188,7 @@ function cfcuser:AddUserInvite( user, id, inviter )
 				["FactionID"]=id, 
 				["InviterSteamID"]=inviter:SteamID64()
 			} )
+			updateAllClientsPlayerInfo()
 		end	
 	end
 end
@@ -230,3 +236,34 @@ local function factionsPlayerInitialSpawn( player )
     cfcFactions.fpm:authUser( player )
 end
 hook.Add( "PlayerInitialSpawn", "CFC_Fac_PlayerInitialSpawn", factionsPlayerInitialSpawn )
+
+-- Generate sub-table of cfcuser for all currently online users
+local function getOnlineUserInfo()
+	local out = {}
+	for k, user in pairs( player.GetAll() ) do
+		local id = user:SteamID64()
+		if cfcuser[id] then
+			out[id] = cfcuser[id]
+		end
+	end
+	return out
+end
+
+-- Send online users player info to specific player
+local function updateClientPlayerInfo( player )
+	local out = getOnlineUserInfo()
+	local data = util.TableToJSON(out)
+	net.Start( "CFC_Fac_SentPlayerInfo" )
+	net.WriteString( data )
+	net.Send( callPly )
+end
+
+-- Send online users player info to all players - Separate for clarity
+local function updateAllClientsPlayerInfo()
+	updateClientPlayerInfo()
+end
+
+local function clientRequestPlayerInfo( len, callPly ) 
+	updateClientPlayerInfo( callPly )
+end	
+net.Receive( "CFC_Fac_RequestPlayerInfo", clientRequestPlayerInfo )
