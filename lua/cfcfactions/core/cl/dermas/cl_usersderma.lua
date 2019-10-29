@@ -9,7 +9,7 @@ local Panel = {}
 local function fetchUserData() 
 	cfcusers = util.JSONToTable( net.ReadString() )
 end
-net.Receive( "CFC_Fac_SentPlayerInfo", fetchUserData )
+net.Receive( "CFC_Fac_SendPlayerInfo", fetchUserData )
 
 -- Not sure which event this should occur on
 local function requestUserData()

@@ -253,7 +253,7 @@ end
 local function updateClientPlayerInfo( player )
 	local out = getOnlineUserInfo()
 	local data = util.TableToJSON(out)
-	net.Start( "CFC_Fac_SentPlayerInfo" )
+	net.Start( "CFC_Fac_SendPlayerInfo" )
 	net.WriteString( data )
 	net.Send( callPly )
 end
