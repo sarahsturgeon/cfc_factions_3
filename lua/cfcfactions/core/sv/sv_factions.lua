@@ -37,8 +37,8 @@ local function ReplicateClientsideFaction( tbl, statechanged )
     --and omit anything else. 
     -- or k, v in pairs ( dest ) do
     -- If source[k] then dest[k] = source[k] end
-    local CleanedFaction = {}
-
+    CopyOfFactionToSend.LastSaved = nil
+    CopyOfFactionToSend.NeedsCleanUp = nil
     local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false ) 
 
     net.Start( "CFC_Fac_FactionRefresh" )
@@ -294,7 +294,7 @@ local function RequestFactionCreation( len, ply )
         ["Temporary"] = fIsTemporary
     }
 
-    if not fpm:hasPermission( fOwner, "CanCreateFaction" ) and not fpm:hasPermission( fOwner, "AccessAll" )then      
+    if ( not fpm:hasPermission( fOwner, "CanCreateFaction" ) ) and ( not fpm:hasPermission( fOwner, "AccessAll" ) ) then      
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["factions-ban"], 1, fOwner )
         return
     end
