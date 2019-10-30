@@ -122,6 +122,7 @@ function Panel:Init()
     self.killcol:SetWide( 5 )
     self.idcol:SetWide( 20 )
 
+    RefreshFactionViewingTable()
 end
 
 function Panel:Paint( w, h )
@@ -132,14 +133,7 @@ function Panel:Think()
 
 end
 
-local function RefreshFactionViewingTable()
-    cfcFactions.FactionsListView:Clear()
-    if table.HasValue(cfcFactions.Factions) then 
-        for KEY, Faction in cfcFactions.Factions do
-            addFaction( Faction )
-        end
-    end
-end
+
 
 --TODO: FactionRemoved
 
@@ -154,6 +148,15 @@ local function addFaction( tbl )
     cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
     cfcFactions.FactionsListView:DataLayout()
 
+end
+
+function RefreshFactionViewingTable()
+    cfcFactions.FactionsListView:Clear()
+    if cfcFactions.Factions ~= nil then 
+        for KEY, Faction in pairs( cfcFactions.Factions ) do
+            addFaction( Faction )
+        end
+    end
 end
 
 local function factionCreated( len, ply )
@@ -181,7 +184,9 @@ local function FactionRefresh()
     if IncomingState == "DELETED" then
         cfcFactions.Factions[Faction.ID] = nil
     else
-        cfcFactions.Factions[Faction.ID] = Faction
+        if Faction ~= nil then
+            cfcFactions.Factions[Faction.ID] = Faction
+        end
     end
 
     RefreshFactionViewingTable()
