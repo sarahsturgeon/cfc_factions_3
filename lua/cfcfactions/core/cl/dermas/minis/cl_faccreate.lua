@@ -67,6 +67,7 @@ function Panel:Init()
     self.ColSelection:SetHeight( 150 )
     self.ColSelection:Dock( TOP )
     self.ColSelection:DockMargin( 15, 5, 15, 0 )
+    self.ColSelection:SetColor( Color( math.random( 1, 255 ), math.random( 1, 255 ),math.random( 1, 255 ), 255 ) ) 
     local col = self.ColSelection
 
     self.ColOutput = vgui.Create( "DPanel", self.MiniPanel )
