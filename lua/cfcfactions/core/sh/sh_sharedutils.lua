@@ -103,7 +103,7 @@ function cfcFactions:SendNotifcation( msg, mtype, player )
         msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or ""
     end
 
-    if not player:IsValid() then
+    if not IsValid(player) then
         return
     end
 
