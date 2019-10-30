@@ -168,25 +168,46 @@ end
 -- Checks to see if a player has a  specific permission( s )
 function fpm:hasPermission( player, permission )
     --Handling normal permissions now
-    if not player:IsPlayer() then return end
-
-    if not self:IsValidPermission( permission ) then return false end
+    if not player:IsPlayer() then 
+        return 
+    end
+    if not self:IsValidPermission( permission ) then 
+        return false 
+    end
 
     local PlayerTable = cfcuser[player:SteamID64()].CFCPermissions
     local PlayerFactionTable = cfcuser[player:SteamID64()].FactionMetadata.InternalFactionPermissions
 
-    if PlayerTable == nil then return false end
-    if PlayerFactionTable == nil then return false end
-    
-    --Are they developer? Then they have permission no matter what
-    if PlayerTable[fpm.Permissions.SpecialPermissions.IsDeveloper] then return true end
-    --Do they even have access to factions? If not, return false
-    if not PlayerTable[fpm.Permissions.SpecialPermissions.AccessAll] then return false end
-    --Do they have the permission they're seeking?, sure, pass fine
-    if PlayerTable[permission] then return true end
-    if PlayerFactionTable[permission] then return true end
+    if PlayerTable == nil then 
+        return false 
+    end
+    if PlayerFactionTable == nil then 
+        return false 
+    end
 
-    --Nothing else, return false
+    --If Developer, let them do anything.
+    if table.HasValue( PlayerTable, "IsDeveloper" )  then 
+        return true 
+    end
+    --If they can't even access factions, just return false for everything.
+    if table.HasValue( PlayerTable,  "AccessAll" ) then
+        return false
+    end
+
+    --Check the global CFC Permissions for the permission.
+    for CFCPermKey, CFCPermDescription in pairs( PlayerTable ) do
+        if CFCPermDescription == permission then
+            return true
+        end
+    end
+
+    --Check the Faction permissions ( Player editable permissions ) for the permission.
+    for FactionPermKey, FactionPermDescription in pairs( PlayerFactionTable ) do
+        if FactionPermDescription == permission then
+            return true
+        end
+    end
+
     return false
 end
 
