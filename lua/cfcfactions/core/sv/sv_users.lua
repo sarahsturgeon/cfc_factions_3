@@ -194,13 +194,18 @@ function cfcuser:RemoveUserInvite( user, id )
 end
 
 function cfcuser:IsInFaction( user ) 
-	if user == nil or not user:IsPlayer() then
-		return
+
+	if type( user == "string" ) then
+		user = player.GetBySteamID( user )
+	end
+	if ( user == nil ) or ( not user:IsPlayer() ) then
+		return false
 	end
 
 	local GetFactionUser = cfcuser[user:SteamID64()]
 	if GetFactionUser == nil then return false end
-	if GetFactionUser.FactionMetadata.FactionID == nil then
+
+	if ( GetFactionUser.FactionMetadata.FactionID == nil ) or ( #GetFactionUser.FactionMetadata.FactionID == 0 ) then
 		return false
 	else
 		return true
@@ -214,7 +219,6 @@ function cfcuser:IsInFaction( user, id )
 
 	local GetFactionUser = cfcuser[user:SteamID64()]
 	if GetFactionUser == nil then return false end
-	print( "ID: " .. GetFactionUser.FactionMetadata.FactionID )
 	if GetFactionUser.FactionMetadata.FactionID == id then
 		return true
 	else
