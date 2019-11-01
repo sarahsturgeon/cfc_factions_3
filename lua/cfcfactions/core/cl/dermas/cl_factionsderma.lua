@@ -13,7 +13,7 @@ cfcFactions:RegisterDermaMenu( "View Factions", Panel, 1 )
 
 
 function Panel:Init()
-    cfcFactions.FactionsView=1
+    cfcFactions.FactionsView = 1
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )

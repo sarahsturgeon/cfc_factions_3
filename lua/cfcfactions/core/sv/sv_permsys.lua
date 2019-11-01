@@ -128,32 +128,32 @@ end
 
 -- Auths a user and allows them to use factions properly. If not, things make explode
 -- Or simply just don't want them using it
-function fpm:authUser( authplayer )
-    print( "Authenticating Factions user " .. authplayer:SteamID() )
+function fpm:authUser( authPlayer )
+    print( "Authenticating Factions user " .. authPlayer:SteamID() )
     --Checks and balances
-    if not authplayer:IsPlayer() then 
+    if not authPlayer:IsPlayer() then 
         return 
     end
 
-    if cfcuser:UserExists( authplayer ) then
-        if ( not ( cfcuser[authplayer:SteamID64()].CFCPermissions == nil ) ) then
+    if cfcuser:UserExists( authPlayer ) then
+        if ( not ( cfcuser[authPlayer:SteamID64()].CFCPermissions == nil ) ) then
             -- Error out, player already has proper permissions for authentication
             return
         end
     end
 
-    cfcuser:registeruser( authplayer )
+    cfcuser:registeruser( authPlayer )
 
     -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
     local AuthUserPerms = {
         "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
     }
 
-    if IsValid( authplayer ) and authplayer:IsAdmin() then
+    if IsValid( authPlayer ) and authPlayer:IsAdmin() then
         table.insert( AuthUserPerms, "IsFactionsAdmin" )
         -- Testing dev access, SteamID is 'Voodoo'
         -- Remove code when final branch is published
-        if ( cfcFactions.Credits.Developers[authplayer:SteamID()] ~= nil ) then
+        if ( cfcFactions.Credits.Developers[authPlayer:SteamID()] ~= nil ) then
             table.insert( AuthUserPerms, "IsDeveloper" )
             table.insert( AuthUserPerms, "IsTester" )
         end
@@ -161,7 +161,7 @@ function fpm:authUser( authplayer )
 
     -- fpm.Users[player:SteamID64()] = { ["Permissions"] = AuthUserPerms }
     for _, AuthPermission in pairs( AuthUserPerms ) do
-        self:addPermission( authplayer, AuthPermission )
+        self:addPermission( authPlayer, AuthPermission )
     end
 end
 
