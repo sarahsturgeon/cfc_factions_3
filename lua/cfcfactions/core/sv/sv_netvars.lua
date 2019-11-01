@@ -8,12 +8,12 @@ local util = util
 local NamedNetworkVars = {
 
 
-    --Alerts/Msgs
-    "CFC_Fac_SendTextAlert", 
-    "CFC_Fac_GetTextAlert", 
-    "CFC_Fac_SendServerTextAlert", 
+    -- Alerts/Msgs
+    "CFC_Fac_SendTextAlert",
+    "CFC_Fac_GetTextAlert",
+    "CFC_Fac_SendServerTextAlert",
     "CFC_Fac_GetServerTextAlert",
-    --Notifications
+    -- Notifications
     "CFC_Fac_NewFactionCreated",
     "CFC_Fac_FactionDeleted",
     "CFC_Fac_FactionChanged",
@@ -21,7 +21,7 @@ local NamedNetworkVars = {
     "CFC_Fac_MemberLeft",
     "CFC_Fac_PermissionChanged",
 
-    --Checks for submitting faction
+    -- Checks for submitting faction
     "CFC_Fac_SendFactionSubmit",
     "CFC_Fac_RequestFactionSubmit",
     -- Editing
@@ -33,15 +33,15 @@ local NamedNetworkVars = {
     -- PlayerInfo/State
     "CFC_Fac_RequestPlayerInfo",
     "CFC_Fac_SendPlayerInfo",
-    --Menu
+    -- Menu
     "CFC_Fac_ToggleDerma",
     "CFC_Fac_RequestNotifcation",
     "CFC_Fac_SendNotifcation",
     -- FactionDeletion
     "CFC_Fac_RequestFactionRemoval",
-    --UserLeaving
+    -- UserLeaving
     "CFC_Fac_FactionUserRemoval",
-    --FactionsRefresh
+    -- FactionsRefresh
     "CFC_Fac_FactionRefresh"
 }
 

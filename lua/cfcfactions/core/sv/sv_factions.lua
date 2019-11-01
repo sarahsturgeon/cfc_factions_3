@@ -18,41 +18,41 @@ local cfcuser = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
---Instead of generating a random ID, we'll just fetch total factions + 1
+-- Instead of generating a random ID, we'll just fetch total factions + 1
 local function GenerateID()
     return ( ( #cfcFactions.Factions ) + 1 )
 end
 
---Sends a copy of the table to client
---statechanged can be 1 of the possible MODIFIED, DELETED, CREATED, NOCHANGE, nil
+-- Sends a copy of the table to client
+-- statechanged can be 1 of the possible MODIFIED, DELETED, CREATED, NOCHANGE, nil
 local function ReplicateClientsideFaction( tbl, statechanged )
     if tbl == nil or table.IsEmpty( tbl ) then
         return
     end
     if statechanged == nil then statechanged = "NOCHANGE" end
-    --Package the table and send to clients
+    -- Package the table and send to clients
     local CopyOfFactionToSend = table.Copy( tbl )
-    --Because of how bitter some clients can get, we should be careful about copying the
-    --entire faction data over to client. Here, we should carefully select what to send 
-    --and omit anything else. 
+    -- Because of how bitter some clients can get, we should be careful about copying the
+    -- entire faction data over to client. Here, we should carefully select what to send
+    -- and omit anything else.
     -- or k, v in pairs ( dest ) do
     -- If source[k] then dest[k] = source[k] end
     CopyOfFactionToSend.LastSaved = nil
     CopyOfFactionToSend.NeedsCleanUp = nil
-    local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false ) 
+    local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false )
 
     net.Start( "CFC_Fac_FactionRefresh" )
         net.WriteString( FactionTableJsonified )
         net.WriteString( statechanged )
     net.Broadcast()
 
-    hook.Call("CFC_ReplicateClientsideFaction")
+    hook.Call( "CFC_ReplicateClientsideFaction" )
 end
 
---function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
+-- function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
 function cfcFactions:CreateFaction( tbl )
-    if not tbl and table.IsEmpty( tbl ) then 
-        return 
+    if not tbl and table.IsEmpty( tbl ) then
+        return
     end
     local FactionTemporaryTable = tbl
     local TmpUnqID = GenerateID()
@@ -73,25 +73,25 @@ function cfcFactions:CreateFaction( tbl )
     end
 
     if not type( factionName ) == "string" then
-        --Send Alert -> Not a valid NameType
+        -- Send Alert -> Not a valid NameType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, factionOwner )
         return
     end
 
     if not type( factionColor ) == "Color" then
-        --Send Alert -> Not a valid ColorType
+        -- Send Alert -> Not a valid ColorType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, factionOwner )
         return
     end
 
     if not type( factionDescription ) == "string" then
-        --Send Alert -> Not a valid DescriptionType
+        -- Send Alert -> Not a valid DescriptionType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, factionOwner )
         return
     end
 
     if not type( factionInviteOnly ) == "boolean" then
-        --Send Alert -> Not a valid IntType
+        -- Send Alert -> Not a valid IntType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, factionOwner )
         return
     end
@@ -102,8 +102,8 @@ function cfcFactions:CreateFaction( tbl )
         return
     end
 
-    --UniqueName Check
-    if not cfcFactions:isUniqueName( factionName ) then 
+    -- UniqueName Check
+    if not cfcFactions:isUniqueName( factionName ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["is-in-faction"], 1, factionOwner )
         return
     end
@@ -132,19 +132,19 @@ function cfcFactions:CreateFaction( tbl )
         ["Name"] = factionName,
         ["NeedsCleanUp"] = false,
         ["Owner"] = factionOwner:SteamID64(),
-        ["Ranks"] = cfcFactions.fpm.defaultRanks      
+        ["Ranks"] = cfcFactions.fpm.defaultRanks
     }
     local FinalFaction = cfcFactions.Factions[TmpUnqID]
 
-    --function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
+    -- function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
 
 
     cfcuser:UpdateUser( player.GetBySteamID64( FinalFaction.Owner ), FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
-    --SQL: Save to database
-    --function cfcFactions:SaveFaction( factionid )
-    --function cfcFactions:SaveUser( userid )
+    -- SQL: Save to database
+    -- function cfcFactions:SaveFaction( factionid )
+    -- function cfcFactions:SaveUser( userid )
 
-    --Let the owner of the faction know they successfully created the faction
+    -- Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, player.GetBySteamID64( FinalFaction.Owner ) )
     
     hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
@@ -165,10 +165,10 @@ function cfcFactions:isUniqueName( faction_name )
 end
 
 
---REWORK
+-- REWORK
 function cfcFactions:IsValidFaction( tbl )
-    if ( not tbl ) and ( table.IsEmpty( tbl ) ) then 
-            return false 
+    if ( not tbl ) and ( table.IsEmpty( tbl ) ) then
+            return false
     else
         return true
     end
@@ -190,7 +190,7 @@ function cfcFactions:RemoveEnemy( id, enemy )
 
 end
 
---Edits a faction based on ID, player is who ever is editing it
+-- Edits a faction based on ID, player is who ever is editing it
 function cfcFactions:EditFaction( tbl )
     ----------------
     --[type checks]
@@ -202,50 +202,50 @@ function cfcFactions:EditFaction( tbl )
 
     local owner
     if not type( util.GetBySteamID64( tbl.Owner ) ) == "Player" then
-        --Send Alert -> Not a valid PlayerType
+        -- Send Alert -> Not a valid PlayerType
 
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
         owner = player.GetBySteamID64( Faction.Owner )
     end
 
-    --Take whatever values are in tbl, and put them into the main faction's table.
-    --Honestly, not sure about this but for now, it works
-    table.Merge(cfcFactions.Factions[tbl.ID], tbl ) 
+    -- Take whatever values are in tbl, and put them into the main faction's table.
+    -- Honestly, not sure about this but for now, it works
+    table.Merge( cfcFactions.Factions[tbl.ID], tbl )
     
     -- if not type( name ) == "string" then
-    --     --Send Alert -> Not a valid NameType
+    --     -- Send Alert -> Not a valid NameType
     --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
     --     return false
     -- end
 
     -- if not type( color ) == "Color" then
-    --     --Send Alert -> Not a valid ColorType
+    --     -- Send Alert -> Not a valid ColorType
     --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, owner )
     --     return false
     -- end
 
     -- if not type( description ) == "string" then
-    --     --Send Alert -> Not a valid DescriptionType
+    --     -- Send Alert -> Not a valid DescriptionType
     --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
     --     return false
     -- end
 
     -- if not type( inviteOnly ) == "boolean" then
-    --     --Send Alert -> Not a valid IntType
+    --     -- Send Alert -> Not a valid IntType
     --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, owner )
     --     return false
     -- end
 
-    hook.Call("CFC_Factionhook_FactionEdited")
+    hook.Call( "CFC_Factionhook_FactionEdited" )
 
-    ReplicateClientsideFaction(cfcFactions.Factions[tbl.ID], "MODIFIED")
+    ReplicateClientsideFaction( cfcFactions.Factions[tbl.ID], "MODIFIED" )
 end
 
---Handles removing a faction( s ) and its attached users properly
+-- Handles removing a faction( s ) and its attached users properly
 function cfcFactions:RemoveFaction( ply, id )
-    --delete the faction and any players inside that faction.
+    -- delete the faction and any players inside that faction.
 
-    local faction = cfcFactions.Factions[id] 
+    local faction = cfcFactions.Factions[id]
     local factionID = id
 
      if faction and not table.IsEmpty( faction ) then
@@ -255,13 +255,13 @@ function cfcFactions:RemoveFaction( ply, id )
                 cfcuser:RemoveUser( ply )
             end
         end
-        ReplicateClientsideFaction(faction, "DELETED")
-    end       
+        ReplicateClientsideFaction( faction, "DELETED" )
+    end
 
 end
 
 local function requestFactionNews( len, ply )
-    --Look into a better way of sending faction news to client
+    -- Look into a better way of sending faction news to client
     for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
         net.Start( "CFC_Fac_SendNews" )
             net.WriteString( v .. "\n" )
@@ -272,12 +272,12 @@ end
 
 net.Receive( "CFC_Fac_RequestNews", requestFactionNews )
 
---When client submits a faction to create, we receive it here
+-- When client submits a faction to create, we receive it here
 local function RequestFactionCreation( len, ply )
 
-    if ply and not IsValid(ply) then return end
-    --Go through and make sure client sending has PROPER : SERVER SIDE
-    --Permissions. Client is sending data, treat them as idiots 
+    if ply and not IsValid( ply ) then return end
+    -- Go through and make sure client sending has PROPER : SERVER SIDE
+    -- Permissions. Client is sending data, treat them as idiots
     local fOwner = ply
     local fName = net.ReadString()
     local fDescription = net.ReadString()
@@ -294,7 +294,7 @@ local function RequestFactionCreation( len, ply )
         ["Temporary"] = fIsTemporary
     }
 
-    if ( not fpm:hasPermission( fOwner, "CanCreateFaction" ) ) and ( not fpm:hasPermission( fOwner, "AccessAll" ) ) then      
+    if ( not fpm:hasPermission( fOwner, "CanCreateFaction" ) ) and ( not fpm:hasPermission( fOwner, "AccessAll" ) ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["factions-ban"], 1, fOwner )
         return
     end
@@ -309,7 +309,7 @@ end
 
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 
---If Requested, Send Faction details to client to edit 
+-- If Requested, Send Faction details to client to edit
 -- local function RequestFactionDetails( len, ply )
 
 --     -- Check if user has proper permission to edit each part of a faction

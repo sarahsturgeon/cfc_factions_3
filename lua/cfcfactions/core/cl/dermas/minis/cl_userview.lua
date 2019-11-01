@@ -1,7 +1,7 @@
 local Panel = {}
 
 local function addUserInfo( listView, data )
-    --[[ 
+    --[[
     local plyName = data.name
     local plyRank = data.rank
     local plyKD = data.kd
@@ -27,4 +27,4 @@ function Panel:Init()
     ]]
 end
 
-vgui.Register("D_cfcfactionusers", Panel)
+vgui.Register( "D_cfcfactionusers", Panel )

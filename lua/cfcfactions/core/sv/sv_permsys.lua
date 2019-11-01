@@ -130,9 +130,9 @@ end
 -- Or simply just don't want them using it
 function fpm:authUser( authplayer )
     print( "Authenticating Factions user " .. authplayer:SteamID() )
-    --Checks and balances
-    if not authplayer:IsPlayer() then 
-        return 
+    -- Checks and balances
+    if not authplayer:IsPlayer() then
+        return
     end
 
     if cfcuser:UserExists( authplayer ) then
@@ -167,41 +167,41 @@ end
 
 -- Checks to see if a player has a  specific permission( s )
 function fpm:hasPermission( player, permission )
-    --Handling normal permissions now
-    if not player:IsPlayer() then 
-        return 
+    -- Handling normal permissions now
+    if not player:IsPlayer() then
+        return
     end
-    if not self:IsValidPermission( permission ) then 
-        return false 
+    if not self:IsValidPermission( permission ) then
+        return false
     end
 
     local PlayerTable = cfcuser[player:SteamID64()].CFCPermissions
     local PlayerFactionTable = cfcuser[player:SteamID64()].FactionMetadata.InternalFactionPermissions
 
-    if PlayerTable == nil then 
-        return false 
+    if PlayerTable == nil then
+        return false
     end
-    if PlayerFactionTable == nil then 
-        return false 
+    if PlayerFactionTable == nil then
+        return false
     end
 
-    --If Developer, let them do anything.
-    if table.HasValue( PlayerTable, "IsDeveloper" )  then 
-        return true 
+    -- If Developer, let them do anything.
+    if table.HasValue( PlayerTable, "IsDeveloper" )  then
+        return true
     end
-    --If they can't even access factions, just return false for everything.
+    -- If they can't even access factions, just return false for everything.
     if table.HasValue( PlayerTable,  "AccessAll" ) then
         return false
     end
 
-    --Check the global CFC Permissions for the permission.
+    -- Check the global CFC Permissions for the permission.
     for CFCPermKey, CFCPermDescription in pairs( PlayerTable ) do
         if CFCPermDescription == permission then
             return true
         end
     end
 
-    --Check the Faction permissions ( Player editable permissions ) for the permission.
+    -- Check the Faction permissions ( Player editable permissions ) for the permission.
     for FactionPermKey, FactionPermDescription in pairs( PlayerFactionTable ) do
         if FactionPermDescription == permission then
             return true
@@ -228,7 +228,7 @@ function fpm:addPermission( player, permission )
     return true
 end
 
---Revokes a permission( s ) from the player. True if success, false if otherwise
+-- Revokes a permission( s ) from the player. True if success, false if otherwise
 function fpm:revokePermission( player, permission_string )
     local usr = cfcuser[player:SteamID64()]
     for Key, Permission in pairs( usr.CFCPermissions ) do
