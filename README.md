@@ -12,6 +12,7 @@ Console Commands
 | fpvp_setfaction | {"Name" "ID"} | Yes | Set a players faction. |
 | fpvp_factioninvite | {"Name"} | No | Invite a player to your faction. (For leader and founder only) |
 | fpvp_closemenu | {} | No | Close the menu if it's stuck. |
+| fpvp_leavefaction | {} | No | Leave the faction you are currently in |
 
 
 The Wiki
