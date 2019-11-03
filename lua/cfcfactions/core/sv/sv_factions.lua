@@ -14,7 +14,7 @@ local util = util
 local table = table
 local fpm = cfcFactions.fpm
 local cfg = cfcFactions.Config.Server
-local cfcuser = cfcFactions.Users
+local factioneers = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
@@ -136,10 +136,10 @@ function cfcFactions:CreateFaction( tbl )
     }
     local FinalFaction = cfcFactions.Factions[TmpUnqID]
 
-    -- function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
+    -- function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
 
 
-    cfcuser:UpdateUser( player.GetBySteamID64( FinalFaction.Owner ), FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
+    factioneers:UpdateUser( player.GetBySteamID64( FinalFaction.Owner ), FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
     -- SQL: Save to database
     -- function cfcFactions:SaveFaction( factionid )
     -- function cfcFactions:SaveUser( userid )
@@ -251,8 +251,8 @@ function cfcFactions:RemoveFaction( ply, id )
      if faction and not table.IsEmpty( faction ) then
         faction = nil
         for _, Player in player.GetHumans() do
-            if cfcuser:IsInFaction( ply, factionID ) then
-                cfcuser:RemoveUser( ply )
+            if factioneers:IsInFaction( ply, factionID ) then
+                factioneers:RemoveUser( ply )
             end
         end
         ReplicateClientsideFaction( faction, "DELETED" )
@@ -299,7 +299,7 @@ local function RequestFactionCreation( len, ply )
         return
     end
 
-    if cfcuser:IsInFaction( fOwner ) then
+    if factioneers:IsInFaction( fOwner ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["is-in-faction"], 1, fOwner )
         return
     end
@@ -373,8 +373,8 @@ function cfcFactions:RemoveFaction( ply, id )
      if faction and not table.IsEmpty( faction ) then
         faction = nil
         for k, Player in player.GetHumans() do
-            if cfcuser:IsInFaction( ply, factionID ) then
-                cfcuser:RemoveUser( ply )
+            if factioneers:IsInFaction( ply, factionID ) then
+                factioneers:RemoveUser( ply )
             end
         end
     end
