@@ -42,7 +42,7 @@ fpm.Permissions.CorePermissions = {
 
         -- misc
         ["CanSendAllMessage"]= {Description = "Allows a user to send a member to any faction member."},
-        
+
         ["CanSendFactionMessage"] = {Description = "Allows a user to send a message to their own faction."},
         ["CanReceiveFactionMessage"] = {Description = "Allows a user to receive a faction message from their own faction."},
         ["CanSpawnXPObject"] = {Description = "Allows a user to spawn a XP gathering object."},
@@ -133,6 +133,7 @@ function fpm:authUser( authPlayer )
     -- Checks and balances
     if not authPlayer:IsPlayer() then
         return
+    end
 
     if cfcuser:UserExists( authPlayer ) then
         if ( not ( cfcuser[authPlayer:SteamID64()].CFCPermissions == nil ) ) then
