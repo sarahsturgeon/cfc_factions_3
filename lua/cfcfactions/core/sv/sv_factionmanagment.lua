@@ -77,7 +77,7 @@ end
 
 concommand.Add( "fpvp_printpermissions", printFactionPermissions )
 
--- Makes the player leave his faction
+-- Makes the player leave their faction
 local function leaveFaction( ply, cmd, args )
     factioneers:RemoveUser( ply )
 end
