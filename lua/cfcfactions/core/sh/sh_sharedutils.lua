@@ -17,12 +17,13 @@ cfcFactions.Credits = cfcFactions.Credits or {}
 -- For extra effect, pull their name from their steam page directly.
 cfcFactions.Credits.Developers = {
     ["STEAM_0:1:74678877"] = "Bleck",
-    ["STEAM_0:0:21170873"] = "Phatso",
+    ["STEAM_0:1:39801724"] = "Decline",
     ["STEAM_0:1:77453431"] = "hmmm",
     ["STEAM_0:1:28482516"] = "iLikeYoBraids",
+    ["STEAM_0:1:13693373"] = "Lego1042",
     ["STEAM_0:1:115301653"] = "Periapsis",
-    ["STEAM_0:1:39801724"] = "Decline",
-    ["STEAM_0:1:13693373"] = "Lego1042"
+    ["STEAM_0:0:21170873"] = "Phatso",
+    ["STEAM_0:1:28607710"] = "Voodoo"
 }
 
 -- If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
@@ -65,7 +66,7 @@ cfcFactions.ErrorMessages = {
     ["is-tester"]             = "Player is a tester",
     ["is-gay"]                = "Cannot kick Phatso. The fuck?",
     ["depreciated-key"]       = "Deprecated key permission. Removing",
-    ["faction-ban"]           = "Unable to create a faction. Banned from creating faction.",
+    ["factions-ban"]           = "Unable to use factions. Banned from using Factions.",
     ["contract-barred"]       = "Barred from creating contracts! Request an admin.",
     ["insufficient-funds"]    = "You lack the required funds to allow this contract.",
     ["excessive-kills"]       = "Too many kills requested. Set a lower number.",
@@ -83,22 +84,26 @@ function cfcFactions:TimeStamp()
     return os.date( "%H:%M:%S - %d/%m/%Y", os.time() )
 end
 
-function cfcFactions:UUID()
-    local template ='xxxxxxxxxxxxxxxxxxxx'
-    return string.gsub( template, '[xy]', function ( c )
-        local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
-        return string.format( '%x', v )
-    end )
-end
+-- function cfcFactions:UUID()
+--     local template ='xxxxxxxxxxxxxxxxxxxx'
+--     return string.gsub( template, '[xy]', function ( c )
+--         local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
+--         return string.format( '%x', v )
+--     end )
+-- end
 
 -- TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing.
+-- Sends a notifcation to an optional player
+-- msg = string or predifined key hard coded above ( cfcFactions.ErrorMessages )
+-- mtype = Number, Error being 1, Msg being 2, Alert being 3, Warning being 4
+-- player to send the notifcation to. Optional
 function cfcFactions:SendNotifcation( msg, mtype, player )
 
     if type( msg ) == "number" then
         msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or ""
     end
 
-    if not player:IsValid() then
+    if not IsValid( player ) then
         return
     end
 

@@ -7,8 +7,12 @@ Purpose: Contains all NetworkedStrings registered on server start
 local util = util
 local NamedNetworkVars = {
 
+
     -- Alerts/Msgs
-    "CFC_Fac_SendTextAlert", "CFC_Fac_GetTextAlert", "CFC_Fac_SendServerTextAlert", "CFC_Fac_GetServerTextAlert",
+    "CFC_Fac_SendTextAlert",
+    "CFC_Fac_GetTextAlert",
+    "CFC_Fac_SendServerTextAlert",
+    "CFC_Fac_GetServerTextAlert",
     -- Notifications
     "CFC_Fac_NewFactionCreated",
     "CFC_Fac_FactionDeleted",
@@ -16,13 +20,7 @@ local NamedNetworkVars = {
     "CFC_Fac_MemberJoined",
     "CFC_Fac_MemberLeft",
     "CFC_Fac_PermissionChanged",
-    -- Logs
-    "CFC_Fac_RequesthLogs",
-    "CFC_Fac_RequestAdminLogs",
-    "CFC_Fac_RequestGlobalAdminLogs",
-    "CFC_Fac_SendLogs",
-    "CFC_Fac_SenddminLogs",
-    "CFC_Fac_SendGlobalAdminLogs",
+
     -- Checks for submitting faction
     "CFC_Fac_SendFactionSubmit",
     "CFC_Fac_RequestFactionSubmit",
@@ -34,7 +32,7 @@ local NamedNetworkVars = {
     "CFC_Fac_RequestNews",
     -- PlayerInfo/State
     "CFC_Fac_RequestPlayerInfo",
-    "CFC_Fac_SentPlayerInfo",
+    "CFC_Fac_SendPlayerInfo",
     -- Menu
     "CFC_Fac_ToggleDerma",
     "CFC_Fac_RequestNotifcation",
@@ -42,7 +40,9 @@ local NamedNetworkVars = {
     -- FactionDeletion
     "CFC_Fac_RequestFactionRemoval",
     -- UserLeaving
-    "CFC_Fac_FactionUserRemoval"
+    "CFC_Fac_FactionUserRemoval",
+    -- FactionsRefresh
+    "CFC_Fac_FactionRefresh"
 }
 
 -- loop through and auto gens netvar names

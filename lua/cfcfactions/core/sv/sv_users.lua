@@ -9,8 +9,28 @@ cfcFactions.Users = cfcFactions.Users or {}
 local cfcuser = cfcFactions.Users
 local fpm = cfcFactions.fpm
 
+-- What a user should have when first logging into the server
+local function ReturnDefaultTable()
+    local PreUserTable = {
+        ["CFCPermissions"] = {},
+        ["DisplayName"] = nil,
+        -- data only pretaining to a user inside a faction
+        ["FactionMetadata"] = {
+            ["DateAdded"] = cfcFactions:TimeStamp(),
+            ["FactionID"] = "",
+            ["Kills"] = 0,
+            ["Deaths"] = 0,
+            ["FactionRank"] = "",
+            ["InternalFactionPermissions"] = {}
+        },
+        ["LastOnline"] = cfcFactions:TimeStamp(),
+        ["PendingInvites"] = {}
+    }
+    return PreUserTable
+end
+
 -- Registers a new user to be accessible by factions
-function cfcuser:registeruser( user, factionid, rank )
+function cfcuser:registeruser( user )
 
     if not user:IsPlayer() then
         -- Error out, not a player
@@ -22,30 +42,13 @@ function cfcuser:registeruser( user, factionid, rank )
         return
     end
 
-    local PreUserTable = {
-        ["DisplayName"] = user:Nick(),
-        ["LastOnline"] = cfcFactions:TimeStamp(),
-        ["PendingInvites"] = {},
-        ["CFCPermissions"] = {},
-        -- data only pretaining to a user inside a faction
-        ["FactionMetadata"] = {
-            ["DateAdded"] = cfcFactions:TimeStamp(),
-            ["FactionID"] = "",
-            ["Kills"] = 0,
-            ["Deaths"] = 0,
-            ["FactionRank"] = "",
-            ["InternalFactionPermissions"] = {},
-            ["HoursInFaction"] = 0
-        }
-    }
-    cfcuser[user:SteamID64()] = PreUserTable
-
+    cfcuser[user:SteamID64()] = ReturnDefaultTable()
+    cfcuser[user:SteamID64()].DisplayName = user:Nick()
 end
 
 -- Checks if a user is already registered
 function cfcuser:UserExists( user )
-
-    if not user:IsPlayer() then
+    if not ( user and IsValid( user ) ) then
         -- Error out, not a player
         return
     end
@@ -57,8 +60,8 @@ function cfcuser:UserExists( user )
     end
 end
 
-local function IsValidAndOfType( item, t )
-    return item ~= nil and type( item ) == t
+local function IsValidAndOfType( item, gtype )
+    return ( item ~= nil ) and ( type( item ) == gtype )
 end
 
 local function IsValidNumber( num )
@@ -69,61 +72,101 @@ local function IsValidString( str )
     return IsValidAndOfType( str, 'string' )
 end
 
+
 -- Used to update a player's table of associated variables
-function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank, hoursinfaction )
-    if not cfcuser:UserExists( user ) then return end
+function cfcuser:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
+    local PlayerEnt = user
+    if not ( IsValid( PlayerEnt ) and PlayerEnt:IsPlayer() ) then
+        if ( type( PlayerEnt ) == "string" ) then
+            PlayerEnt = player.GetBySteamID64( user )
+            cfcuser:UpdateUser( PlayerEnt, lastonline, factionid, kills, deaths, factionrank )
+        end
+    end
+
+    if not cfcuser:UserExists( user ) then
+        cfcuser:registeruser( user )
+    end
 
     local userTable = cfcuser[user:SteamID64()]
-    local userFactionTable = userTable["FactionMetadata"]
-    if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
-    if IsValidNumber( factionId ) and cfcFactions:IsValidFaction( factionid ) then
-        userFactionTable["FactionId"] = factionid
+    local userFactionTable = userTable.FactionMetadata
+
+    if not IsValidString( lastonline ) then
+        LastOnline = cfcFactions:TimeStamp()
+    else
+        userTable["LastOnline"] = lastonline
     end
-    if IsValidNumber( kills ) then userFactionTable["Kills"] = kills end
-    if IsValidNumber( deaths ) then userFactionTable["Deaths"] = deaths end
-    if IsValidString( factionrank ) then userFactionTable["FactionRank"] = factionrank end
-    if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 then userFactionTable["HoursInFaction"] = hoursinfaction end
+
+    if not IsValidNumber( factionid ) then
+
+    else
+        if cfcFactions:IsValidFaction( cfcFactions.Factions[factionid] ) then
+            userFactionTable["FactionID"] = factionid
+            if IsValidNumber( kills ) then
+                userFactionTable["Kills"] = kills
+            end
+
+            if IsValidNumber( deaths ) then
+                userFactionTable["Deaths"] = deaths
+            end
+
+            if IsValidString( factionrank ) then
+                userFactionTable["FactionRank"] = factionrank
+            end
+        else
+          --Conditional Statement for if a faction is NOT valid.
+          --We can likely send error to client stateing that.
+          return
+        end
+        --alert user not a proper number
+        --Conditional Statement for if a faction id is not a number
+        return
+    end
+
+end
+
+-- Uses mysql.lua to save to database
+function cfcuser:SaveUser( user )
+
+end
+
+function cfcuser:Kills( user )
+    return cfcuser[user:SteamID64()].FactionMetadata.Kills
+end
+
+function cfcuser:Deaths( user )
+    return cfcuser[user:SteamID64()].FactionMetadata.Deaths
+end
+
+function cfcuser:FactionID( user )
+    return cfcuser[user:SteamID64()].FactionMetadata.FactionID
+end
+
+function cfcuser:LastOnline( user )
+    return cfcuser[user:SteamID64()].FactionMetadata.LastOnline
+end
+
+function cfcuser:FactionRank( user )
+    return cfcuser[user:SteamID64()].FactionMetadata.FactionRank
 end
 
 -- Used to update values that may change quickly
-function cfcuser:UpdateStats( user, lastonline, kills, deaths, hoursinfaction )
+function cfcuser:UpdateStats( user, lastonline, kills, deaths )
     if not cfcuser:UserExists( user ) then return end
 
     local userTable = cfcuser[user:SteamID64()]
     local userFactionTable = userTable["FactionMetadata"]
     if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
-    if IsValidNumber( kills ) then userFactionTable["Kills"] = kills end
-    if IsValidNumber( deaths ) then userFactionTable["Deaths"] = deaths end
-    if IsValidNumber( hoursinfaction ) and hoursinfaction > 0 and IsInFaction( user ) then userFactionTable["HoursInFaction"] = hoursinfaction end
+    if IsValidNumber( kills ) then userFactionTable.FactionMetadata["Kills"] = kills end
+    if IsValidNumber( deaths ) then userFactionTable.FactionMetadata["Deaths"] = deaths end
 end
 
 function cfcuser:SetUserFaction( user, id, rank )
-    if not user:IsPlayer() then
-        -- Error out, not a player
-        return
-    end
-
-    if not cfcFactions:IsValidFaction( id ) then
-        -- Error out, invalid faction
-        return
-    end
-    local GetFactionUser = cfcuser[user:SteamID64()]
-    GetFactionUser.FactionID = id
-    GetFactionUser.FactionRank = rank
+    self:UpdateUser( user, _, id, rank )
 end
 
 function cfcuser:RemoveUser( user )
     cfcuser[user:SteamID64()].FactionMetadata = nil
-    cfcuser[user:SteamID64()].FactionMetadata = {
-        ["DateAdded"] = cfcFactions:TimeStamp(),
-        ["FactionID"] = "",
-        ["Kills"] = 0,
-        ["Deaths"] = 0,
-        ["FactionRank"] = "",
-        ["InternalFactionPermissions"] = {},
-        ["HoursInFaction"] = 0
-    }
-
+    cfcuser[user:SteamID64()].FactionMetadata = ReturnDefaultTable.FactionMetadata
 end
 
 function cfcuser:HasExistingInvite( user, id )
@@ -155,13 +198,18 @@ function cfcuser:RemoveUserInvite( user, id )
 end
 
 function cfcuser:IsInFaction( user )
-    if not user:IsPlayer() then
-        return
+
+    if type( user == "string" ) then
+        user = player.GetBySteamID( user )
+    end
+    if ( user == nil ) or ( not user:IsPlayer() ) then
+        return false
     end
 
     local GetFactionUser = cfcuser[user:SteamID64()]
     if GetFactionUser == nil then return false end
-    if GetFactionUser.FactionID == nil then
+
+    if ( GetFactionUser.FactionMetadata.FactionID == nil ) or ( #GetFactionUser.FactionMetadata.FactionID == 0 ) then
         return false
     else
         return true
@@ -181,3 +229,12 @@ function cfcuser:IsInFaction( user, id )
         return false
     end
 end
+
+local function SendUserRefresh( data )
+
+end
+
+local function factionsPlayerInitialSpawn( player )
+    cfcFactions.fpm:authUser( player )
+end
+hook.Add( "PlayerInitialSpawn", "CFC_Fac_PlayerInitialSpawn", factionsPlayerInitialSpawn )
