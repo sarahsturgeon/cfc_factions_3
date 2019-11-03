@@ -12,7 +12,7 @@ meta = FindMetaTable( "Player" )
 local fusers = cfcFactions.Users
 local fpm = cfcFactions.fpm
 function meta:CFCToggleMenu()
-    if not fpm:hasPermission( self, "AccessAll" ) then 
+    if not fpm:hasPermission( self, "AccessAll" ) then
         cfcFactions:SendNotifcation( "factions-ban", mtype, player )
         return
     else

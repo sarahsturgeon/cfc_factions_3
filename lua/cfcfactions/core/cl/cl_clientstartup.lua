@@ -14,7 +14,7 @@ function cfcFactions:RegisterDermaMenu( name, panel, ranking )
     if panel == nil then panel = {} end
     if ranking == nil then ranking = 99 end
     table.insert( cfcFactions.Dermas, {
-        InternalName=name, InternalPanel=panel, InternalRanking=ranking, InternalButton={}
+        InternalName = name, InternalPanel = panel, InternalRanking = ranking, InternalButton = {}
     } )
 end
 
