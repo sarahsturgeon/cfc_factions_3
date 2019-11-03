@@ -8,7 +8,7 @@ local table = table
 local string = string
 local os = os
 local fpm = cfcFactions.fpm
-local Users = cfcFactions.Users
+local factioneers = cfcFactions.Users
 
 --------------------------------------------------------------------------------------------------------------
 -- FACTIONS MANAGMENT COMMANDS
@@ -79,7 +79,7 @@ concommand.Add( "fpvp_printpermissions", printFactionPermissions )
 
 -- Makes the player leave his faction
 local function leaveFaction( ply, cmd, args )
-    Users:RemoveUser( ply )
+    factioneers:RemoveUser( ply )
 end
 
 concommand.Add( "fpvp_leavefaction", leaveFaction )
