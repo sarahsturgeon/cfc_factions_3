@@ -79,7 +79,11 @@ concommand.Add( "fpvp_printpermissions", printFactionPermissions )
 
 -- Makes the player leave their faction
 local function leaveFaction( ply, cmd, args )
-    factioneers:RemoveUser( ply )
+    if fpm:hasPermission( ply, "CanLeaveFaction" ) then
+        factioneers:RemoveUser( ply )
+    else
+        cfcFactions:SendNotifcation( "You do not have the permission to leave the faction.", 4, ply )
+    end
 end
 
 concommand.Add( "fpvp_leavefaction", leaveFaction )
