@@ -53,7 +53,7 @@ function cfcuser:UserExists( user )
         return
     end
 
-    if table.HasValue( cfcuser, user:SteamID64() ) then
+    if cfcuser[user:SteamID64()] ~= nil then
         return true
     else
         return false
