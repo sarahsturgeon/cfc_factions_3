@@ -34,11 +34,7 @@ function Panel:Init()
         end )
 
         menu:AddOption( "Edit", function()
-            self.EditMiniPanel = vgui.Create( "D_cfcfactionedit", self.MainContainer )
-            --Fill in details for LoadFactionDetails
-            --Get the ID of the current selected faction, fetch the id by the clientside table
-            --where all factions are being stored, and pass that table's proper values into the function
-            --self.EditMini:LoadFactionDetails( name, description, color, inviteonly )
+            --
         end )
 
         menu:AddOption( "Flag for Administration", function()
@@ -176,18 +172,7 @@ local function addFaction( tbl )
     local tmpLock = Faction.Invite and "L" or ""
     local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
     -- Add faction to clientside table
-    --resource/icons/lock_icon/lock_locked.png
-    --resource/icons/lock_icon/lock_unlocked.png
-    local TinyLock = vgui.Create( "DImage", cfcFactions.FactionsListView )
-    TinyLock:SetSize( 15, 15 )
-    TinyLock:CenterHorizontal( 0.5 )
-
-    if tmpLock then
-        TinyLock:SetImage( "resource/icons/lock_icon/lock_locked.png" )
-    else
-        TinyLock:SetImage( "resource/icons/lock_icon/lock_unlocked.png" )
-    end
-    cfcFactions.FactionsListView:AddLine( TinyLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/" .. Faction.Deaths ), Faction.ID )
+    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/" .. Faction.Deaths ), Faction.ID )
     cfcFactions.FactionsListView:DataLayout()
 
 end

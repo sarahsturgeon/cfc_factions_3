@@ -33,8 +33,7 @@ AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_creditsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_alertsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_logsderma.lua" )
 resource.AddFile( "resource/fonts/coolvetica.ttf" )
-resource.AddFile( "resource/icons/lock_icon/lock_locked.png" )
-resource.AddFile( "resource/icons/lock_icon/lock_unlocked.png" )
+
 
 function cfcFactions:LoadNews()
     -- Future proofing, load from phatso's github
