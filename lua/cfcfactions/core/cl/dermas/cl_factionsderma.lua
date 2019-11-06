@@ -171,8 +171,18 @@ local function addFaction( tbl )
     local Faction = tbl
     local tmpLock = Faction.Invite and "L" or ""
     local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
+    local TinyLock = vgui.Create( "DImage", cfcFactions.FactionsListView )
+
+    TinyLock:SetSize( 15, 15 )
+    TinyLock:CenterHorizontal( 0.5 )
+
+    if tmpLock then
+        TinyLock:SetImage( "resource/icons/lock_icon/lock_locked.png" )
+    else
+        TinyLock:SetImage( "resource/icons/lock_icon/lock_unlocked.png" )
+    end
     -- Add faction to clientside table
-    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/" .. Faction.Deaths ), Faction.ID )
+    cfcFactions.FactionsListView:AddLine( TinyLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/" .. Faction.Deaths ), Faction.ID )
     cfcFactions.FactionsListView:DataLayout()
 
 end
