@@ -34,7 +34,11 @@ function Panel:Init()
         end )
 
         menu:AddOption( "Edit", function()
-            --
+            self.EditMiniPanel = vgui.Create( "D_cfcfactionedit", self.MainContainer )
+            --Fill in details for LoadFactionDetails
+            --Get the ID of the current selected faction, fetch the id by the clientside table
+            --where all factions are being stored, and pass that table's proper values into the function
+            --self.EditMini:LoadFactionDetails( name, description, color, inviteonly )
         end )
 
         menu:AddOption( "Flag for Administration", function()
