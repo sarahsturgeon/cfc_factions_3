@@ -21,11 +21,13 @@ fpm.Permissions.CorePermissions = {
         ["CanBan"] = {Description = "Allows the user to ban from their own faction."},
         ["CanUnban"] = {Description = "Allows the user to unban a member from their own faction."},
         ["CanDisbandFaction"] = {Description = "Allows a user to disband their faction."},
+        ["CanEditFaction"] = {Description = "Generic Editing, required for all other edit faction permissions."},
         ["CanEditAll"] = {Description = "Allows a user to edit any faction detail."},
         ["CanEditDescription"] = {Description = "Allows a user to edit the faction's description."},
         ["CanEditName"] = {Description = "Allows a user to edit the faction's name."},
         ["CanEditColor"] = {Description = "Allows a user to edit the faction's color."},
         ["CanEditInvite"] = {Description = "Allows a user to edit the faction's invite status."},
+        ["CanEditTemporary"] = {Description = "Allows a user to edit the faction's temporary flag."},
 
 
         -- permssions
@@ -89,7 +91,7 @@ fpm.defaultRanks = {
     "CanViewLogs", "CanViewAdminLogs", "CanViewGlobalLogs", "CanViewFactionWiki",
     "CanEditFactionWiki", "CanSpawnXPOrb", "CanDeleteXPOrb", "CanSetAllies",
     "CanSetEnemies", "CanRemoveAllies", "CanRemoveEnemies", "CanSendInvite", "CanRevokeInvite", "CanSetRanks", "CanRemoveRanks",
-    "CanSetPermissions", "CanRemovePermissions"},
+    "CanSetPermissions", "CanRemovePermissions", "CanEditFaction"},
     -- admin, can handle things like user managment and permission managment
     ["admin"] = {"CanKick", "CanBan", "CanSendAllMessage", "CanSendFactionMessage",
     "CanReceiveFactionMessage", "CanViewLogs", "CanViewAdminLogs", "CanViewFactionWiki",

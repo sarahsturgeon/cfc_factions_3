@@ -82,6 +82,8 @@ function Panel:Init()
 
     self.SubmitClick.DoClick = function()
         net.Start( "CFC_Fac_SendFactionEdit" )
+            --Pass ID of faction to edit
+            --net.WriteInt( )
             net.WriteString( self.NameEntry:GetValue() )
             net.WriteString( self.DescEntry:GetValue() )
             net.WriteBool( self.InviteBool:GetChecked() )

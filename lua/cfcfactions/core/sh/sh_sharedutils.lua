@@ -32,7 +32,6 @@ function cfcFactions.Credits:GenerateDeveloperNames()
 
         for KEY2, PLAYER in pairs( player.GetHumans() ) do
             if KEY == PLAYER:SteamID() then
-                print( "Changing " .. PLAYER:Nick() .. "'s name." )
                 cfcFactions.Credits.Developers[KEY] = PLAYER:Nick()
             end
         end
@@ -48,6 +47,7 @@ cfcFactions.ErrorMessages = {
     ["invalid-table-type"]    = "Not a valid TableType",
     ["invalid-int-type"]      = "Not a valid IntType",
     ["is-in-faction"]         = "Already in a faction",
+    ["not-in-faction"]        = "Not in a faction",
     ["factions-unavailable"]  = "Unable to create a faction right now",
     ["database-connect-fail"] = "Unable to connect to database.",
     ["kick-faction-fail"]     = "Cannot kick player not of same faction.",
@@ -74,10 +74,11 @@ cfcFactions.ErrorMessages = {
     ["duplicate-name"]        = "Unable to create faction, duplicate name or too similar to exsisting faction name.",
     ["test-string"]           = "Test String, please ignore.",
     ["contract-ban"]          = "Unable to create contract. Barred from creating contracts",
-    ["no-permission-edit"]    = "Unable to edit faction. Missing EditFaction permission.",
-    ["no-permission-name"]    = "Unable to edit faction. Missing Editname permission.",
-    ["no-permission-color"]   = "Unable to edit faction. Missing EditColor permission.",
-    ["no-permission-invite"]  = "Unable to edit faction. Missing EditInvite permission."
+    ["no-permission-generic"] = "Unable to edit faction.",
+    ["no-permission-name"]    = "Unable to edit faction. Missing CanEditname permission.",
+    ["no-permission-color"]   = "Unable to edit faction. Missing CanEditColor permission.",
+    ["no-permission-invite"]  = "Unable to edit faction. Missing CanEditInvite permission.",
+    ["no-permission-description"] = "Unable to edit faction. Missing CanEditDescription permission."
 }
 
 function cfcFactions:TimeStamp()
@@ -146,11 +147,11 @@ function cfcFactions:SendNotifcation( msg, mtype, player )
 end
 
 
-function cfcFactions.colorToInt( c ) 
+function cfcFactions:colorToInt( c )
     return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
 end
 
-function cfcFactions.intToColor(n)
+function cfcFactions:intToColor(n)
     return Color(
         bit.band( bit.rshift( n, 16 ), 0xFF ),
         bit.band( bit.rshift( n, 8 ), 0xFF ),

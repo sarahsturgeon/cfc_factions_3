@@ -19,6 +19,7 @@ local cfcuser = cfcFactions.Users
 cfcFactions.Factions = cfcFactions.Factions or {}
 
 -- Instead of generating a random ID, we'll just fetch total factions + 1
+--FUTURE: Let database generate ids and return them here.
 local function GenerateID()
     return ( ( #cfcFactions.Factions ) + 1 )
 end
@@ -146,7 +147,7 @@ function cfcFactions:CreateFaction( tbl )
 
     -- Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, player.GetBySteamID64( FinalFaction.Owner ) )
-    
+
     hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
     ReplicateClientsideFaction( FinalFaction, "CREATED" )
 
@@ -210,31 +211,31 @@ function cfcFactions:EditFaction( tbl )
 
     -- Take whatever values are in tbl, and put them into the main faction's table.
     -- Honestly, not sure about this but for now, it works
-    table.Merge( cfcFactions.Factions[tbl.ID], tbl )
-    
-    -- if not type( name ) == "string" then
-    --     -- Send Alert -> Not a valid NameType
-    --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
-    --     return false
-    -- end
+    --table.Merge( cfcFactions.Factions[tbl.ID], tbl )
 
-    -- if not type( color ) == "Color" then
-    --     -- Send Alert -> Not a valid ColorType
-    --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, owner )
-    --     return false
-    -- end
+    if not type( name ) == "string" then
+        -- Send Alert -> Not a valid NameType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
+        return false
+    end
 
-    -- if not type( description ) == "string" then
-    --     -- Send Alert -> Not a valid DescriptionType
-    --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
-    --     return false
-    -- end
+    if not type( color ) == "Color" then
+        -- Send Alert -> Not a valid ColorType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, owner )
+        return false
+    end
 
-    -- if not type( inviteOnly ) == "boolean" then
-    --     -- Send Alert -> Not a valid IntType
-    --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, owner )
-    --     return false
-    -- end
+    if not type( description ) == "string" then
+        -- Send Alert -> Not a valid DescriptionType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, owner )
+        return false
+    end
+
+    if not type( inviteOnly ) == "boolean" then
+        -- Send Alert -> Not a valid IntType
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, owner )
+        return false
+    end
 
     hook.Call( "CFC_Factionhook_FactionEdited" )
 
@@ -309,59 +310,69 @@ end
 
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 
--- If Requested, Send Faction details to client to edit
--- local function RequestFactionDetails( len, ply )
+local function RequestFactionEdit( len, ply )
+    if ply and not IsValid( ply ) then return end
+    -- Go through and make sure client sending has PROPER : SERVER SIDE
+    -- Permissions. Client is sending data, treat them as idiots
+    local fOwner = ply
+    local fID = net.ReadInt(32)
+    local fName = net.ReadString()
+    local fDescription = net.ReadString()
+    local fIsInviteOnly = net.ReadBool()
+    local fIsTemporary = net.ReadBool()
+    local fColorSelected = net.ReadColor()
 
---     -- Check if user has proper permission to edit each part of a faction
---     -- CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
---     local faction = cfcFactions.Factions[id]
---     faction.Name = name
---     faction.Description = description
---     faction.Color = color
---     faction.Invite = inviteOnly
+    if not cfcuser:IsInFaction( fOwner ) then
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["not-in-faction"], 1, fOwner )
+        return
+    else
+        --Condition Statement for being inside a faction, check player perms to be able to edit each field.
+        if not fpm:hasPermission( fOwner, "CanEditAll" ) then
+            cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-generic"], 1, fOwner )
+            return
+        else
+            --Player can clearly edit the faction. Lets proceed to checking each permission required.
+            local FactionToEdit = {
+                ["Owner"] = fOwner,
+                ["Name"] = "",
+                ["Description"] = "",
+                ["Color"] = "",
+                ["Invite"] = 0,
+            }
+            if not fpm:hasPermission( fOwner, "CanEditDescription" ) then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["factions-ban"], 1, fOwner )
+                return
+            else
+                FactionToEdit.Description = fDescription
+            end
 
---     -- We'll check if the player has the proper permission to edit each field.
---     -- If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
---     -- This way clients send only the data they think they need to edit a faction, if they try to sneak around it
---     -- and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
---     if fpm:hasPermission( player, "CanEditName" ) then
---         faction.Name = name
---     else
---         if ( ( name and #name > 0 ) or name == nil ) then
---             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, owner )
---         end
---     end
+            if not fpm:hasPermission( fOwner, "CanEditName" ) then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, fOwner )
+                return
+            else
+                FactionToEdit.Name = fName
+            end
 
---     if fpm:hasPermission( player, "CanEditColor" ) then
---         faction.Color = color
---     else
---         if ( ( not table.IsEmpty( color ) ) or color == nil ) then
---             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, owner )
---         end
---     end
+            if not fpm:hasPermission( fOwner, "CanEditColor" ) then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, fOwner )
+                return
+            else
+                FactionToEdit.Color = fColorSelected
+            end
 
---     if fpm:hasPermission( player, "CanEditInvite" ) then
---         faction.Invite = inviteOnly
---     else
---         if ( not ( inviteOnly == nil ) ) then
---             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, owner )
---         end
---     end
+            if not fpm:hasPermission( fOwner, "CanEditInvite" ) then
+                cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["CanEditInvite"], 1, fOwner )
+                return
+            else
+                FactionToEdit.Invite = fIsInviteOnly
+            end
+            --Pass the temporary table to be edited
+            cfcFactions:EditFaction( FactionToEdit )
+        end
+    end
+end
 
---     if fpm:hasPermission( owner, "CanEditDescription" ) then
---         faction.Description = description
---     else
---         if ( ( description and #description > 0 ) or description == nil ) then
---             cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, owner )
---         end
---     end
---     -- save to db
-
---     -- Broadcast change to players
--- end
-
-
--- net.Receive( "CFC_Fac_RequestFactionEdit", RequestFactionDetails )
+net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionEdit )
 
 -- Handles removing a faction( s ) and its attached users properly
 function cfcFactions:RemoveFaction( ply, id )
