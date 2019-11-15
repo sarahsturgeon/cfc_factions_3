@@ -6,7 +6,28 @@ local Panel = {}
 cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
 
 function Panel:Init()
+    --[[
+    local quickMenu = DermaMenu()
+    quickMenu:SetPos( gui.MouseX(), gui.MouseY() )
 
+    menu:AddOption( "Invite to Faction", function()
+        --
+    end )
+
+    menu:AddOption( "Copy SteamID", function()
+        --
+    end )
+
+    menu:AddOption( "Edit Permissions", function()
+        --
+    end )
+
+    menu:AddSpacer()
+
+    menu:AddOption( "Kick from Faction", function()
+        --
+    end )
+    ]]
 end
 
 function Panel:Paint( w, h )

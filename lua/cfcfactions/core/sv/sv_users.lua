@@ -53,7 +53,7 @@ function factioneers:UserExists( user )
         return
     end
 
-    if table.HasValue( factioneers, user:SteamID64() ) then
+    if factioneers[user:SteamID64()] ~= nil then
         return true
     else
         return false
