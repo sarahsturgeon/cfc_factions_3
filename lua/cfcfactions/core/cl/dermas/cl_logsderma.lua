@@ -1,6 +1,6 @@
 local Panel = {}
---Commenting out till later completion. Useless menu clutter
---cfcFactions:RegisterDermaMenu( "View Logs", Panel, 1 )
+-- Commenting out till later completion. Useless menu clutter
+-- cfcFactions:RegisterDermaMenu( "View Logs", Panel, 1 )
 
 local LocalPanelView = 1 -- 1 is Normal logs, 2 is admin logs
 

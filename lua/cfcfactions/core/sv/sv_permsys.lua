@@ -42,7 +42,7 @@ fpm.Permissions.CorePermissions = {
 
         -- misc
         ["CanSendAllMessage"]= {Description = "Allows a user to send a member to any faction member."},
-        
+
         ["CanSendFactionMessage"] = {Description = "Allows a user to send a message to their own faction."},
         ["CanReceiveFactionMessage"] = {Description = "Allows a user to receive a faction message from their own faction."},
         ["CanSpawnXPObject"] = {Description = "Allows a user to spawn a XP gathering object."},
@@ -128,32 +128,32 @@ end
 
 -- Auths a user and allows them to use factions properly. If not, things make explode
 -- Or simply just don't want them using it
-function fpm:authUser( authplayer )
-    print( "Authenticating Factions user " .. authplayer:SteamID() )
-    --Checks and balances
-    if not authplayer:IsPlayer() then 
-        return 
+function fpm:authUser( authPlayer )
+    print( "Authenticating Factions user " .. authPlayer:SteamID() )
+    -- Checks and balances
+    if not authPlayer:IsPlayer() then
+        return
     end
 
-    if cfcuser:UserExists( authplayer ) then
-        if ( not ( cfcuser[authplayer:SteamID64()].CFCPermissions == nil ) ) then
+    if cfcuser:UserExists( authPlayer ) then
+        if ( not ( cfcuser[authPlayer:SteamID64()].CFCPermissions == nil ) ) then
             -- Error out, player already has proper permissions for authentication
             return
         end
     end
 
-    cfcuser:registeruser( authplayer )
+    cfcuser:registeruser( authPlayer )
 
     -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
     local AuthUserPerms = {
         "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
     }
 
-    if IsValid( authplayer ) and authplayer:IsAdmin() then
+    if IsValid( authPlayer ) and authPlayer:IsAdmin() then
         table.insert( AuthUserPerms, "IsFactionsAdmin" )
         -- Testing dev access, SteamID is 'Voodoo'
         -- Remove code when final branch is published
-        if ( cfcFactions.Credits.Developers[authplayer:SteamID()] ~= nil ) then
+        if ( cfcFactions.Credits.Developers[authPlayer:SteamID()] ~= nil ) then
             table.insert( AuthUserPerms, "IsDeveloper" )
             table.insert( AuthUserPerms, "IsTester" )
         end
@@ -161,29 +161,53 @@ function fpm:authUser( authplayer )
 
     -- fpm.Users[player:SteamID64()] = { ["Permissions"] = AuthUserPerms }
     for _, AuthPermission in pairs( AuthUserPerms ) do
-        self:addPermission( authplayer, AuthPermission )
+        self:addPermission( authPlayer, AuthPermission )
     end
 end
 
 -- Checks to see if a player has a  specific permission( s )
 function fpm:hasPermission( player, permission )
-    --Handling normal permissions now
-    if not player:IsPlayer() then return end
-    local PlayerTable = cfcuser[player:SteamID64()].CFCPermissions
-    --Can they even access factions? Then no, they don't have permission for anything
-    if not table.HasValue( PlayerTable, "AccessAll" ) then
+    -- Handling normal permissions now
+    if not player:IsPlayer() then
+        return
+    end
+    if not self:IsValidPermission( permission ) then
         return false
-
-    --Do they have the permission they're seeking?, sure, pass fine
-    elseif table.HasValue( PlayerTable, permission ) then
-        return true
-
-    --Are they developer? sure, why not, they have access to everything
-    elseif table.HasValue( PlayerTable, "IsDeveloper" ) then
-        return true
     end
 
-    --Nothing else, return false
+    local PlayerTable = cfcuser[player:SteamID64()].CFCPermissions
+    local PlayerFactionTable = cfcuser[player:SteamID64()].FactionMetadata.InternalFactionPermissions
+
+    if PlayerTable == nil then
+        return false
+    end
+    if PlayerFactionTable == nil then
+        return false
+    end
+
+    -- If Developer, let them do anything.
+    if table.HasValue( PlayerTable, "IsDeveloper" )  then
+        return true
+    end
+    -- If they can't even access factions, just return false for everything.
+    if table.HasValue( PlayerTable,  "AccessAll" ) then
+        return false
+    end
+
+    -- Check the global CFC Permissions for the permission.
+    for CFCPermKey, CFCPermDescription in pairs( PlayerTable ) do
+        if CFCPermDescription == permission then
+            return true
+        end
+    end
+
+    -- Check the Faction permissions ( Player editable permissions ) for the permission.
+    for FactionPermKey, FactionPermDescription in pairs( PlayerFactionTable ) do
+        if FactionPermDescription == permission then
+            return true
+        end
+    end
+
     return false
 end
 
@@ -204,7 +228,7 @@ function fpm:addPermission( player, permission )
     return true
 end
 
---Revokes a permission( s ) from the player. True if success, false if otherwise
+-- Revokes a permission( s ) from the player. True if success, false if otherwise
 function fpm:revokePermission( player, permission_string )
     local usr = cfcuser[player:SteamID64()]
     for Key, Permission in pairs( usr.CFCPermissions ) do

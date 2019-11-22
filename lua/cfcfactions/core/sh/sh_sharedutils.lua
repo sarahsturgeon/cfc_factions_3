@@ -92,18 +92,18 @@ end
 --     end )
 -- end
 
---TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing. 
---Sends a notifcation to an optional player
---msg = string or predifined key hard coded above ( cfcFactions.ErrorMessages )
---mtype = Number, Error being 1, Msg being 2, Alert being 3, Warning being 4
---player to send the notifcation to. Optional
+-- TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing.
+-- Sends a notifcation to an optional player
+-- msg = string or predifined key hard coded above ( cfcFactions.ErrorMessages )
+-- mtype = Number, Error being 1, Msg being 2, Alert being 3, Warning being 4
+-- player to send the notifcation to. Optional
 function cfcFactions:SendNotifcation( msg, mtype, player )
 
     if type( msg ) == "number" then
         msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or ""
     end
 
-    if not player:IsValid() then
+    if not IsValid( player ) then
         return
     end
 

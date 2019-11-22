@@ -15,7 +15,7 @@ local fpm = cfcFactions.fpm
 
 
 --------------------------------------------------------------------------------------------------------------
---Permission System : dev only
+-- Permission System : dev only
 
 --------------------------------------------------------------------------------------------------------------
 -- Grants a player permission based on "Player Name":player, "Permission":string

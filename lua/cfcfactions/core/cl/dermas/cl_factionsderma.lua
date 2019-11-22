@@ -13,7 +13,7 @@ cfcFactions:RegisterDermaMenu( "View Factions", Panel, 1 )
 
 
 function Panel:Init()
-    cfcFactions.FactionsView=1
+    cfcFactions.FactionsView = 1
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
@@ -67,7 +67,7 @@ function Panel:Init()
         -- create cl_faccreate.lua, process, submit to server
         local CreateFactionMiniPanel = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
         CreateFactionMiniPanel:Center()
-        --Make sure we delete the FactionMiniPanel when finished
+        -- Make sure we delete the FactionMiniPanel when finished
     end
 
     self.EditFaction = vgui.Create( "DButton", self.BottomButtonsControlPanel )
@@ -122,6 +122,7 @@ function Panel:Init()
     self.killcol:SetWide( 5 )
     self.idcol:SetWide( 20 )
 
+    RefreshFactionViewingTable()
 end
 
 function Panel:Paint( w, h )
@@ -132,16 +133,9 @@ function Panel:Think()
 
 end
 
-local function RefreshFactionViewingTable()
-    cfcFactions.FactionsListView:Clear()
-    if table.HasValue(cfcFactions.Factions) then 
-        for KEY, Faction in cfcFactions.Factions do
-            addFaction( Faction )
-        end
-    end
-end
 
---TODO: FactionRemoved
+
+-- TODO: FactionRemoved
 
 -- TODO:  tie into being actually used
 local function addFaction( tbl )
@@ -150,10 +144,19 @@ local function addFaction( tbl )
     local Faction = tbl
     local tmpLock = Faction.Invite and "L" or ""
     local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
-    --Add faction to clientside table
-    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/"..Faction.Deaths ), Faction.ID )
+    -- Add faction to clientside table
+    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/" .. Faction.Deaths ), Faction.ID )
     cfcFactions.FactionsListView:DataLayout()
 
+end
+
+function RefreshFactionViewingTable()
+    cfcFactions.FactionsListView:Clear()
+    if cfcFactions.Factions ~= nil then
+        for KEY, Faction in pairs( cfcFactions.Factions ) do
+            addFaction( Faction )
+        end
+    end
 end
 
 local function factionCreated( len, ply )
@@ -176,12 +179,14 @@ local function FactionRefresh()
     local IncomingJSONVar = net.ReadString()
     local IncomingState = net.ReadString()
 
-    local Faction = util.JSONToTable(IncomingJSONVar)
+    local Faction = util.JSONToTable( IncomingJSONVar )
 
     if IncomingState == "DELETED" then
         cfcFactions.Factions[Faction.ID] = nil
     else
-        cfcFactions.Factions[Faction.ID] = Faction
+        if Faction ~= nil then
+            cfcFactions.Factions[Faction.ID] = Faction
+        end
     end
 
     RefreshFactionViewingTable()
