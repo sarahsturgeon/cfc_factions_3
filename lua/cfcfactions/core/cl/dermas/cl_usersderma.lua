@@ -1,39 +1,39 @@
 if not CLIENT then return end
 
-local cfcusers = {}
+local factioneers = {}
 
-local Panel = {}
--- cfcFactions.Dermas["View Users"] = {1, Panel}
+local ViewUserDerma = {}
+-- cfcFactions.Dermas["View Users"] = {1, ViewUserDerma}
 
 -- Get current online users from server
 local function fetchUserData() 
-	cfcusers = util.JSONToTable( net.ReadString() )
+    factioneers = util.JSONToTable( net.ReadString() )
 end
 net.Receive( "CFC_Fac_SendPlayerInfo", fetchUserData )
 
 -- Not sure which event this should occur on
 local function requestUserData()
-	net.Start( "CFC_Fac_RequestPlayerInfo" )
-	net.SendToServer()
+    net.Start( "CFC_Fac_RequestPlayerInfo" )
+    net.SendToServer()
 end
 hook.Add( "InitPostEntity", "CFC_Fac_RequestUserData", requestUserData )
 
 
-cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
+cfcFactions:RegisterDermaMenu( "View Users", ViewUserDerma, 1 )
 
-function Panel:Init()
-
-end
-
-function Panel:Paint( w, h )
+function ViewUserDerma:Init()
 
 end
 
-function Panel:Think()
+function ViewUserDerma:Paint( w, h )
 
 end
 
-vgui.Register( 'D_cfcusersderma', Panel )
+function ViewUserDerma:Think()
+
+end
+
+vgui.Register( 'D_factioneersderma', ViewUserDerma )
 
 -- TODO: tie into the system - This may be completed by above code, ask V
 
