@@ -6,30 +6,50 @@ local Panel = {}
 cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
 
 function Panel:Init()
-    --[[
-    local quickMenu = DermaMenu()
-    quickMenu:SetPos( gui.MouseX(), gui.MouseY() )
+    self:SetSize( 500, 500 )
+    self:Center()
 
-    menu:AddOption( "Invite to Faction", function()
-        --
-    end )
+    self.mainFrame = vgui.Create( "DFrame", self )
+    self.mainFrame:Dock( FILL )
+    self.mainFrame:MakePopup()
 
-    menu:AddOption( "Copy SteamID", function()
-        --
-    end )
+    self.categoryList = vgui.Create( "DListView", self.mainFrame )
+    self.categoryList:Dock( FILL )
+    self.categoryList:AddColumn( "Steam ID" )
+    self.categoryList:AddColumn( "Player" )
+    self.categoryList:AddColumn( "Kills" )
+    self.categoryList:AddColumn( "Deaths" )
+    self.categoryList:AddColumn( "Faction Name" )
+    self.categoryList:AddColumn( "Faction Rank" )
 
-    menu:AddOption( "Edit Permissions", function()
-        --
-    end )
+    self.categoryList:AddLine( "1234", "Bleck", "69", "420", "Tunnel Snakes", "God Status" )
 
-    menu:AddSpacer()
+    function self.categoryList:OnRowRightClick( id, line )
+        local optionMenu = DermaMenu()
 
-    menu:AddOption( "Kick from Faction", function()
-        --
-    end )
-    ]]
+        optionMenu:AddOption( "Copy SteamID" ):SetIcon( "icon16/page_edit.png" )
+        optionMenu:AddOption( "Copy FactionID" ):SetIcon( "icon16/page_edit.png" )
+
+        --[[if LocalPlayer():canKick() then
+            optionMenu:AddOption( "Kick Player" ):SetIcon( "icon16/lock.png" )
+        end]]
+
+        optionMenu:AddOption( "Invite to Faction" ):SetIcon( "icon16/user_add.png" )
+
+        if LocalPlayer():IsAdmin() then
+            optionMenu:AddSpacer()
+
+            local child, parent = optionMenu:AddSubMenu( "Staff Actions" )
+            parent:SetIcon( "icon16/shield.png" )
+            child:AddOption( "Kick From Faction" ):SetIcon( "icon16/asterisk_yellow.png" )
+            child:AddOption( "Ban From Factions" ):SetIcon( "icon16/flag_red.png" )
+        end
+
+        optionMenu:Open()
+    end
 end
 
+--[[
 function Panel:Paint( w, h )
 
 end
@@ -37,6 +57,7 @@ end
 function Panel:Think()
 
 end
+]]
 
 vgui.Register( 'D_cfcusersderma', Panel )
 
