@@ -191,7 +191,7 @@ function fpm:hasPermission( player, permission )
     end
     -- If they can't even access factions, just return false for everything.
     if table.HasValue( PlayerTable,  "AccessAll" ) then
-        return false
+        return true
     end
 
     -- Check the global CFC Permissions for the permission.
