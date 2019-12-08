@@ -22,7 +22,7 @@ function Panel:Init()
     self.categoryList:AddColumn( "Faction Name" )
     self.categoryList:AddColumn( "Faction Rank" )
 
-    self.categoryList:AddLine( "1234", "Bleck", "69", "420", "Tunnel Snakes", "God Status" )
+    --self.categoryList:AddLine( "1234", "Bleck", "69", "420", "Tunnel Snakes", "God Status" )
 
     function self.categoryList:OnRowRightClick( id, line )
         local optionMenu = DermaMenu()
