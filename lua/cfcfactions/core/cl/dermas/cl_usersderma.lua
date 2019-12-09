@@ -3,6 +3,8 @@ if not CLIENT then return end
 local factioneers = {}
 
 local ViewUserDerma = {}
+
+cfcFactions:RegisterDermaMenu( "View Users", ViewUserDerma, 1 )
 -- cfcFactions.Dermas["View Users"] = {1, ViewUserDerma}
 
 -- Get current online users from server
