@@ -23,7 +23,7 @@ function Panel:Init()
         if ply:IsValid() and ply:IsPlayer() then
             --self.CategoryList( ply:SteamID(), ply:Name(), ply:Frags(), ply:Deaths(), ply:GetFaction().Name, ply:GetRank() )
             playerList[ iterator ] = ply
-            iterator++
+            iterator = iterator + 1
         end
     end
 
