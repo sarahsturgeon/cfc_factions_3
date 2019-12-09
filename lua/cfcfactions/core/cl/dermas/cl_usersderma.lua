@@ -1,37 +1,47 @@
 if not CLIENT then return end
 
 local Panel = {}
--- cfcFactions.Dermas["View Users"] = {1, Panel}
 
 cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
 
 function Panel:Init()
-    self:SetSize( 500, 500 )
-    self:Center()
+    self:Dock( FILL )
 
-    self.mainFrame = vgui.Create( "DFrame", self )
-    self.mainFrame:Dock( FILL )
-    self.mainFrame:MakePopup()
+    self.CategoryList = vgui.Create( "DListView", self )
+    self.CategoryList:Dock( FILL )
+    self.CategoryList:AddColumn( "Steam ID" )
+    self.CategoryList:AddColumn( "Player" )
+    self.CategoryList:AddColumn( "Kills" )
+    self.CategoryList:AddColumn( "Deaths" )
+    self.CategoryList:AddColumn( "Faction Name" )
+    self.CategoryList:AddColumn( "Faction Rank" )
 
-    self.categoryList = vgui.Create( "DListView", self.mainFrame )
-    self.categoryList:Dock( FILL )
-    self.categoryList:AddColumn( "Steam ID" )
-    self.categoryList:AddColumn( "Player" )
-    self.categoryList:AddColumn( "Kills" )
-    self.categoryList:AddColumn( "Deaths" )
-    self.categoryList:AddColumn( "Faction Name" )
-    self.categoryList:AddColumn( "Faction Rank" )
+    local playerList = {}
+    local iterator = 1
 
-    --self.categoryList:AddLine( "1234", "Bleck", "69", "420", "Tunnel Snakes", "God Status" )
+    for _, ply in pairs( player.GetHumans() ) do
+        if ply:IsValid() and ply:IsPlayer() then
+            --self.CategoryList( ply:SteamID(), ply:Name(), ply:Frags(), ply:Deaths(), ply:GetFaction().Name, ply:GetRank() )
+            playerList[ iterator ] = ply
+            iterator++
+        end
+    end
 
-    function self.categoryList:OnRowRightClick( id, line )
+    function self.CategoryList:OnRowRightClick( id, line )
         local optionMenu = DermaMenu()
 
-        optionMenu:AddOption( "Copy SteamID" ):SetIcon( "icon16/page_edit.png" )
-        optionMenu:AddOption( "Copy FactionID" ):SetIcon( "icon16/page_edit.png" )
+        optionMenu:AddOption( "Copy SteamID", function()
+            SetClipboardText( line:GetColumnText( 1 ) )
+        end ):SetIcon( "icon16/page_edit.png" )
+
+        optionMenu:AddOption( "Copy FactionID", function()
+            --SetClipboardText( playerList[id]:GetFactionID() )
+        end ):SetIcon( "icon16/page_edit.png" )
 
         --[[if LocalPlayer():canKick() then
-            optionMenu:AddOption( "Kick Player" ):SetIcon( "icon16/lock.png" )
+            optionMenu:AddOption( "Kick Player", function()
+                playerList[id]:KickPlayerFromFaction()
+            end ):SetIcon( "icon16/lock.png" )
         end]]
 
         optionMenu:AddOption( "Invite to Faction" ):SetIcon( "icon16/user_add.png" )
@@ -41,8 +51,14 @@ function Panel:Init()
 
             local child, parent = optionMenu:AddSubMenu( "Staff Actions" )
             parent:SetIcon( "icon16/shield.png" )
-            child:AddOption( "Kick From Faction" ):SetIcon( "icon16/asterisk_yellow.png" )
-            child:AddOption( "Ban From Factions" ):SetIcon( "icon16/flag_red.png" )
+
+            child:AddOption( "Kick From Faction", function()
+                --playerList[id]:KickPlayerFromFaction()
+            end ):SetIcon( "icon16/asterisk_yellow.png" )
+
+            child:AddOption( "Ban From Factions", function()
+                --playerList[id]:BanPlayerFromFactions()
+            end ):SetIcon( "icon16/flag_red.png" )
         end
 
         optionMenu:Open()
