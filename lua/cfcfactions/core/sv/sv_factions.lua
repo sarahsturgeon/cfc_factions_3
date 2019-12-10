@@ -23,33 +23,11 @@ local function GenerateID()
     return ( ( #cfcFactions.Factions ) + 1 )
 end
 
--- Sends a copy of the table to client
--- statechanged can be 1 of the possible MODIFIED, DELETED, CREATED, NOCHANGE, nil
-local function ReplicateClientsideFaction( tbl, statechanged )
-    if tbl == nil or table.IsEmpty( tbl ) then
-        return
-    end
-    if statechanged == nil then statechanged = "NOCHANGE" end
-    -- Package the table and send to clients
-    local CopyOfFactionToSend = table.Copy( tbl )
-    -- Because of how bitter some clients can get, we should be careful about copying the
-    -- entire faction data over to client. Here, we should carefully select what to send
-    -- and omit anything else.
-    -- or k, v in pairs ( dest ) do
-    -- If source[k] then dest[k] = source[k] end
-    CopyOfFactionToSend.LastSaved = nil
-    CopyOfFactionToSend.NeedsCleanUp = nil
-    local FactionTableJsonified = util.TableToJSON( CopyOfFactionToSend, false )
-
-    net.Start( "CFC_Fac_FactionRefresh" )
-        net.WriteString( FactionTableJsonified )
-        net.WriteString( statechanged )
-    net.Broadcast()
-
-    hook.Call( "CFC_ReplicateClientsideFaction" )
+-- function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
+function cfcFactions:Faction( id ) 
+    return cfcFactions.Factions[id]
 end
 
--- function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
 function cfcFactions:CreateFaction( tbl )
     if not tbl and table.IsEmpty( tbl ) then
         return
@@ -147,8 +125,18 @@ function cfcFactions:CreateFaction( tbl )
     -- Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, player.GetBySteamID64( FinalFaction.Owner ) )
     
+    net.Start( "CFC_Fac_FactionCreation" )
+        --private, name, description, owner, k/d, id
+        net.WriteInt( FinalFaction.ID, 32 )
+        net.WriteBool( FinalFaction.Invite )
+        net.WriteString( FinalFaction.Name )
+        net.WriteString( FinalFaction.Description )
+        net.WriteString( FinalFaction.Owner )
+        net.WriteInt( FinalFaction.Kills, 32 )
+        net.WriteInt(  FinalFaction.Deaths, 32 )
+    net.Broadcast()
+
     hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
-    ReplicateClientsideFaction( FinalFaction, "CREATED" )
 
     --- Returns the newly created faction as a table
     return FinalFaction
@@ -239,25 +227,6 @@ function cfcFactions:EditFaction( tbl )
     hook.Call( "CFC_Factionhook_FactionEdited" )
 
     ReplicateClientsideFaction( cfcFactions.Factions[tbl.ID], "MODIFIED" )
-end
-
--- Handles removing a faction( s ) and its attached users properly
-function cfcFactions:RemoveFaction( ply, id )
-    -- delete the faction and any players inside that faction.
-
-    local faction = cfcFactions.Factions[id]
-    local factionID = id
-
-     if faction and not table.IsEmpty( faction ) then
-        faction = nil
-        for _, Player in player.GetHumans() do
-            if factioneers:IsInFaction( ply, factionID ) then
-                factioneers:RemoveUser( ply )
-            end
-        end
-        ReplicateClientsideFaction( faction, "DELETED" )
-    end
-
 end
 
 local function requestFactionNews( len, ply )
@@ -363,23 +332,61 @@ net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 
 -- net.Receive( "CFC_Fac_RequestFactionEdit", RequestFactionDetails )
 
--- Handles removing a faction( s ) and its attached users properly
+-- Handles removing a faction and its attached users properly
+-- player who initated the delete (if there is one), id of faction that was deleted
 function cfcFactions:RemoveFaction( ply, id )
     -- delete the faction and any players inside that faction.
 
-    local faction = cfcFactions.Factions[id]
     local factionID = id
+    local factionToDelete = cfcFactions:Faction( factionID )
 
-     if faction and not table.IsEmpty( faction ) then
-        faction = nil
-        for k, Player in player.GetHumans() do
-            if factioneers:IsInFaction( ply, factionID ) then
-                factioneers:RemoveUser( ply )
+     if factionToDelete and not table.IsEmpty( factionToDelete ) then
+        cfcFactions.Factions[factionID] = nil
+        for _, Player in pairs( player.GetHumans() ) do
+            if factioneers:IsInFaction( Player, factionID ) then
+                factioneers:RemoveUser( Player )
             end
         end
+        net.Start("CFC_Fac_FactionDeleted")
+            net.WriteInt(factionID, 32)
+        net.Broadcast()
     end
 
 end
+
+local function RequestFactionDeletion(len, ply)
+
+    local FactionToDelete = net.ReadInt(32)
+    if ply and not IsValid( ply ) then return end
+    --Need to check if player (If NOT a admin, or NOT a dev), is in the faction)
+    if fpm:IsFactionAdmin( ply ) or fpm:IsDev( ply ) then
+        cfcFactions:RemoveFaction( ply, FactionToDelete )
+        --allow them to delete the faction no matter what
+        --untested for now
+    elseif ply:IsInFaction( FactionToDelete ) then
+        --Can they even disband?
+        ErrorNoHalt( "Needs Testing", "RequestFactionDeletion(len, ply)" )
+        if fpm:hasPermission( ply, "CanDisbandFaction") then
+            --Does the faction exist?
+            if cfcFactions:Faction(FactionToDelete) ~= nil then 
+                --Lastily, to prevent minging, is the faction owner the same player requesting the deletion?
+                if cfcFactions:Faction(FactionToDelete.Owner == ply:SteamID64() ) then
+                    --delete!
+                    cfcFactions:RemoveFaction( ply, FactionToDelete )
+
+                end
+            end
+        end
+        --Check if player has proper permission to delete the faction
+        --aka, owner
+    else
+        --Tell the player they cannot delete the great infinite void of nothingness
+        ErrorNoHalt("Needs Finish", "RequestFactionDeletion(len, ply)" ) 
+    end
+
+end
+
+net.Receive("CFC_Fac_RequestDelete", RequestFactionDeletion )
 
 local function requestFactionNews( len, ply )
     -- Look into a better way of sending faction news to client

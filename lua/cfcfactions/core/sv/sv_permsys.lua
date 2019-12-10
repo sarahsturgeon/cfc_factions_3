@@ -118,7 +118,6 @@ function fpm:revokeUser( player )
     return false
 end
 
-
 -- forces init for all current humans connected
 function fpm:authAllUsers()
     for _, players in pairs ( player.GetHumans() ) do
@@ -142,7 +141,7 @@ function fpm:authUser( authPlayer )
         end
     end
 
-    factioneers:registeruser( authPlayer )
+    factioneers:registerUser( authPlayer )
 
     -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
     local AuthUserPerms = {
@@ -219,7 +218,7 @@ function fpm:addPermission( player, permission )
          return false
     end
 
-    local usr = factioneers[player:SteamID64()]
+    local usr = factioneers:User( player ) 
     if fpm:IsSpecialPermission( permission ) == false then
         table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )
     else

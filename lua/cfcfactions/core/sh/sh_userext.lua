@@ -8,9 +8,15 @@ Purpose: Shared functions to fetch users from the global table cfcFactions.Users
 local table = table
 
 function cfcFactions:GetUser( ply )
-    return cfcFactions.Users[ply:SteamID64()]
+    if SERVER then
+        return cfcFactions.Users[ply:SteamID64()]
+    else
+        --clientside get the user 
+    end
 end
 
+--old function, make sure to redo when this is called
+--should return a table of your fellow factioneers ( of same id )
 function cfcFactions:GetFactionUsers( factionid )
     local tmp = {}
     for _, ply in pairs( cfcFactions.Users ) do
