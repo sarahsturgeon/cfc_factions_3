@@ -1,22 +1,17 @@
 if not CLIENT then return end
 
 local Panel = {}
-local lastCount = -1
-cfcFactions:RegisterDermaMenu( "My Alerts", Panel, 3 )
+local cfcFactions.Client.Alerts = cfcFactions.Client.Alerts or {}
+
 
 -- converts message type to a pretty string for the user
 local function printyprint( number )
-    if number == 1 then
-        return "Message"
-    elseif number == 2 then
-        return "Alert"
-    elseif number == 3 then
-        return "Debug"
-    elseif number == 4 then
-        return "Error"
-    else
-        return"Message"
-    end
+    local alertStruct = {
+        1 = "Message",
+        2 = "Alert", 
+        3 = "Debug" 
+    }
+    return alertStruct[number] and alertStruct[number] or 1
 end
 
 local function drawAlertsTable( main_panel )
@@ -59,4 +54,29 @@ function Panel:Think()
 
 end
 
+function cfcFactions:AddAlert( msg, mtype )
+    if mtype == nil then mtype = MsgType.Msg end
+    table.insert( cfcFactions.Alerts, {["Message"] = msg, ["Type"] = mtype, ["Time"] = os.date( "%T ", os.time() )} )
+    cfcFactions:AddToAlertPanel( msg, mtype )
+    hook.Call( "CFC_FAC_AlertAdded", _, msg, mtype )
+end
+
 vgui.Register( 'D_cfcalertsderma', Panel )
+
+local function sendFactionMessage( len, ply )
+
+end
+
+net.Receive( 'CFC_Fac_SendMessage', sendFactionMessage )
+
+local function sendServerTextAlert( len, ply )
+    local msg = net.ReadString()
+    local mtype = net.ReadInt( 4 )
+    local ment = net.ReadEntity()
+
+    if cfcFactions.MainDerma ~= nil then
+        cfcFactions.MainDerma:CreateAlert( msg, mtype )
+    end
+end
+
+--net.Receive( 'CFC_Fac_SendServerTextAlert', sendServerTextAlert )

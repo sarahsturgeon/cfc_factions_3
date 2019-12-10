@@ -3,13 +3,9 @@ if not CLIENT then return end
 cfcFactions.FactionsView = nil
 cfcFactions.Factions = cfcFactions.Factions or {}
 cfcFactions.FactionsListView = nil
+
 local Panel = {}
 local cfg = cfcFactions.Config.Client
-local MinQuery = 1
-local MaxQuery = 15
-
-cfcFactions:RegisterDermaMenu( "View Factions", Panel, 1 )
-
 
 
 function Panel:Init()

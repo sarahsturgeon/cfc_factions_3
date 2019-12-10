@@ -1,83 +1,46 @@
-cfcFactions.Dermas = {}
-cfcFactions.Alerts = {}
-cfcFactions.Logs = {}
-cfcFactions.IsOpen = false
-cfcFactions.MainDerma = nil
-cfcFactions.CurrentTab = nil
-cfcFactions.News = ""
+local cfcFactions = cfcFactions or {}
+local cfg = cfcFactions.Config.Client
 
--- Registers items to be placed into the menubar at loadtime
-function cfcFactions:RegisterDermaMenu( name, panel, ranking )
-    if not CLIENT then return end
 
-    if name == nil then name = "No Text Set" end
-    if panel == nil then panel = {} end
-    if ranking == nil then ranking = 99 end
-    table.insert( cfcFactions.Dermas, {
-        InternalName = name, InternalPanel = panel, InternalRanking = ranking, InternalButton = {}
-    } )
-end
-
-function cfcFactions:AddAlert( msg, mtype )
-    if mtype == nil then mtype = MsgType.Msg end
-    table.insert( cfcFactions.Alerts, {["Message"] = msg, ["Type"] = mtype, ["Time"] = os.date( "%T ", os.time() )} )
-    cfcFactions:AddToAlertPanel( msg, mtype )
-    hook.Call( "CFC_FAC_AlertAdded", _, msg, mtype )
-end
-
--- Displays and handles closing ( an already open ) menu derma.
 function cfcFactions:DisplayMenu()
-    if not cfcFactions.MainDerma or cfcFactions.MainDerma == nil then
-        cfcFactions.MainDerma = vgui.Create( "D_cfcmainderma" )
-        cfcFactions.MainDerma:SetVisible( false )
+    if not cfcFactions.MainMenu then
+        cfcFactions.MainMenu = vgui.Create( "D_cfcmainderma" )
     end
 
-    if not cfcFactions.MainDerma:IsVisible() then
-        cfcFactions.MainDerma:ClearAlerts()
-        cfcFactions.MainDerma:Show()
-        gui.EnableScreenClicker( true )
-    else
-        cfcFactions.MainDerma:Hide()
+    if cfcFactions.MainMenu:IsVisible() then
+        cfcFactions.MainMenu:Hide()
         gui.EnableScreenClicker( false )
+    else
+        cfcFactions.MainMenu:Show()
+        gui.EnableScreenClicker( true )
     end
+
 end
 
--- If the defined key is properly set, users can use that specific key to also open/close the derma
-local function menuKeyDown( ply, button )
-    if input.GetKeyName( button ) == cfcFactions.Config.Client.CLIENT_KEY then
-        cfcFactions:DisplayMenu()
+function cfcFactions:Think()
+
+    if input.IsKeyDown( cfg.CLIENT_KEY ) and not self.KeyDown then
+        self.KeyDown = true
+    elseif self.KeyDown and not input.IsKeyDown(cfg.CLIENT_KEY) then
+        self.KeyDown = false
     end
+
+    if not IsValid(self.MainMenu) then
+        --for now, open it clientside but ask server permission for opening it eventually (net handling)
+        self:DisplayMenu()
+    else
+        self.MainMenu:Close()
+    end
+
 end
 
-hook.Add( "PlayerButtonDown", "CFC_Fac_MenuKeyDown", menuKeyDown )
+hook.Add("Think", "CFC_Factionhook_Clientsidemenu", function()
+    cfcFactions:Think()
+end)
 
--- If a user requests to display the derma from serverside
-local function toogleFactionDerma( len, ply )
+net.Receive('CFC_Factionhook_ToggleMenu', function(length)
     cfcFactions:DisplayMenu()
-end
+end)
 
-net.Receive( 'CFC_Fac_ToggleDerma', toogleFactionDerma )
 
-local function sendFactionMessage( len, ply )
 
-end
-
-net.Receive( 'CFC_Fac_SendMessage', sendFactionMessage )
-
-local function sendServerTextAlert( len, ply )
-    local msg = net.ReadString()
-    local mtype = net.ReadInt( 4 )
-    local ment = net.ReadEntity()
-
-    if cfcFactions.MainDerma ~= nil then
-        cfcFactions.MainDerma:CreateAlert( msg, mtype )
-    end
-end
-
-net.Receive( 'CFC_Fac_SendServerTextAlert', sendServerTextAlert )
-
-function FetchFactionRefresh( len, ply )
-
-end
-
-net.Receive( "CFC_Fac_FactionRefresh", FetchFactionRefresh )
