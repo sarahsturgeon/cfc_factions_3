@@ -8,6 +8,7 @@ local table = table
 local string = string
 local os = os
 local fpm = cfcFactions.fpm
+local factioneers = cfcFactions.Users
 
 --------------------------------------------------------------------------------------------------------------
 -- FACTIONS MANAGMENT COMMANDS
@@ -75,6 +76,17 @@ local function printFactionPermissions( ply, cmd, args )
 end
 
 concommand.Add( "fpvp_printpermissions", printFactionPermissions )
+
+-- Makes the player leave their faction
+local function leaveFaction( ply, cmd, args )
+    if fpm:hasPermission( ply, "CanLeaveFaction" ) then
+        factioneers:RemoveUser( ply )
+    else
+        cfcFactions:SendNotifcation( "You do not have the permission to leave the faction.", 4, ply )
+    end
+end
+
+concommand.Add( "fpvp_leavefaction", leaveFaction )
 
 --------------------------------------------------------------------------------------------------------------
 -- ADMIN COMMANDS : admin only

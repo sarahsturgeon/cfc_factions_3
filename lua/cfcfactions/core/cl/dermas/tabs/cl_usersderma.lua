@@ -4,30 +4,67 @@ local Panel = {}
 
 
 function Panel:Init()
-    --[[
-    local quickMenu = DermaMenu()
-    quickMenu:SetPos( gui.MouseX(), gui.MouseY() )
+    self:Dock( FILL )
 
-    menu:AddOption( "Invite to Faction", function()
-        --
-    end )
+    self.CategoryList = vgui.Create( "DListView", self )
+    self.CategoryList:Dock( FILL )
+    self.CategoryList:AddColumn( "Steam ID" )
+    self.CategoryList:AddColumn( "Player" )
+    self.CategoryList:AddColumn( "Kills" )
+    self.CategoryList:AddColumn( "Deaths" )
+    self.CategoryList:AddColumn( "Faction Name" )
+    self.CategoryList:AddColumn( "Faction Rank" )
 
-    menu:AddOption( "Copy SteamID", function()
-        --
-    end )
+    local playerList = {}
+    local iterator = 1
 
-    menu:AddOption( "Edit Permissions", function()
-        --
-    end )
+    for _, ply in pairs( player.GetHumans() ) do
+        if ply:IsValid() and ply:IsPlayer() then
+            --self.CategoryList( ply:SteamID(), ply:Name(), ply:Frags(), ply:Deaths(), ply:GetFaction().Name, ply:GetRank() )
+            playerList[ iterator ] = ply
+            iterator = iterator + 1
+        end
+    end
 
-    menu:AddSpacer()
+    function self.CategoryList:OnRowRightClick( id, line )
+        local optionMenu = DermaMenu()
 
-    menu:AddOption( "Kick from Faction", function()
-        --
-    end )
-    ]]
+        optionMenu:AddOption( "Copy SteamID", function()
+            SetClipboardText( line:GetColumnText( 1 ) )
+        end ):SetIcon( "icon16/page_edit.png" )
+
+        optionMenu:AddOption( "Copy FactionID", function()
+            --SetClipboardText( playerList[id]:GetFactionID() )
+        end ):SetIcon( "icon16/page_edit.png" )
+
+        --[[if LocalPlayer():canKick() then
+            optionMenu:AddOption( "Kick Player", function()
+                playerList[id]:KickPlayerFromFaction()
+            end ):SetIcon( "icon16/lock.png" )
+        end]]
+
+        optionMenu:AddOption( "Invite to Faction" ):SetIcon( "icon16/user_add.png" )
+
+        if LocalPlayer():IsAdmin() then
+            optionMenu:AddSpacer()
+
+            local child, parent = optionMenu:AddSubMenu( "Staff Actions" )
+            parent:SetIcon( "icon16/shield.png" )
+
+            child:AddOption( "Kick From Faction", function()
+                --playerList[id]:KickPlayerFromFaction()
+            end ):SetIcon( "icon16/asterisk_yellow.png" )
+
+            child:AddOption( "Ban From Factions", function()
+                --playerList[id]:BanPlayerFromFactions()
+            end ):SetIcon( "icon16/flag_red.png" )
+        end
+
+        optionMenu:Open()
+    end
 end
 
+--[[
 function Panel:Paint( w, h )
 
 end
@@ -35,6 +72,7 @@ end
 function Panel:Think()
 
 end
+]]
 
 vgui.Register( 'D_cfcusersderma', Panel )
 

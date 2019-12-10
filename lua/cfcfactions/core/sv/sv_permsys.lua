@@ -190,7 +190,7 @@ function fpm:hasPermission( player, permission )
         return true
     end
     -- If they can't even access factions, just return false for everything.
-    if table.HasValue( PlayerTable,  "AccessAll" ) then
+    if not table.HasValue( PlayerTable,  "AccessAll" ) then
         return false
     end
 
