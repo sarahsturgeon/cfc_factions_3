@@ -1,17 +1,14 @@
-local cfcFactions = cfcFactions or {}
-local cfg = cfcFactions.Config.Client
-
-
 function cfcFactions:DisplayMenu()
-    if not cfcFactions.MainMenu then
-        cfcFactions.MainMenu = vgui.Create( "D_cfcmainderma" )
+    if not self.MainMenu then
+        self.MainMenu = vgui.Create( "D_cfcmainderma" )
+        self.MainMenu:SetVisible( false ) 
     end
 
-    if cfcFactions.MainMenu:IsVisible() then
-        cfcFactions.MainMenu:Hide()
+    if self.MainMenu:IsVisible() then
+        self.MainMenu:Hide()
         gui.EnableScreenClicker( false )
     else
-        cfcFactions.MainMenu:Show()
+        self.MainMenu:Show()
         gui.EnableScreenClicker( true )
     end
 
@@ -19,28 +16,19 @@ end
 
 function cfcFactions:Think()
 
-    if input.IsKeyDown( cfg.CLIENT_KEY ) and not self.KeyDown then
-        self.KeyDown = true
-    elseif self.KeyDown and not input.IsKeyDown(cfg.CLIENT_KEY) then
-        self.KeyDown = false
-    end
-
-    if not IsValid(self.MainMenu) then
-        --for now, open it clientside but ask server permission for opening it eventually (net handling)
-        self:DisplayMenu()
-    else
-        self.MainMenu:Close()
-    end
-
 end
 
-hook.Add("Think", "CFC_Factionhook_Clientsidemenu", function()
+hook.Add("Think", "CFC_Factionhook_Think", function()
     cfcFactions:Think()
-end)
+end )
 
-net.Receive('CFC_Factionhook_ToggleMenu', function(length)
+net.Receive('CFC_Fac_ToggleDerma', function(length)
     cfcFactions:DisplayMenu()
-end)
+end )
 
-
-
+hook.Add( "PlayerButtonDown", "CFC_Fac_MenukeyDown", function( player, button )
+    if MENU_KEY == button then
+        net.Start("CFC_Fac_RequestDerma")
+        net.SendToServer()
+    end
+end )

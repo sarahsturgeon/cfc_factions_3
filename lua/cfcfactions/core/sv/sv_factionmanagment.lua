@@ -109,3 +109,9 @@ local function factionsPlayerInitialSpawn( player )
 end
 
 
+
+local function UserRequestDerma(len, ply )
+    ply:CFCToggleMenu() 
+end
+
+net.Receive("CFC_Fac_RequestDerma", UserRequestDerma )

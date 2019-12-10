@@ -1,6 +1,3 @@
-local cfcFactions = cfcFactions or {}
-if not CLIENT then return end
-
 -- Resizes all buttons inside a parent equally ( Highest text length is what is used to determine all button's size )
 -- Modifier adds onto size for a fixed amount
 function cfcFactions:ResizeChildrenEqually( parent, modifer )
