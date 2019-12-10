@@ -21,17 +21,17 @@ AddCSLuaFile( "cfcfactions/core/cl/cl_clientstartup.lua" )
 AddCSLuaFile( "cfcfactions/config/cl_config.lua" )
 AddCSLuaFile( "cfcfactions/core/sh/sh_init.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_init.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_mainderma.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_factionsderma.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_usersderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_mainderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_factionsderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_usersderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_alertbox.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_faccreate.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/minis/cl_editfac.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_utilities.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_newsderma.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_creditsderma.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_alertsderma.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/dermas/cl_logsderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_newsderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_creditsderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_alertsderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_logsderma.lua" )
 resource.AddFile( "resource/fonts/coolvetica.ttf" )
 
 
@@ -51,7 +51,7 @@ function cfcFactions:InitializeFactions()
 
     -- Make sure tables exsist
     if sql_db == nil then
-        Error( "Unable to initilize mysql data object. Make sure there are no errors in config." )
+        ErrorNoHalt( "Unable to initilize mysql data object. Make sure there are no errors in config." )
     end
 
     sql_db:initilize()
@@ -108,4 +108,4 @@ local function cfcPlayerSpawn( ply )
     if not IsValid( ply ) then return end
     ply:FetchUserData()
 end
-hook.Add( "PlayerSpawn", "cfcPlayerSpawn", cfcPlayerSpawn( ply ) )
+hook.Add( "PlayerSpawn", "cfcPlayerSpawn", cfcPlayerSpawn )

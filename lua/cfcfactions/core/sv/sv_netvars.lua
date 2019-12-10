@@ -37,6 +37,7 @@ local NamedNetworkVars = {
     "CFC_Fac_RequestDelete", 
     -- Menu
     "CFC_Fac_ToggleDerma",
+    "CFC_Fac_RequestDerma",
     "CFC_Fac_RequestNotifcation",
     "CFC_Fac_SendNotifcation",
     -- Faction Specific Stuff
