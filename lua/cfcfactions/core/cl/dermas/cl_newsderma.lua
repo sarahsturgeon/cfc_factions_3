@@ -1,7 +1,6 @@
 if not CLIENT then return end
 
 local Panel = {}
-cfcFactions:RegisterDermaMenu( "View News", Panel, 10 )
 
 function Panel:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )

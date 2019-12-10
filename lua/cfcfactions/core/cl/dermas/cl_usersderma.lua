@@ -2,7 +2,6 @@ if not CLIENT then return end
 
 local Panel = {}
 
-cfcFactions:RegisterDermaMenu( "View Users", Panel, 1 )
 
 function Panel:Init()
     self:Dock( FILL )

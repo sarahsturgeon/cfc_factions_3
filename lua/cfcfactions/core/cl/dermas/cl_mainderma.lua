@@ -30,58 +30,19 @@ surface.CreateFont( "CFC_Alert_Small",
     }
 )
 
-local cfg = cfcFactions.Config.Client
 local Panel = {}
-local menutabs = {}
-
--- Adds the menu bars and handles adding any extras that aren't apart of hard coded items
-function Panel:SetupMenubars( Menubar )
-        -- Sort by ranking
-        table.sort( cfcFactions.Dermas, function( a, b ) return a.InternalRanking < b.InternalRanking end )
-
-        -- loop through tmpsorttable in order to take advantage of the internal ranking of tabs
-        for n = 1, table.Count( cfcFactions.Dermas ) do
-            local Entry = cfcFactions.Dermas[n]
-            if Entry.InternalButton ~= nil then
-
-
-                -- assign a button to a stripped down cleaned name
-                Entry.InternalButton = vgui.Create( "DButton", Menubar )
-                Entry.InternalButton:Dock( LEFT )
-                Entry.InternalButton:SetText( Entry.InternalName )
-                Entry.InternalButton:SetTall( Menubar:GetTall() + 0.5 )
-                Entry.InternalButton:DockMargin( 25, 0, 0, 0 )
-
-                Entry.InternalButton.DoClick = function()
-                    cfcFactions.CurrentTab = Entry.InternalButton
-
-                    for k = 1, table.Count( cfcFactions.Dermas ) do
-                        local otherbuttons = cfcFactions.Dermas[k]
-
-
-                        -- If current tab == button clicked
-                        if cfcFactions.CurrentTab == otherbuttons.InternalButton then
-                            cfcFactions.CurrentTab:SetEnabled( false )
-                        else
-                            otherbuttons.InternalButton:SetEnabled( true )
-                        end
-                    end
-
-                    --[[
-                        Logic to handle showing the Panel table to subself.Container to view, use and interact with the client
-                        Should be parented and docked. Clicking on another tab will reset this view
-                    ]]--
-                    self:SetMainview( Entry.InternalPanel )
-                end
-            else
-                MsgN( "Unable to create a self.Menubar button!" )
-            end
-        end
-
-        cfcFactions:ResizeChildrenEqually( Menubar, 6 )
-end
+local cfg = cfcFactions.Config.Client
 
 function Panel:Init()
+    -- self.MainMenu:SetTitle(string.format(cfg.DermaHeaderTitle, LocalPlayer():Nick() ) )
+    -- self.MainMenu:SetKeyboardInputEnabled(false)
+    -- self.MainMenu:MakePopup()
+    -- self.MainMenu:SetDraggable(true)
+
+    --self.MainMenu:Center()
+
+
+
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
@@ -97,18 +58,26 @@ function Panel:Init()
     self.CloseButton.DoClick = function()
         cfcFactions:DisplayMenu()
     end
-    
-    -- self.Menubar : Contains the autoloaded elements defined in
-    --  cfcFactions:RegisterDermaMenu( string )
-    --      cfcFactions.Dermas
+
     self.Menubar = vgui.Create( "DPanel", self )
     self.Menubar:DockMargin( 0, 45, 0, 0 )
     self.Menubar:Dock( TOP )
     self.Menubar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
     self.Menubar:SetBackgroundColor( cfg.ColorSchemes.BackgroundPanel )
 
-    -- Load the registered dermas into the Menubar
-    self:SetupMenubars( self.Menubar )
+
+    --Where new menu buttons are added to
+    self.MenuItemFactions = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemUsers = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemAlerts = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemNews = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemOptions = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemCredits = vgui.Create("DButton", self.MenuBar)
+    --pretty paint overrides for menubar
+
+    --
+
+
 
     -- Main self.Container
     self.Container = vgui.Create( "DPanel", self )
@@ -140,13 +109,6 @@ function Panel:Init()
     self.Mainview:SetSize( self:GetWide() - 20, self:GetTall() - 230 )
     self.Mainview:SetPos( ( self:GetWide() / 2 ) - ( self.Mainview:GetWide() / 2 ), 120 )
     self.Mainview:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
-
-    -- set main view to whatever the first Menubar item is
-    if cfcFactions.Dermas[1].InternalPanel ~= nil then
-        self:SetMainview( cfcFactions.Dermas[1].InternalPanel )
-        -- cfcFactions.Dermas[1].InternalButton:SetToggle( true )
-        cfcFactions.Dermas[1].InternalButton:SetEnabled( false )
-    end
 
     -- Debug Status
     self.StatusLabel = vgui.Create( "DLabel", self.Statusbar )
