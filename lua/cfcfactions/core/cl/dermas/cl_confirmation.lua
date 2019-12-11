@@ -18,10 +18,7 @@ function Panel:Init()
 
     local frameDivideA = vgui.Create( "DPanel", self )
     frameDivideA:Dock( FILL )
-
-    function frameDivideA:Paint( w, h )
-
-    end
+    frameDivideA.Paint = nil
 
     local labelTitle = vgui.Create( "DLabel", frameDivideA )
     labelTitle:SetFont( "Trebuchet24" )
@@ -52,12 +49,9 @@ function Panel:Init()
     local buttonYes = vgui.Create( "DButton", frameDivideB )
     buttonYes:Dock( RIGHT )
     buttonYes:DockMargin( 0, 10, 10, 10 )
+    buttonYes.Paint = nil
     buttonYes.DoClick = function()
         frame:Close()
-    end
-
-    function buttonYes:Paint()
-
     end
 
     function buttonYes:PaintOver( w, h )
@@ -73,12 +67,9 @@ function Panel:Init()
     local buttonNo = vgui.Create( "DButton", frameDivideB )
     buttonNo:Dock( RIGHT )
     buttonNo:DockMargin( 0, 10, 10, 10 )
+    buttonNo.Paint = nil
     buttonNo.DoClick = function()
         frame:Close()
-    end
-
-    function buttonNo:Paint()
-
     end
 
     function buttonNo:PaintOver( w, h )
