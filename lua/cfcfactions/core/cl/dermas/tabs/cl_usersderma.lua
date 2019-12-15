@@ -1,11 +1,14 @@
 if not CLIENT then return end
 
-local Panel = {}
+local PANEL = {}
 
 
-function Panel:Init()
+
+function PANEL:Init()
+    self.Rows = {}
+
+
     self:Dock( FILL )
-
     self.CategoryList = vgui.Create( "DListView", self )
     self.CategoryList:Dock( FILL )
     self.CategoryList:AddColumn( "Steam ID" )
@@ -65,16 +68,16 @@ function Panel:Init()
 end
 
 --[[
-function Panel:Paint( w, h )
+function PANEL:Paint( w, h )
 
 end
 
-function Panel:Think()
+function PANEL:Think()
 
 end
 ]]
 
-vgui.Register( 'D_cfcusersderma', Panel )
+vgui.Register( 'D_cfcusersderma', PANEL )
 
 -- TODO: tie into the system
 
