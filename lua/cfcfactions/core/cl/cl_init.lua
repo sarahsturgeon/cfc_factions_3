@@ -1,10 +1,12 @@
 cfcFactions = cfcFactions or {}
 include( "cfcFactions/config/cl_config.lua" )
+include( "cfcFactions/core/cl/cl_colorscheme.lua" )
 include( "cfcfactions/core/cl/cl_clientstartup.lua" )
 include( "cfcfactions/core/sh/sh_init.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_mainderma.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_factionsderma.lua" )
-include( "cfcfactions/core/cl/dermas/tabs/cl_usersderma.lua" )
+include( "cfcfactions/core/cl/dermas/minis/cl_factionpanel.lua")
+include( "cfcfactions/core/cl/dermas/tabs/cl_factioneersderma.lua" )
 include( "cfcfactions/core/cl/dermas/minis/cl_playerpanel.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_newsderma.lua" )
 include( "cfcfactions/core/cl/dermas/minis/cl_alertbox.lua" )
