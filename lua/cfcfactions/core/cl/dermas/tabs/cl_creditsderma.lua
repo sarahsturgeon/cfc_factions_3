@@ -1,8 +1,8 @@
 if not CLIENT then return end
 
-local Panel = {}
+local PANEL = {}
 
-function Panel:Init()
+function PANEL:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
@@ -18,12 +18,12 @@ function Panel:Init()
 
 end
 
-function Panel:Paint( w, h )
+function PANEL:Paint( w, h )
 
 end
 
-function Panel:Think()
+function PANEL:Think()
 
 end
 
-vgui.Register( 'D_cfccreditssderma', Panel )
+vgui.Register( 'D_cfccreditssderma', PANEL )
