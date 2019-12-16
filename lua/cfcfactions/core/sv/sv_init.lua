@@ -18,7 +18,6 @@ include( "cfcfactions/core/sv/sv_player_ext.lua" )
 
 -- cl
 AddCSLuaFile( "cfcfactions/config/cl_config.lua" )
-AddCSLuaFile( "cfcfactions/core/cl/cl_colorscheme.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_clientstartup.lua" )
 AddCSLuaFile( "cfcfactions/core/sh/sh_init.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_init.lua" )
