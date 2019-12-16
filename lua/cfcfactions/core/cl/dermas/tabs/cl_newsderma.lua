@@ -12,7 +12,7 @@ function PANEL:Init()
     self.NewsBox:SetEditable( false )
     self.NewsBox:SetMultiline( true )
 
-    self.NewsBox:SetText( cfcFactions.News )
+    self.NewsBox:SetText( "" )
     string.Replace( self.NewsBox:GetText(), "%s", LocalPlayer():Nick() )
     net.Start( "CFC_Fac_RequestNews" )
 end
