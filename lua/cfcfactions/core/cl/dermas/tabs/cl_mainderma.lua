@@ -207,7 +207,7 @@ function PANEL:Paint( w, h )
 end
 
 function PANEL:Think()
-    cfcFactions:PaintOverride()
+    cfcFactions:PaintOverride(self.MainPanel)
 end
 
 
