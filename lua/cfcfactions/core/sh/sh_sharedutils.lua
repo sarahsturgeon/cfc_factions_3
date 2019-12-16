@@ -47,6 +47,7 @@ cfcFactions.ErrorMessages = {
     ["invalid-string-type"]   = "Not a valid StringType",
     ["invalid-table-type"]    = "Not a valid TableType",
     ["invalid-int-type"]      = "Not a valid IntType",
+    ["invalid-bool-type"]     = "Not a valid BoolType", 
     ["is-in-faction"]         = "Already in a faction",
     ["factions-unavailable"]  = "Unable to create a faction right now",
     ["database-connect-fail"] = "Unable to connect to database.",
