@@ -31,34 +31,51 @@ surface.CreateFont( "CFC_Alert_Small",
 )
 
 local PANEL = {}
+vgui.Register( 'D_cfcmainderma', PANEL )
 
 function PANEL:Init()
-
     --Magic numbers to subtly adjust the panel's size
     local ButtonTextWidthModifier = 7
     local ButtonTextTallModifier = 0.5
 
-    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    --self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+    --self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
     -- window buttons
-    self.CloseButton = vgui.Create( 'DButton', self )
-    self.CloseButton:SetFont( 'CFC_Normal' )
-    self.CloseButton:SetText( '[X]' )
-    self.CloseButton.Paint = function() end
-    self.CloseButton:SetColor( Color( 255, 255, 255 ) )
-    self.CloseButton:SetSize( 32, 32 )
-    self.CloseButton:SetPos( self:GetWide() - 35, 5 )
+    -- self.CloseButton = vgui.Create( 'DButton', self )
+    -- self.CloseButton:SetFont( 'CFC_Normal' )
+    -- self.CloseButton:SetText( '[X]' )
+    -- self.CloseButton.Paint = function() end
+    -- self.CloseButton:SetColor( Color( 255, 255, 255 ) )
+    -- self.CloseButton:SetSize( 32, 32 )
+    -- self.CloseButton:SetPos( self:GetWide() - 35, 5 )
 
-    self.CloseButton.DoClick = function()
-        cfcFactions:DisplayMenu()
-    end
+    -- self.CloseButton.DoClick = function()
+    --     cfcFactions:DisplayMenu()
+    -- end
 
     self.MenuBar = vgui.Create( "DPanel", self )
     self.MenuBar:DockMargin( 0, 45, 0, 0 )
     self.MenuBar:Dock( TOP )
     self.MenuBar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
-    self.MenuBar:SetBackgroundColor( ColorSchemes.BackgroundPANEL )
+    self.MenuBar:SetBackgroundColor( ColorSchemes.BackgroundPanel )
+
+    --Used to manage MenuBar buttons
+    self.ButtonState = {}
+    self.ButtonState.LastPressed = nil
+
+   --Handles what happens when a button is clicked
+    self.ButtonState.HandlePressedEvent = function( button )
+        if not IsValid( button ) then return end
+        if not self.ButtonState.LastPressed == button then
+            if IsValid( self.ButtonState.LastPressed ) then
+                --When a button is pressed, set it to a pressed state
+                self.ButtonState:SetEnabled( true )
+            end
+            self.ButtonState.LastPressed = button
+            button:SetEnabled( false )
+        end
+    end
 
     --
     --Where new menu buttons are added to
@@ -74,66 +91,77 @@ function PANEL:Init()
     self.MenuItemFactions.DoClick = function()
         --local ItemFactioneers = vgui.Create("D_cfcfactionsderma", self.MainView)  
         self:AddToMainView( "D_cfcfactionsderma", "Viewing Factions" )
+        self.ButtonState.HandlePressedEvent( self.MenuItemFactions ) 
     end
     self.MenuItemFactions.Paint = nil
     self.MenuItemFactions:SetColor( ColorSchemes.ButtonText  )
 
     --Users Derma
-    self.MenuItemUsers = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemUsers = vgui.Create( "DButton", self.MenuBar )
     self.MenuItemUsers:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemUsers:Dock( LEFT )
     self.MenuItemUsers:SetText("View Users" )
     self.MenuItemUsers:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemUsers.DoClick = function()
-        --self.MainView:Clear()
         --local ItemFactioneers = vgui.Create("D_cfcuserssderma", self.MainView)
-        self:AddToMainView( "D_cfcuserssderma", "Viewing Users" )   
+        self:AddToMainView( "D_cfcuserssderma", "Viewing Users" )  
+        self.ButtonState.HandlePressedEvent( self.MenuItemUsers )  
     end
     self.MenuItemUsers.Paint = nil
     self.MenuItemUsers:SetColor( ColorSchemes.ButtonText  )
 
     --Alerts Derma
-    self.MenuItemAlerts = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemAlerts = vgui.Create( "DButton", self.MenuBar )
     self.MenuItemAlerts:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemAlerts:Dock( LEFT )
     self.MenuItemAlerts:SetText( "View Logs" )
     self.MenuItemAlerts:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemAlerts.DoClick = function()
     self.MenuItemAlerts:SetEnabled( false )
-        --self.MainView:Clear()
         --local ItemAlerts = vgui.Create("D_cfcalertsderma", self.MainView)   
         self:AddToMainView( "D_cfcalertsderma", "Viewing Alerts" )  
+        self.ButtonState.HandlePressedEvent( self.MenuItemAlerts ) 
     end
     self.MenuItemAlerts.Paint = nil
     self.MenuItemAlerts:SetColor( ColorSchemes.ButtonText  )
 
     --News Derma
-    self.MenuItemNews = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemNews = vgui.Create( "DButton", self.MenuBar )
     self.MenuItemNews:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemNews:Dock( LEFT )
     self.MenuItemNews:SetText( "View News" )
     self.MenuItemNews:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemNews.DoClick = function()
-        --self.MainView:Clear()
         --local ItemNews = vgui.Create("D_cfcnewsderma", self.MainView)
         self:AddToMainView( "D_cfcnewsderma", "Viewing News" )    
+        self.ButtonState.HandlePressedEvent( self.MenuItemNews ) 
     end
     self.MenuItemNews.Paint = nil
     self.MenuItemNews:SetColor( ColorSchemes.ButtonText  )
 
     --Credits Derma
-    self.MenuItemCredits = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemCredits = vgui.Create( "DButton", self.MenuBar )
     self.MenuItemCredits:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemCredits:Dock( LEFT )
     self.MenuItemCredits:SetText( "View Logs" )
     self.MenuItemCredits:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemCredits.DoClick = function()
-        --self.MainView:Clear()
         --local ItemCredits = vgui.Create("D_cfcnewsderma", self.MainView) 
-        --self:AddToMainView( "D_cfcnewsderma", "Viewing News" )     
+        self:AddToMainView( "D_cfcnewsderma", "Viewing News" ) 
+        self.ButtonState.HandlePressedEvent( self.MenuItemCredits )     
     end
     self.MenuItemCredits.Paint = nil
     self.MenuItemCredits:SetColor( ColorSchemes.ButtonText  )
+
+    --Magic numbers to subtly adjust the panel's size
+    local ButtonTextWidthModifier = 7
+    local ButtonTextTallModifier = 0.5
+
+    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+
+
+
 
     -- Main self.Container
     self.Container = vgui.Create( "DPanel", self )
@@ -151,11 +179,11 @@ function PANEL:Init()
     self.Statusbar:SetBackgroundColor( ColorSchemes.ButtonText )
 
     -- alertbox
-    if self.AlertPANEL == nil then
-        self.AlertPANEL = vgui.Create( 'DPanel', self.Container )
-        self.AlertPANEL:Dock( TOP )
-        self.AlertPANEL:SetSize( self.Container:GetWide(), 55 )
-        self.AlertPANEL:SetBackgroundColor( ColorSchemes.ButtonText )
+    if self.AlertPanel == nil then
+        self.AlertPanel = vgui.Create( 'DPanel', self.Container )
+        self.AlertPanel:Dock( TOP )
+        self.AlertPanel:SetSize( self.Container:GetWide(), 55 )
+        self.AlertPanel:SetBackgroundColor( ColorSchemes.ButtonText )
     end
 
     -- sub_self.Container
@@ -164,7 +192,6 @@ function PANEL:Init()
     self.MainView:Dock( TOP )
     self.MainView:SetSize( self:GetWide() - 20, self:GetTall() - 230 )
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
-    --TODO Eventually change this background color to a ColorScheme defined color
     self.MainView:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
 
     -- Debug Status
@@ -203,4 +230,4 @@ function PANEL:Think()
 
 end
 
-vgui.Register( 'D_cfcmainderma', PANEL )
+
