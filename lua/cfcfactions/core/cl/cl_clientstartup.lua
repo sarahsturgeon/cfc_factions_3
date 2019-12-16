@@ -2,7 +2,6 @@
 function cfcFactions:DisplayMenu()
 
     if not self.MainMenu then
-        cfcFactions:InitColorSchemes()
         self.MainMenu = vgui.Create( "D_cfcmainderma" )
         self.MainMenu:SetVisible( false ) 
     end
