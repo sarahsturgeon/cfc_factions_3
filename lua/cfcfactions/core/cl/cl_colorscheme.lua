@@ -163,8 +163,8 @@ function cfcFactions:LoadCustomColorScheme( path )
         local schemefile = string.lower( string.gsub( fileToRead, "%.json$", "" ) )
         --print( schemefile )
 
-        local JSONTable = util.JSONToTable( fileToRead ) 
-        print( util.JSONToTable( fileToRead ) )
+        local JSONTable = util.JSONToTable( schemefile ) 
+        print( util.JSONToTable( schemefile ) )
         cfcFactions.ColorSchemes[schemefile] = JSONTable
         print('Storing ' .. JSONTable.Name .. ' @' .. cfcFactions.ColorSchemes[JSONTable.Name] )
         
