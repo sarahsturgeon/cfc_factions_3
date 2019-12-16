@@ -1,6 +1,5 @@
 cfcFactions = cfcFactions or {}
 include( "cfcFactions/config/cl_config.lua" )
-include( "cfcFactions/core/cl/cl_colorscheme.lua" )
 include( "cfcfactions/core/cl/cl_clientstartup.lua" )
 include( "cfcfactions/core/sh/sh_init.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_mainderma.lua" )

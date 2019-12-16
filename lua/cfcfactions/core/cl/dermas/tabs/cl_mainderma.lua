@@ -54,7 +54,7 @@ function PANEL:Init()
         cfcFactions:DisplayMenu()
     end
 
-    self.MenuBar = vgui.Create( "DPANEL", self )
+    self.MenuBar = vgui.Create( "DPanel", self )
     self.MenuBar:DockMargin( 0, 45, 0, 0 )
     self.MenuBar:Dock( TOP )
     self.MenuBar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
@@ -136,7 +136,7 @@ function PANEL:Init()
     self.MenuItemCredits:SetColor( ColorSchemes.ButtonText  )
 
     -- Main self.Container
-    self.Container = vgui.Create( "DPANEL", self )
+    self.Container = vgui.Create( "DPanel", self )
     self.Container:DockMargin( 0, 0, 0, 0 )
     self.Container:Dock( TOP )
     self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
@@ -144,7 +144,7 @@ function PANEL:Init()
     self.Container:SetBackgroundColor( ColorSchemes.ButtonText )
 
     -- Status Bar
-    self.Statusbar = vgui.Create( "DPANEL", self )
+    self.Statusbar = vgui.Create( "DPanel", self )
     self.Statusbar:DockMargin( 0, 0, 0, 0 )
     self.Statusbar:Dock( BOTTOM )
     self.Statusbar:SetSize( self:GetWide(), self:GetTall()-750 )
@@ -152,14 +152,14 @@ function PANEL:Init()
 
     -- alertbox
     if self.AlertPANEL == nil then
-        self.AlertPANEL = vgui.Create( 'DPANEL', self.Container )
+        self.AlertPANEL = vgui.Create( 'DPanel', self.Container )
         self.AlertPANEL:Dock( TOP )
         self.AlertPANEL:SetSize( self.Container:GetWide(), 55 )
         self.AlertPANEL:SetBackgroundColor( ColorSchemes.ButtonText )
     end
 
     -- sub_self.Container
-    self.MainView = vgui.Create( "DPANEL", self.Container )
+    self.MainView = vgui.Create( "DPanel", self.Container )
     self.MainView:DockMargin( 15, 15, 15, 15 )
     self.MainView:Dock( TOP )
     self.MainView:SetSize( self:GetWide() - 20, self:GetTall() - 230 )
