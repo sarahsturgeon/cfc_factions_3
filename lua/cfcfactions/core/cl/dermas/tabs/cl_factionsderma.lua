@@ -1,4 +1,5 @@
 local PANEL = {}
+vgui.Register( 'D_cfcfactionsderma', PANEL )
 
 function PANEL:Init()
     self.Rows = nil
@@ -82,7 +83,7 @@ function PANEL:Init()
     self.ButtonsGridRight:SetWide( self.NextPage:GetWide() + self.LastPage:GetWide() )
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
-
+    local Test = vgui.Create("D_factionpanel", self.MainContainer )
 end
 
 function PANEL:Paint( w, h )
@@ -95,10 +96,7 @@ end
 
 
 function PANEL:AddFactionRow( faction )
-
     self.Rows[faction] = vgui.Create( "" )
-
-
 end
 
 
@@ -134,4 +132,3 @@ end
 
 net.Receive( "CFC_Fac_FactionRefresh", FactionRefresh )
 
-vgui.Register( 'D_cfcfactionsderma', PANEL )
