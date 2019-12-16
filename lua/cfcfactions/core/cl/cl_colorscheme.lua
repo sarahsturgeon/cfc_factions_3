@@ -17,7 +17,6 @@ local Default = {
             ["Match"] = "DButton",
             ["TextColor"] = Color( 255, 255, 255, 255 ),
             ["TextPressedColor"] = Color( 255, 0, 0, 255 ),
-            ["TextBackground"] = nil
         },
 
 
@@ -84,27 +83,28 @@ local Default = {
 
 
 --GetConVar("fpvp_colorscheme"):GetString()
-cfcFactions.ColorSchemes = cfcFactions.ColorSchemes or {}
 
---CreateClientConVar( string name, string default, boolean shouldsave=true, boolean userinfo=false, string helptext="", number min=nil, number max=nil ) 
-CreateClientConVar( "fpvp_colorscheme", "default", true,  FCVAR_ARCHIVE )
-function cfcFactions:AutoCompleteNames()
+CreateClientConVar( "fpvp_colorscheme", "default", true,  {FCVAR_ARCHIVE, FCVAR_LUA_CLIENT} )
+local function AutoCompleteNames()
     local TableToReturn = {}
     for KEY, CHILD in pairs( cfcFactions.ColorSchemes ) do 
-        table.insert( TableToReturn, CHILD[KEY].Name )
+        table.insert( TableToReturn, string.lower( string.gsub( KEY, "%.json$", "" ) ) )
     end
-    return TableToReturn and TableToReturn or {}
+    return TableToReturn
 end
 
 local function UpdateTheme( ply, cmd, args )
-    if #args == 0 then 
-        return {} 
+    if not args then 
+        return 
     end
     local ArgumentSlice = string.lower( args[1] ) 
-
-
+    local GetConvar = GetConVar("fpvp_colorscheme"):GetString()
+    if ArgumentSlice == GetConvar then
+        Msg("[cfcFactions] Same theme selected")
+        return
+    end
     if cfcFactions.ColorSchemes[ArgumentSlice] then
-        local GetConvar = GetConVar("fpvp_colorscheme"):GetString()
+        RunConsoleCommand( "fpvp_colorscheme", args[1] ) 
         cfcFactions.ColorSchemes.SelectedTheme = string.lower( GetConvar) 
         Msg("Updated theme " .. ArgumentSlice)
     end
@@ -113,6 +113,8 @@ concommand.Add( "fpvp_scheme", UpdateTheme, AutoCompleteNames, "Changes the curr
 
 
 function cfcFactions:InitColorSchemes()
+    self.ColorSchemes = {}
+
     local ConfigPath = "cfcFactions/config/"
     local ConfigName = "clientcfg.json"
     local ConfigFile = ConfigPath .. ConfigName
@@ -157,17 +159,16 @@ end
 function cfcFactions:LoadCustomColorScheme( path )
     local SchemesPath = "cfcfactions/colorschemes/"
     local FullPath = SchemesPath .. path
-
     if file.Exists( FullPath, "DATA" ) then
-        local fileToRead = file.Read( FullPath, "DATA" ) 
-        local schemefile = string.lower( string.gsub( fileToRead, "%.json$", "" ) )
-        --print( schemefile )
-
-        local JSONTable = util.JSONToTable( fileToRead ) 
-        print( util.JSONToTable( fileToRead ) )
-        cfcFactions.ColorSchemes[schemefile] = JSONTable
-        print('Storing ' .. JSONTable.Name .. ' @' .. cfcFactions.ColorSchemes[JSONTable.Name] )
-        
+        local fileToRead = file.Read( FullPath ) 
+        local schemefile = string.lower( string.gsub( path, "%.json$", "" ) )
+        local JSONTable = util.JSONToTable( fileToRead )
+        if JSONTable then
+            if not self.ColorSchemes[schemefile] then
+                
+                self.ColorSchemes[schemefile] = JSONTable
+            end
+        end
     end
 end
 
@@ -207,15 +208,22 @@ function cfcFactions:ApplyColorScheme( panel, panel_override )
 
     local GetConvar = GetConVar("fpvp_colorscheme"):GetString()
     local CurrentScheme = cfcFactions.ColorSchemes[GetConvar]
-
+    --print(panel:GetClassName())
     --Change the actual stuff
+    PrintTable(panel:GetTable())
     if IsValid( CurrentScheme ) then
-        if type( panel ) == "DLabel" and not HasOverride( panel_override ) then
-            panel:SetColor( CurrentScheme.TextColor )
-        elseif type( panel ) == "DButton" and not HasOverride( panel_override ) then
-
-        elseif type( panel ) == "DPanel" and not HasOverride( panel_override ) then
-
+        print("Valid")
+        if pane:GetName()  == "DLabel" and not HasOverride( panel_override ) then
+            local LabelScheme = CurrentScheme.NormalLabel
+            panel:SetColor( LabelScheme.TextColor )
+        elseif pane:GetName() == "DButton" and not HasOverride( panel_override ) then
+            local ButtonScheme = CurrentScheme.NormalButton
+            panel:SetTextColor( ButtonScheme.TextColor )
+            panel:SetBackgroundColor( ButtonScheme.TextBackground )
+            panel:SetText( "Test" )
+        elseif pane:GetName() == "DPanel" and not HasOverride( panel_override ) then
+            local PanelScheme = CurrentScheme.BackgroundMainPanel
+            panel:SetColor( PanelScheme.BackgroundColor )
         elseif HasOverride( panel_override ) then
             --panel = 
         else
@@ -225,11 +233,15 @@ function cfcFactions:ApplyColorScheme( panel, panel_override )
 
 end
 
-function cfcFactions:PaintOverride()
+function cfcFactions:PaintOverride( masterpanel )
     --Dynamically paint over elements
-    if not IsValid( self.MainMenu ) then return end
-    for KEY, CHILD in pairs( self.MainMenu:GetChildren() ) do
-        if IsValid( CHILD ) then
+    if not IsValid( masterpanel ) then return end
+    local Children = masterpanel:GetChildren()
+
+    for KEY, CHILD in pairs( Children ) do
+        if table.Count( CHILD:GetChildren() ) > 0 then
+            self:PaintOverride( CHILD )
+        else
             self:ApplyColorScheme( CHILD )
         end
     end
