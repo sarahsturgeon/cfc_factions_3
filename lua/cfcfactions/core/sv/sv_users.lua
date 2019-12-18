@@ -9,24 +9,6 @@ cfcFactions.Users = cfcFactions.Users or {}
 local factioneers = cfcFactions.Users
 local fpm = cfcFactions.fpm
 
---Function to update clientside of user's data. Not to be used for things like stat updating
-function ReplicateClientsideUser( user , statechanged )
-
-    if tbl == nil or table.IsEmpty( tbl ) then
-        return
-    end
-    if statechanged == nil then statechanged = "NOCHANGE" end
-
-    local CopyOfUserToSend = table.Copy( factioneers:User( user ) )
-    CopyOfUserToSend.CFCPermissions = nil
-    local UserTableJsonified = util.TableToJSON( CopyOfUserToSend, false )
-
-    net.Start( "CFC_Fac_UserRefresh" )  
-        net.WriteString( UserTableJsonified )
-        net.WriteString( statechanged )
-    net.Broadcast()
-
-end
 
 -- What a user should have when first logging into the server
 local function ReturnDefaultTable()
