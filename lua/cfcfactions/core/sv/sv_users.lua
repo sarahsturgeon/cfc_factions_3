@@ -58,7 +58,7 @@ function factioneers:registerUser( user )
     end
 
     if factioneers:UserExists( user ) then
-        -- Error out, already exsists
+        -- Error out if already exist
         return
     end
 
@@ -67,6 +67,7 @@ function factioneers:registerUser( user )
     factioneers[user:SteamID64()] .DisplayName = user:Nick()
     factioneers[user:SteamID64()] .SteamID = user:SteamID()
 
+    --Save to DB!
 end
 
 -- Checks if a user is already registered

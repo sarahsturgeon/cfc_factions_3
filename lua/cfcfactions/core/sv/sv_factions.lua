@@ -387,10 +387,10 @@ local function RequestFactionDetails( len, ply )
 
     -- Pass everything into the edit faction
     -- If editing returns a table, then errors occured
-    if not cfcFactions:EditFaction( TmpID, TmpName, TmpDescription, TmpColor, TmpPrivate, TmpTemporary  ) then
-
-    else
-
+    local Results = cfcFactions:EditFaction( TmpID, TmpName, TmpDescription, TmpColor, TmpPrivate, TmpTemporary  )
+    if table.Count( Results ) > 0   then
+        local ErrorsToSend = 'The following errors occured when editing faction: ' .. table.ToString( Results, "Errors", false ) 
+        cfcFactions:SendNotifcation( ErrorsToSend, 1, TmpOwner )
     end
 end
 
@@ -446,7 +446,7 @@ local function RequestFactionDeletion(len, ply)
         --aka, owner
     else
         --Tell the player they cannot delete the great infinite void of nothingness
-        ErrorNoHalt("Needs Finish", "RequestFactionDeletion(len, ply)" ) 
+        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
     end
 
 end

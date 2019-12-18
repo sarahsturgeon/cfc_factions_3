@@ -78,7 +78,8 @@ cfcFactions.ErrorMessages = {
     ["no-permission-edit"]    = "Unable to edit faction. Missing EditFaction permission.",
     ["no-permission-name"]    = "Unable to edit faction. Missing Editname permission.",
     ["no-permission-color"]   = "Unable to edit faction. Missing EditColor permission.",
-    ["no-permission-invite"]  = "Unable to edit faction. Missing EditInvite permission."
+    ["no-permission-invite"]  = "Unable to edit faction. Missing EditInvite permission.",
+    ["faction-delete-fail"]   = "Unable to delete faction"
 }
 
 function cfcFactions:TimeStamp()
