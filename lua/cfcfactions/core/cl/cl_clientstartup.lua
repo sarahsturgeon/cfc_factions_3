@@ -1,14 +1,15 @@
-
 function cfcFactions:DisplayMenu()
 
-    if not self.MainMenu then
+    if not self.MainFrame then
         self.MainFrame = vgui.Create( "DFrame" )
         self.MainFrame:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+        self.MainFrame:SetDeleteOnClose( false )
+        self.MainFrame.Paint = nil
         self.MainPanel = vgui.Create("D_cfcmainderma", self.MainFrame)
         self.MainPanel:Dock( FILL )
-        
+        self.MainPanel:CopyWidth(  self.MainFrame )
         self.MainFrame:SetVisible( false ) 
-
+        self.MainFrame:SetDraggable( false )
     end
 
     if self.MainFrame:IsVisible() then
@@ -17,7 +18,6 @@ function cfcFactions:DisplayMenu()
         gui.EnableScreenClicker( false )
     else
         self.MainFrame:Show()
-        --self.SetDraggable( true )
         self.MainFrame:SetDraggable( true )
         gui.EnableScreenClicker( true ) 
     end
