@@ -38,21 +38,21 @@ function PANEL:Init()
     local ButtonTextWidthModifier = 7
     local ButtonTextTallModifier = 0.5
 
-    --self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     --self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
     -- window buttons
-    -- self.CloseButton = vgui.Create( 'DButton', self )
-    -- self.CloseButton:SetFont( 'CFC_Normal' )
-    -- self.CloseButton:SetText( '[X]' )
-    -- self.CloseButton.Paint = function() end
-    -- self.CloseButton:SetColor( Color( 255, 255, 255 ) )
-    -- self.CloseButton:SetSize( 32, 32 )
-    -- self.CloseButton:SetPos( self:GetWide() - 35, 5 )
+    self.CloseButton = vgui.Create( 'DButton', self )
+    self.CloseButton:SetFont( 'CFC_Normal' )
+    self.CloseButton:SetText( '[X]' )
+    self.CloseButton.Paint = function() end
+    self.CloseButton:SetColor( Color( 255, 255, 255 ) )
+    self.CloseButton:SetSize( 32, 32 )
+    self.CloseButton:SetPos( self:GetWide() - 45, 5 )
 
-    -- self.CloseButton.DoClick = function()
-    --     cfcFactions:DisplayMenu()
-    -- end
+    self.CloseButton.DoClick = function()
+        cfcFactions:DisplayMenu()
+    end
 
     self.MenuBar = vgui.Create( "DPanel", self )
     self.MenuBar:DockMargin( 0, 45, 0, 0 )
@@ -160,9 +160,6 @@ function PANEL:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
-
-
-
     -- Main self.Container
     self.Container = vgui.Create( "DPanel", self )
     self.Container:DockMargin( 0, 0, 0, 0 )
@@ -212,7 +209,7 @@ function PANEL:AddToMainView( panel, state )
     --Clear any PANELs currently in the main view
     self.MainView:Clear()
     --The actual PANEL to display
-    self.SubMainViewPANEL = vgui.Create( panel, self.MainView)   
+    self.SubMainViewPanel = vgui.Create( panel, self.MainView )   
 
 end
 
