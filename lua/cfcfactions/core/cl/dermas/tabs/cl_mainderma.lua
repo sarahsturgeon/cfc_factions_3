@@ -31,6 +31,7 @@ surface.CreateFont( "CFC_Alert_Small",
 )
 
 local PANEL = {}
+local cfg = ColorSchemes
 vgui.Register( 'D_cfcmainderma', PANEL )
 
 function PANEL:Init()
@@ -62,19 +63,16 @@ function PANEL:Init()
 
     --Used to manage MenuBar buttons
     self.ButtonState = {}
-    self.ButtonState.LastPressed = nil
+    self.LastPressed = nil
 
    --Handles what happens when a button is clicked
     self.ButtonState.HandlePressedEvent = function( button )
-        if not IsValid( button ) then return end
-        if not self.ButtonState.LastPressed == button then
-            if IsValid( self.ButtonState.LastPressed ) then
-                --When a button is pressed, set it to a pressed state
-                self.ButtonState:SetEnabled( true )
-            end
-            self.ButtonState.LastPressed = button
-            button:SetEnabled( false )
+        if not self.LastPressed == nil then
+            self.LastPressed:SetEnabled( true )
         end
+        local ReverseState = not button:IsEnabled() 
+        button:SetEnabled( ReverseState )
+        self.LastPressed = button
     end
 
     --
@@ -194,6 +192,7 @@ function PANEL:Init()
     -- Debug Status
     self.StatusLabel = vgui.Create( "DLabel", self.Statusbar )
     self.StatusLabel:Dock( RIGHT )
+    self.StatusLabel:DockPadding( 0, 0, 5, 0 ) 
     self:ChangeSatus( "Rocking and Rolling" )
 end
 
