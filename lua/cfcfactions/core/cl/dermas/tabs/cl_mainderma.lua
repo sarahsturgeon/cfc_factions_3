@@ -59,7 +59,9 @@ function PANEL:Init()
     self.MenuBar:DockMargin( 0, 45, 0, 0 )
     self.MenuBar:Dock( TOP )
     self.MenuBar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
-    self.MenuBar:SetBackgroundColor( ColorSchemes.BackgroundPanel )
+    self.MenuBar:SetBackgroundColor( cfg.BackgroundPanel )
+
+    
 
     --Used to manage MenuBar buttons
     self.ButtonState = {}
@@ -67,12 +69,13 @@ function PANEL:Init()
 
    --Handles what happens when a button is clicked
     self.ButtonState.HandlePressedEvent = function( button )
-        if not self.LastPressed == nil then
-            self.LastPressed:SetEnabled( true )
-        end
-        local ReverseState = not button:IsEnabled() 
-        button:SetEnabled( ReverseState )
-        self.LastPressed = button
+        -- if not self.LastPressed == nil then
+        --     local LastPressedReversedState = not self.LastPressed:GetEnabled() 
+        --     self.LastPressed:SetEnabled( LastPressedReversedState )
+        -- end
+        -- local ReverseState = not button:IsEnabled() 
+        -- button:SetEnabled( ReverseState )
+        -- self.LastPressed = button
     end
 
     --
@@ -108,6 +111,20 @@ function PANEL:Init()
     self.MenuItemUsers.Paint = nil
     self.MenuItemUsers:SetColor( ColorSchemes.ButtonText  )
 
+    --News Derma
+    self.MenuItemNews = vgui.Create( "DButton", self.MenuBar )
+    self.MenuItemNews:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
+    self.MenuItemNews:Dock( LEFT )
+    self.MenuItemNews:SetText( "View News" )
+    self.MenuItemNews:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
+    self.MenuItemNews.DoClick = function()
+        --local ItemNews = vgui.Create("D_cfcnewsderma", self.MainView)
+        self:AddToMainView( "D_cfcnewsderma", "Viewing News" )    
+        self.ButtonState.HandlePressedEvent( self.MenuItemNews ) 
+    end
+    self.MenuItemNews.Paint = nil
+    self.MenuItemNews:SetColor( ColorSchemes.ButtonText  )
+    
     --Alerts Derma
     self.MenuItemAlerts = vgui.Create( "DButton", self.MenuBar )
     self.MenuItemAlerts:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
@@ -122,20 +139,6 @@ function PANEL:Init()
     end
     self.MenuItemAlerts.Paint = nil
     self.MenuItemAlerts:SetColor( ColorSchemes.ButtonText  )
-
-    --News Derma
-    self.MenuItemNews = vgui.Create( "DButton", self.MenuBar )
-    self.MenuItemNews:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
-    self.MenuItemNews:Dock( LEFT )
-    self.MenuItemNews:SetText( "View News" )
-    self.MenuItemNews:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
-    self.MenuItemNews.DoClick = function()
-        --local ItemNews = vgui.Create("D_cfcnewsderma", self.MainView)
-        self:AddToMainView( "D_cfcnewsderma", "Viewing News" )    
-        self.ButtonState.HandlePressedEvent( self.MenuItemNews ) 
-    end
-    self.MenuItemNews.Paint = nil
-    self.MenuItemNews:SetColor( ColorSchemes.ButtonText  )
 
     --Credits Derma
     self.MenuItemCredits = vgui.Create( "DButton", self.MenuBar )
@@ -161,9 +164,9 @@ function PANEL:Init()
     -- Main self.Container
     self.Container = vgui.Create( "DPanel", self )
     self.Container:DockMargin( 0, 0, 0, 0 )
-    self.Container:Dock( TOP )
-    self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
-    self.Container:SetPos( ( self:GetWide() / 2 ) - ( self.Container:GetWide() / 2 ), 120 )
+    self.Container:Dock( FILL )
+    --self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
+    --self.Container:SetPos( ( self:GetWide() / 2 ) - ( self.Container:GetWide() / 2 ), 120 )
     self.Container:SetBackgroundColor( ColorSchemes.ButtonText )
 
     -- Status Bar
@@ -183,11 +186,11 @@ function PANEL:Init()
 
     -- sub_self.Container
     self.MainView = vgui.Create( "DPanel", self.Container )
-    self.MainView:DockMargin( 15, 15, 15, 15 )
-    self.MainView:Dock( TOP )
+    self.MainView:DockMargin( 0, 0, 0, 0 )
+    self.MainView:Dock( FILL )
     self.MainView:SetSize( self:GetWide() - 20, self:GetTall() - 230 )
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
-    self.MainView:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
+    self.MainView:SetBackgroundColor( cfg.BackgroundPanel )
 
     -- Debug Status
     self.StatusLabel = vgui.Create( "DLabel", self.Statusbar )
@@ -206,9 +209,18 @@ end
 --IE: D_cfcnewsderma, "Viewing News"
 function PANEL:AddToMainView( panel, state )
     --Clear any PANELs currently in the main view
-    self.MainView:Clear()
-    --The actual PANEL to display
-    self.SubMainViewPanel = vgui.Create( panel, self.MainView )   
+    if self.MainView:IsValid() then
+        self.MainView:Clear()
+        --self.MainView = vgui.Create( panel, self.Container )
+        --self.MainView:SetWide( self.Container:GetWide() )  
+        --self.MainView:SetBackgroundColor( Color( 255, 0, 0, 0 ) )
+        --self.MainView:SetBackgroundColor( Color( 255, 0, 0 ) )
+        --The actual PANEL to display
+        self.SubMainViewPanel = vgui.Create( panel, self.MainView )   
+        self.SubMainViewPanel:SetSize( self.MainView:GetWide(), self.MainView:GetTall() )
+        self.SubMainViewPanel:Dock( FILL )
+        --self.SubMainViewPanel:SetBackgroundColor( Color( 255, 0, 0 ) )
+    end
 
 end
 
@@ -219,7 +231,7 @@ function PANEL:Paint( w, h )
         surface.DrawOutlinedRect( 0, 0, w, h )
 
         -- surface.DrawOutlinedRect( 0, 0, w, h )
-        draw.SimpleText( string.format( DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, ColorSchemes.HeaderText )
+        draw.SimpleText( string.format( DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 10, ColorSchemes.HeaderText )
 end
 
 function PANEL:Think()

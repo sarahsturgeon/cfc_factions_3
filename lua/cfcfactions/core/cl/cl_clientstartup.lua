@@ -5,6 +5,7 @@ function cfcFactions:DisplayMenu()
         self.MainFrame:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
         self.MainFrame:SetDeleteOnClose( false )
         self.MainFrame.Paint = nil
+        
         self.MainPanel = vgui.Create("D_cfcmainderma", self.MainFrame)
         self.MainPanel:Dock( FILL )
         self.MainPanel:CopyWidth(  self.MainFrame )
