@@ -4,11 +4,11 @@ local cfg = ColorSchemes
 vgui.Register( 'D_factionpanel', PANEL )
 
 function PANEL:Init()
-    
     self.Faction = nil
 
     self.MainPanel = vgui.Create( "DPanel", self )
     self.MainPanel:Dock( FILL )
+    self.MainPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
     --Locked icon       Faction Name        Faction ID
     self.TopBar = vgui.Create( "DPanel" , self.MainPanel )
@@ -37,14 +37,19 @@ function PANEL:Init()
 
     self.FactionPrivateIcon = vgui.Create( "DImage", self.TopBar )
     self.FactionPrivateIcon:SetImage( "resource/icons/lock_icon/lock_locked.png" )
+    self.FactionPrivateIcon:Dock( LEFT )
 
     self.FactionNameLabel = vgui.Create( "DLabel", self.TopBar )
     self.FactionNameLabel:SetText( self.FactionName )
     self.FactionNameLabel:SetTextColor( cfg.NormalText )
+    self.FactionNameLabel:Dock( LEFT )
+    self.FactionNameLabel:DockPadding( ( self:GetWide() - 100 ), 0, ( self:GetWide() - 100 ), 0, 0)
 
     self.FactionIDLabel = vgui.Create( "DLabel", self.TopBar )
     self.FactionIDLabel:SetText( self.FactionID )
     self.FactionIDLabel:SetTextColor( cfg.NormalText )
+    self.FactionIDLabel:Dock( RIGHT )
+    self.FactionIDLabel:DockPadding( 0, 0, 50, 0 )
 
     self.LeftInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
     self.LeftInnerPanel:Dock( LEFT )

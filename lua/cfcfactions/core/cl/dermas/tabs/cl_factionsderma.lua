@@ -13,7 +13,8 @@ function PANEL:Init()
     self.MainContainer:Dock( FILL )
 
     self.MiddleContainer = vgui.Create( "DPanel", self.MainContainer )
-
+    self.MiddleContainer:Dock( FILL )
+    self.MiddleContainer:SetPaintBorderEnabled( true ) 
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
     self.BottomGrid:Dock( BOTTOM )
@@ -87,6 +88,7 @@ function PANEL:Init()
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
     local Test = vgui.Create("D_factionpanel", self.MiddleContainer )
+    Test:SetSize( self.MiddleContainer:GetWide(), 150)
 
 end
 
