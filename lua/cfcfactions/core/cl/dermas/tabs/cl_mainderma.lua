@@ -95,7 +95,7 @@ function PANEL:Init()
         self.ButtonState.HandlePressedEvent( self.MenuItemFactions ) 
     end
     self.MenuItemFactions.Paint = nil
-    self.MenuItemFactions:SetColor( ColorSchemes.ButtonText  )
+    self.MenuItemFactions:SetColor( cfg.ButtonText  )
 
     --Users Derma
     self.MenuItemUsers = vgui.Create( "DButton", self.MenuBar )
@@ -109,7 +109,7 @@ function PANEL:Init()
         self.ButtonState.HandlePressedEvent( self.MenuItemUsers )  
     end
     self.MenuItemUsers.Paint = nil
-    self.MenuItemUsers:SetColor( ColorSchemes.ButtonText  )
+    self.MenuItemUsers:SetColor( cfg.ButtonText  )
 
     --News Derma
     self.MenuItemNews = vgui.Create( "DButton", self.MenuBar )
@@ -123,8 +123,8 @@ function PANEL:Init()
         self.ButtonState.HandlePressedEvent( self.MenuItemNews ) 
     end
     self.MenuItemNews.Paint = nil
-    self.MenuItemNews:SetColor( ColorSchemes.ButtonText  )
-    
+    self.MenuItemNews:SetColor( cfg.ButtonText  )
+
     --Alerts Derma
     self.MenuItemAlerts = vgui.Create( "DButton", self.MenuBar )
     self.MenuItemAlerts:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
@@ -138,7 +138,7 @@ function PANEL:Init()
         self.ButtonState.HandlePressedEvent( self.MenuItemAlerts ) 
     end
     self.MenuItemAlerts.Paint = nil
-    self.MenuItemAlerts:SetColor( ColorSchemes.ButtonText  )
+    self.MenuItemAlerts:SetColor( cfg.ButtonText  )
 
     --Credits Derma
     self.MenuItemCredits = vgui.Create( "DButton", self.MenuBar )
@@ -152,7 +152,7 @@ function PANEL:Init()
         self.ButtonState.HandlePressedEvent( self.MenuItemCredits )     
     end
     self.MenuItemCredits.Paint = nil
-    self.MenuItemCredits:SetColor( ColorSchemes.ButtonText  )
+    self.MenuItemCredits:SetColor( cfg.ButtonText  )
 
     --Magic numbers to subtly adjust the panel's size
     local ButtonTextWidthModifier = 7
@@ -165,38 +165,18 @@ function PANEL:Init()
     self.Container = vgui.Create( "DPanel", self )
     self.Container:DockMargin( 0, 0, 0, 0 )
     self.Container:Dock( FILL )
-    --self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
+    self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
     --self.Container:SetPos( ( self:GetWide() / 2 ) - ( self.Container:GetWide() / 2 ), 120 )
-    self.Container:SetBackgroundColor( ColorSchemes.ButtonText )
-
-    -- Status Bar
-    self.Statusbar = vgui.Create( "DPanel", self )
-    self.Statusbar:DockMargin( 0, 0, 0, 0 )
-    self.Statusbar:Dock( BOTTOM )
-    self.Statusbar:SetSize( self:GetWide(), self:GetTall()-750 )
-    self.Statusbar:SetBackgroundColor( ColorSchemes.ButtonText )
-
-    -- alertbox
-    if self.AlertPanel == nil then
-        self.AlertPanel = vgui.Create( 'DPanel', self.Container )
-        self.AlertPanel:Dock( TOP )
-        self.AlertPanel:SetSize( self.Container:GetWide(), 55 )
-        self.AlertPanel:SetBackgroundColor( ColorSchemes.ButtonText )
-    end
+    self.Container:SetBackgroundColor( cfg.ButtonText )
 
     -- sub_self.Container
     self.MainView = vgui.Create( "DPanel", self.Container )
     self.MainView:DockMargin( 0, 0, 0, 0 )
     self.MainView:Dock( FILL )
-    self.MainView:SetSize( self:GetWide() - 20, self:GetTall() - 230 )
+    self.MainView:SetSize( self.Container:GetWide() - 20, self.Container:GetTall() - 230 )
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
     self.MainView:SetBackgroundColor( cfg.BackgroundPanel )
 
-    -- Debug Status
-    self.StatusLabel = vgui.Create( "DLabel", self.Statusbar )
-    self.StatusLabel:Dock( RIGHT )
-    self.StatusLabel:DockPadding( 0, 0, 5, 0 ) 
-    self:ChangeSatus( "Rocking and Rolling" )
 end
 
 --Changes the Main Menu status label. 
@@ -211,15 +191,9 @@ function PANEL:AddToMainView( panel, state )
     --Clear any PANELs currently in the main view
     if self.MainView:IsValid() then
         self.MainView:Clear()
-        --self.MainView = vgui.Create( panel, self.Container )
-        --self.MainView:SetWide( self.Container:GetWide() )  
-        --self.MainView:SetBackgroundColor( Color( 255, 0, 0, 0 ) )
-        --self.MainView:SetBackgroundColor( Color( 255, 0, 0 ) )
-        --The actual PANEL to display
         self.SubMainViewPanel = vgui.Create( panel, self.MainView )   
         self.SubMainViewPanel:SetSize( self.MainView:GetWide(), self.MainView:GetTall() )
         self.SubMainViewPanel:Dock( FILL )
-        --self.SubMainViewPanel:SetBackgroundColor( Color( 255, 0, 0 ) )
     end
 
 end
