@@ -8,13 +8,26 @@ function PANEL:Init()
     self.CurrentRequestAmountMin = 1
     self.CurrentRequestAmountMax = 10
 
+    self.ChangeViewPanel = vgui.Create( "DPanel", self )
+    self.ChangeViewPanel:Dock( TOP )
+    self.ChangeViewPanel:SetWide( self:GetWide() )
+    self.ChangeViewPanel:SetTall( 50 )
+
+    self.PrettyView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
+    self.PrettyView:SetText( "Clean View")
+    self.PrettyView:SetValue( true )        
+    self.QuickView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
+    self.QuickView:SetText( "Quick View")
+
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
+    self.MainContainer:SetWide( self:GetWide() )
 
     self.MiddleContainer = vgui.Create( "DPanel", self.MainContainer )
     self.MiddleContainer:Dock( FILL )
     self.MiddleContainer:SetPaintBorderEnabled( true ) 
+    self.MiddleContainer:SetWide( self.MainContainer:GetWide() )
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
     self.BottomGrid:Dock( BOTTOM )
