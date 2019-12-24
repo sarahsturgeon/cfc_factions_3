@@ -1,4 +1,5 @@
 local PANEL = {}
+local cfg = ColorSchemes
 vgui.Register( 'D_cfcfactionsderma', PANEL )
 
 function PANEL:Init()
@@ -8,26 +9,37 @@ function PANEL:Init()
     self.CurrentRequestAmountMin = 1
     self.CurrentRequestAmountMax = 10
 
+    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+
     self.ChangeViewPanel = vgui.Create( "DPanel", self )
     self.ChangeViewPanel:Dock( TOP )
     self.ChangeViewPanel:SetWide( self:GetWide() )
-    self.ChangeViewPanel:SetTall( 50 )
+    self.ChangeViewPanel:SetTall( 15 )
 
     self.PrettyView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
     self.PrettyView:SetText( "Clean View")
-    self.PrettyView:SetValue( true )        
+    self.PrettyView:SetValue( true )
+    self.PrettyView:SizeToContents()
+    self.PrettyView:Dock( LEFT )   
+    --( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom ) 
+    self.PrettyView:DockPadding( 5, 0, 15, 5 )
+
     self.QuickView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
     self.QuickView:SetText( "Quick View")
+    self.QuickView:Dock( LEFT )
+    self.QuickView:SizeToContents()
+    self.QuickView:DockPadding( 15, 0, 10, 5 )
 
-    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
     self.MainContainer:SetWide( self:GetWide() )
+    self.MainContainer:DockPadding( 0, 0, 0, 5 )
 
     self.MiddleContainer = vgui.Create( "DPanel", self.MainContainer )
     self.MiddleContainer:Dock( FILL )
     self.MiddleContainer:SetPaintBorderEnabled( true ) 
     self.MiddleContainer:SetWide( self.MainContainer:GetWide() )
+    self.MiddleContainer:SetBackgroundColor( cfg.BackgroundPanel )
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
     self.BottomGrid:Dock( BOTTOM )
@@ -80,28 +92,20 @@ function PANEL:Init()
     self.ViewFaction:Dock( LEFT )
 
     -- First Page, Previous Page, Next Page, Last Page
-    self.FirstPage = vgui.Create( "DButton", self.ButtonsGridLeft )
-    self.FirstPage:SetText( "<<" )
-    self.FirstPage:Dock( LEFT )
-
     self.PreviousPage = vgui.Create( "DButton", self.ButtonsGridLeft )
-    self.PreviousPage:SetText( "<" )
-    self.PreviousPage:Dock( RIGHT )
+    self.PreviousPage:SetText( "Previous Page" )
+    self.PreviousPage:Dock( LEFT )
 
     self.NextPage = vgui.Create( "DButton", self.ButtonsGridRight )
-    self.NextPage:SetText( ">" )
-    self.NextPage:Dock( LEFT )
+    self.NextPage:SetText( "Next Page" )
+    self.NextPage:Dock( RIGHT )
 
-    self.LastPage = vgui.Create( "DButton", self.ButtonsGridRight )
-    self.LastPage:SetText( ">>" )
-    self.LastPage:Dock( RIGHT )
 
-    self.ButtonsGridLeft:SetWide( self.FirstPage:GetWide() + self.NextPage:GetWide() )
-    self.ButtonsGridRight:SetWide( self.NextPage:GetWide() + self.LastPage:GetWide() )
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
     local Test = vgui.Create("D_factionpanel", self.MiddleContainer )
     Test:SetSize( self.MiddleContainer:GetWide(), 150)
+    Test:SetPaintBorderEnabled( true )
 
 end
 
@@ -113,41 +117,8 @@ function PANEL:Think()
 
 end
 
-
 function PANEL:AddFactionRow( faction )
     self.Rows[faction] = vgui.Create( "" )
 end
 
-
-
-local function factionCreated( len, ply )
-
-    local ClientsideFactionJsonified = net.ReadString()
-    local FactionTable = util.JSONToTable( ClientsideFactionJsonified )
-    cfcFactions.Factions[FactionTable.ID] = FactionTable
-
-end
-
-net.Receive( "CFC_Fac_SendFactionSubmit", factionCreated )
-
-local function factionEdited()
-
-end
-
-local function FactionRefresh()
-    local IncomingJSONVar = net.ReadString()
-    local IncomingState = net.ReadString()
-
-    local Faction = util.JSONToTable( IncomingJSONVar )
-
-    if IncomingState == "DELETED" then
-        cfcFactions.Factions[Faction.ID] = nil
-    else
-        if Faction ~= nil then
-            cfcFactions.Factions[Faction.ID] = Faction
-        end
-    end
-end
-
-net.Receive( "CFC_Fac_FactionRefresh", FactionRefresh )
 

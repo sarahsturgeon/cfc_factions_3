@@ -40,7 +40,7 @@ function PANEL:Init()
     local ButtonTextTallModifier = 0.5
 
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    --self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
     -- window buttons
     self.CloseButton = vgui.Create( 'DButton', self )
@@ -167,7 +167,7 @@ function PANEL:Init()
     self.Container:Dock( FILL )
     self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
     --self.Container:SetPos( ( self:GetWide() / 2 ) - ( self.Container:GetWide() / 2 ), 120 )
-    self.Container:SetBackgroundColor( cfg.ButtonText )
+    self.Container:SetBackgroundColor( cfg.BackgroundDerma )
 
     -- sub_self.Container
     self.MainView = vgui.Create( "DPanel", self.Container )
@@ -177,19 +177,15 @@ function PANEL:Init()
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
     self.MainView:SetBackgroundColor( cfg.BackgroundPanel )
 
+    --Set our default viewing experience to view factions.
+    self:AddToMainView( "D_cfcfactionsderma", "Viewing Factions" )
 end
-
---Changes the Main Menu status label. 
---This is not timed, it is permanent 
-function PANEL:ChangeSatus( text )
-    self.StatusLabel:SetText( text )
-end    
 
 --Which PANEL to display in the main view, along with the state to report back.
 --IE: D_cfcnewsderma, "Viewing News"
 function PANEL:AddToMainView( panel, state )
-    --Clear any PANELs currently in the main view
     if self.MainView:IsValid() then
+        --Clear any PANELs currently in the main view
         self.MainView:Clear()
         self.SubMainViewPanel = vgui.Create( panel, self.MainView )   
         self.SubMainViewPanel:SetSize( self.MainView:GetWide(), self.MainView:GetTall() )
@@ -203,8 +199,6 @@ function PANEL:Paint( w, h )
         draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
         surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
         surface.DrawOutlinedRect( 0, 0, w, h )
-
-        -- surface.DrawOutlinedRect( 0, 0, w, h )
         draw.SimpleText( string.format( DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 10, ColorSchemes.HeaderText )
 end
 
