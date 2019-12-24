@@ -13,18 +13,21 @@ function PANEL:Init()
     --Locked icon       Faction Name        Faction ID
     self.TopBar = vgui.Create( "DPanel" , self.MainPanel )
     self.TopBar:Dock( TOP ) 
+    self.TopBar:SetBackgroundColor( cfg.BackgroundPanel )
 
     self.MiddlePanel = vgui.Create( "DPanel" , self.MainPanel )
     self.MiddlePanel:Dock( FILL )
+    self.MiddlePanel:SetBackgroundColor( cfg.BackgroundPanel )
 
     self.BottomPanel = vgui.Create ( "DPanel" , self.MainPanel )
-
+    self.BottomPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
     --Panel Faction Stats
     --Top Panel
     self.FactionLocked = false
     self.FactionName = "Uninitialized Faction"
     self.FactionID = 0
+
     --Middle Panel
     self.Description = ""
     self.Avatar = ""
@@ -37,29 +40,41 @@ function PANEL:Init()
 
     self.FactionPrivateIcon = vgui.Create( "DImage", self.TopBar )
     self.FactionPrivateIcon:SetImage( "resource/icons/lock_icon/lock_locked.png" )
+    self.FactionPrivateIcon:SetSize( 16, 16 )
     self.FactionPrivateIcon:Dock( LEFT )
+    self.FactionPrivateIcon:DockPadding(2, 0, 2, 0, 0)
 
     self.FactionNameLabel = vgui.Create( "DLabel", self.TopBar )
     self.FactionNameLabel:SetText( self.FactionName )
     self.FactionNameLabel:SetTextColor( cfg.NormalText )
     self.FactionNameLabel:Dock( LEFT )
-    self.FactionNameLabel:DockPadding( ( self:GetWide() - 100 ), 0, ( self:GetWide() - 100 ), 0, 0)
+    -- number paddingLeft, number paddingTop, number paddingRight, number paddingBottom
+    self.FactionNameLabel:DockPadding( 25, 0, 50, 0, 0)
+    self.FactionNameLabel:SizeToContents()
 
     self.FactionIDLabel = vgui.Create( "DLabel", self.TopBar )
     self.FactionIDLabel:SetText( self.FactionID )
     self.FactionIDLabel:SetTextColor( cfg.NormalText )
     self.FactionIDLabel:Dock( RIGHT )
-    self.FactionIDLabel:DockPadding( 0, 0, 50, 0 )
+    self.FactionIDLabel:DockPadding( 0, 0, 5, 0 )
 
     self.LeftInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
     self.LeftInnerPanel:Dock( LEFT )
+    self.LeftInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
+    self.LeftInnerPanel:SetWide( 256 ) 
+
     self.MiddleInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
     self.MiddleInnerPanel:Dock( LEFT )
-    self.RightInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
-    self.RightInnerPanel:Dock( RIGHT )
+    self.MiddleInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
-    self.DescriptionLabel = vgui.Create( "DTextEntry", self.LeftInnerPanel )
-    self.DescriptionLabel:SetText( self.Description )
+    self.RightInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
+    self.RightInnerPanel:Dock( LEFT )
+    self.RightInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
+
+    self.DescriptionLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
+    self.DescriptionLabel:SizeToContents()
+    self.DescriptionLabel:Dock( LEFT )
+
     self.AvatarImage = vgui.Create( "DImage", self.MiddleInnerPanel )
     self.OwnerLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
     self.OwnerLabel:SetText( self.Owner )
@@ -67,6 +82,8 @@ function PANEL:Init()
     self.MembersLabel:SetText( ( self.Members .. "/" .. self.MaxMembers ) )
     self.KillsDeathsLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
     self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "/" .. "Deaths: " .. self.Deaths ) )
+
+    self:SetFactionDescription(nil)
 
 end
 --faction functions to set this panel up
@@ -113,8 +130,14 @@ function PANEL:SetFactionKD( kills, deaths )
     self:SetFactionDeaths( deaths )
 end
 function PANEL:SetFactionDescription( description )
-    self.Description = description
-    self.DescriptionLabel:setText( self.Description )
+    local Text = description
+    if Text == nil then 
+        Text = "No description provided."
+    else
+       Text = string.Trim( Text )
+    end
+    self.Description = Text
+    self.DescriptionLabel:SetText( 'Description: ' .. self.Description )
 end
 function PANEL:GetFactionID()
     local ReturnID = self.FactionID and self.FactionID > 0 or nil 
