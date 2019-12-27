@@ -6,6 +6,7 @@ DermaHeaderTitle = "cfcFactions 3.0 - %s"
 ColorSchemes = {
     HeaderText = Color( 255, 255, 255, 255 ),
     NormalText = Color( 255, 255, 255, 255 ),
+    DarkText = Color( 0, 0, 0, 255 ),
     ImportantText = Color( 255, 0, 0, 255 ),
     ButtonText = Color( 255, 255, 255, 255 ),
     EasterEggText = Color( 153, 51, 255, 255 ),

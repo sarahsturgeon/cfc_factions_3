@@ -154,10 +154,6 @@ function PANEL:Init()
     self.MenuItemCredits.Paint = nil
     self.MenuItemCredits:SetColor( cfg.ButtonText  )
 
-    --Magic numbers to subtly adjust the panel's size
-    local ButtonTextWidthModifier = 7
-    local ButtonTextTallModifier = 0.5
-
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
 
@@ -171,7 +167,7 @@ function PANEL:Init()
 
     -- sub_self.Container
     self.MainView = vgui.Create( "DPanel", self.Container )
-    self.MainView:DockMargin( 0, 0, 0, 0 )
+    self.MainView:DockMargin( 0, 5, 0, 0 )
     self.MainView:Dock( FILL )
     self.MainView:SetSize( self.Container:GetWide() - 20, self.Container:GetTall() - 230 )
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )

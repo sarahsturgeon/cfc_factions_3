@@ -4,7 +4,7 @@ vgui.Register( 'D_cfcfactionsderma', PANEL )
 
 function PANEL:Init()
     self.Rows = nil
-
+    self.Test = {}
     --The number of factions to fetch, by default 1-10
     self.CurrentRequestAmountMin = 1
     self.CurrentRequestAmountMax = 10
@@ -15,6 +15,7 @@ function PANEL:Init()
     self.ChangeViewPanel:Dock( TOP )
     self.ChangeViewPanel:SetWide( self:GetWide() )
     self.ChangeViewPanel:SetTall( 15 )
+    self.ChangeViewPanel:SetBackgroundColor( cfg.InlinePanel )
 
     self.PrettyView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
     self.PrettyView:SetText( "Clean View")
@@ -40,6 +41,17 @@ function PANEL:Init()
     self.MiddleContainer:SetPaintBorderEnabled( true ) 
     self.MiddleContainer:SetWide( self.MainContainer:GetWide() )
     self.MiddleContainer:SetBackgroundColor( cfg.BackgroundPanel )
+
+
+    self.SplitPanelLeft = vgui.Create( "DPanel", self.MainContainer )
+    self.SplitPanelLeft:SetSize( self.MainContainer:GetWide() / 2, self.MainContainer:GetTall() )
+    self.SplitPanelLeft:Dock( LEFT )
+    self.SplitPanelLeft:SetBackgroundColor( cfg.BackgroundPanel )
+
+    self.SplitPanelRight = vgui.Create( "DPanel", self.MainContainer )
+    self.SplitPanelRight:SetSize( self.MainContainer:GetWide() / 2, self.MainContainer:GetTall() )
+    self.SplitPanelRight:Dock( RIGHT )
+    self.SplitPanelRight:SetBackgroundColor( cfg.BackgroundPanel )
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
     self.BottomGrid:Dock( BOTTOM )
@@ -103,10 +115,11 @@ function PANEL:Init()
 
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
-    local Test = vgui.Create("D_factionpanel", self.MiddleContainer )
-    Test:SetSize( self.MiddleContainer:GetWide(), 150)
-    Test:SetPaintBorderEnabled( true )
 
+
+    for K=1, 12 do
+        self:DebugAddFaction( K )  
+    end
 end
 
 function PANEL:Paint( w, h )
@@ -116,9 +129,44 @@ end
 function PANEL:Think()
 
 end
-
+function PANEL:DebugAddFaction( id )
+    local name 
+        local T = ""
+    for N=1, 256 do
+        T = T .. "V"
+    end
+    name = T
+    if self.Test[id] then return end
+    local CurrentNumberOfFactions = #self.Test
+    local PanelToAttach = self.SplitPanelLeft
+    self.Test[id] = {}
+    if CurrentNumberOfFactions >= 6 and CurrentNumberOfFactions < 12 then
+        PanelToAttach = self.SplitPanelRight
+        self.Test[id].SIDE = "RIGHT"
+    elseif CurrentNumberOfFactions >= 0 and CurrentNumberOfFactions <= 6 then
+        PanelToAttach = self.SplitPanelLeft
+        self.Test[id].SIDE = "LEFT"
+    else
+        return
+    end
+    self.Test[id] = vgui.Create("D_factionpanel", PanelToAttach)
+    self.Test[id]:SetSize( PanelToAttach:GetWide(), 100 )
+    self.Test[id]:SetFactionName( name )
+    self.Test[id]:SetFactionID( id )
+    self.Test[id]:SetFactionDescription( "This is a test faction." )
+    self.Test[id]:Dock( TOP )
+    self.Test[id]:SetFactionOwner( LocalPlayer():Nick() )
+    self.Test[id]:SetPaintBorderEnabled( true )
+end
 function PANEL:AddFactionRow( faction )
     self.Rows[faction] = vgui.Create( "" )
+
+    local Test = vgui.Create("D_factionpanel", self.MiddleContainer )
+    Test:SetSize( 355, 100 )
+    Test:SetFactionName( "A test faction")
+    --Test:Dock( TOP )
+    Test:SetPaintBorderEnabled( true )
+
 end
 
 
