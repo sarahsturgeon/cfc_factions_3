@@ -4,8 +4,9 @@ local cfg = ColorSchemes
 vgui.Register( 'D_factionpanel', PANEL )
 
 function PANEL:Init()
+    local fPanel = self
+    self:AddMouseEvent(self)
     self.Faction = nil
-    self:SetSize( 255, 100 )
 
     --Panel Faction Stats
     --Top Panel
@@ -26,118 +27,171 @@ function PANEL:Init()
 
     self.MainPanel = vgui.Create( "DPanel", self )
     self.MainPanel:Dock( FILL )
+    self.MainPanel:DockMargin( 4, 4, 4, 4 )
     self.MainPanel:SetBackgroundColor( cfg.BackgroundDerma )
-    self.MainPanel:SetSize( 355, 100 )
 
     --Locked icon       Faction Name        Faction ID
     self.TopBar = vgui.Create( "DPanel" , self.MainPanel )
     self.TopBar:Dock( TOP ) 
     self.TopBar:DockPadding( 0, 0, 0, 0 )
-    self.TopBar:SetBackgroundColor( self.MainColor )
+    self.TopBar:SetTall( 26 )
+    self:AddMouseEvent(self.TopBar)
+    function self.TopBar:Paint(w, h)
+        surface.SetDrawColor( Color(110, 136, 148) )
+        local lineThickness = 2
+
+        surface.DrawRect( 0, 0, w, h )
+        surface.SetDrawColor( fPanel.MainColor )
+        -- top line
+        surface.DrawRect( 0, h - lineThickness, w, lineThickness )
+        -- bottom line
+        surface.DrawRect( 0, 0, w, lineThickness )
+
+        surface.SetDrawColor( Color(0,0,0) )
+        -- left bar
+        surface.DrawRect( 100, h * 0.2, lineThickness - 1, h * 0.7 )
+        -- right bar
+        surface.DrawRect( w - 100, h * 0.2, lineThickness - 1, h * 0.7 )
+
+    end
 
     self.TopBarLeft = vgui.Create( "DPanel" , self.TopBar )
+    self.TopBarLeft:SetWide( 100 )
     self.TopBarLeft:Dock( LEFT ) 
     self.TopBarLeft:DockPadding( 5, 0, 0, 0 )
-    self.TopBarLeft:SetBackgroundColor( self.MainColor )
-    self.TopBarLeft:SetWide( 25 )
+    self.TopBarLeft.Paint = nil
+
+    -- Right before middle so that Dock Top positions itself correctly
+    self.TopBarRight = vgui.Create( "DPanel" , self.TopBar )
+    self.TopBarRight:SetWide( 100 )
+    self.TopBarRight:Dock( RIGHT ) 
+    self.TopBarRight:DockPadding( 0, 0, 5, 0 )
+    self.TopBarRight:SetBackgroundColor( Color(64, 82, 100) )
+    self.TopBarRight.Paint = nil
 
     self.TopBarMiddle = vgui.Create( "DPanel" , self.TopBar )
-    self.TopBarMiddle:Dock( LEFT ) 
+    self.TopBarMiddle:Dock( TOP ) 
     self.TopBarMiddle:DockPadding( 0, 0, 0, 0 )
     self.TopBarMiddle:SetBackgroundColor( self.MainColor )
-    self.TopBarMiddle:SetWide( 400 )
-
-    self.TopBarRight = vgui.Create( "DPanel" , self.TopBar )
-    self.TopBarRight:Dock( LEFT ) 
-    self.TopBarRight:DockPadding( 100, 0, 0, 0 )
-    self.TopBarRight:SetWide( 150 )
-    --self.TopBarRight:SetBackgroundColor( self.MainColor )
-    self.TopBarRight:SetBackgroundColor( self.MainColor )
+    self.TopBarMiddle.Paint = nil
 
     self.MiddlePanel = vgui.Create( "DPanel" , self.MainPanel )
     self.MiddlePanel:Dock( FILL )
     self.MiddlePanel:SetBackgroundColor( cfg.BackgroundPanel )
 
-    self.BottomPanel = vgui.Create ( "DPanel" , self.MainPanel )
-    self.BottomPanel:SetBackgroundColor( cfg.BackgroundPanel )
-
     self.FactionPrivateIcon = vgui.Create( "DImage", self.TopBarLeft )
-    self.FactionPrivateIcon:SetImage( "resource/icons/lock_icon/lock_locked.png" )
+    self.FactionPrivateIcon:SetImage( "resource/icons/lock.png" )
     self.FactionPrivateIcon:SetSize( 16, 16 )
-    self.FactionPrivateIcon:Dock( LEFT )
-    self.FactionPrivateIcon:DockPadding(2, 0, 2, 0, 0)
+    self.FactionPrivateIcon:AlignLeft( 5 )
+    self.FactionPrivateIcon:CenterVertical()
 
     self.FactionNameLabel = vgui.Create( "DLabel", self.TopBarMiddle )
+    self.FactionNameLabel:SetFont( "CFC_Normal_Bold" )
     self.FactionNameLabel:SetText( self.FactionName )
-    self.FactionNameLabel:SetTextColor( Color(255, 255, 255, 255 ) )
-    self.FactionNameLabel:Dock( LEFT )
-    -- number paddingLeft, number paddingTop, number paddingRight, number paddingBottom
-    self.FactionNameLabel:DockPadding( 15, 0, 0, 0, 0)
-    self.FactionNameLabel:SetWide( self.TopBarMiddle:GetWide() )
+    self.FactionNameLabel:SetTextColor( cfg.DarkText )
+    self.FactionNameLabel:SetContentAlignment( 5 )
+    self.FactionNameLabel:Dock( FILL )
+    self.FactionNameLabel:DockPadding( 0, 0, 0, 0 )
 
     self.FactionIDLabel = vgui.Create( "DLabel", self.TopBarRight )
+    self.FactionIDLabel:SetFont( "CFC_Normal_Bold" )
     self.FactionIDLabel:SetText( self.FactionID )
-    self.FactionIDLabel:SetTextColor( cfg.NormalText )
-    self.FactionIDLabel:Dock( LEFT )
+    self.FactionIDLabel:SetTextColor( cfg.DarkText )
+    self.FactionIDLabel:Dock( FILL )
     self.FactionIDLabel:DockPadding( 0, 0, 0, 0 )
+    self.FactionIDLabel:SetContentAlignment( 6 )
 
     self.LeftInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
     self.LeftInnerPanel:Dock( LEFT )
     self.LeftInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
-    self.LeftInnerPanel:SizeToContents()
 
     self.MiddleInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
-    self.MiddleInnerPanel:Dock( LEFT )
+    self.MiddleInnerPanel:Dock( FILL )
     self.MiddleInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
-    self.MiddleInnerPanel:SizeToContents()
+    self.MiddleInnerPanel:InvalidateLayout( true )
 
     self.RightInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
-    self.RightInnerPanel:Dock( LEFT )
+    self.RightInnerPanel:Dock( RIGHT )
     self.RightInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
-    self.RightInnerPanel:SizeToContents() 
+
+    self.DescriptionTitleLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
+    self.DescriptionTitleLabel:Dock( TOP )
+    self.DescriptionTitleLabel:DockMargin( 8, 5, 5, 0 )
 
     self.DescriptionLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
-    self.DescriptionLabel:SetWide( self.LeftInnerPanel:GetWide() )
-    self.DescriptionLabel:Dock( LEFT )
-    self.DescriptionLabel:SizeToContents()
+    self.DescriptionLabel:Dock( FILL )
+    self.DescriptionLabel:DockMargin( 8, 0, 5, 5 )
+    self.DescriptionLabel:SetContentAlignment( 7 )
+    self.DescriptionLabel:SetWrap( true )
+    self.DescriptionLabel:SetTextColor( Color(180, 180, 180, 255) ) -- Faded text colour, should probably be in ColorSchemes?
 
-    self.AvatarImage = vgui.Create( "DImage", self.MiddleInnerPanel )
-    self.AvatarImage:Dock( TOP )
+    self.AvatarImage = vgui.Create( "DImageCircle", self.MiddleInnerPanel )
+    self.AvatarImage:SetImage( "resource/icons/no_avatar.png" )
+    -- Force the image to be square but max size it can be
+    function self.AvatarImage:PerformLayout()
+        local p = self:GetParent()
+        local w, h = p:GetSize()
+        local size = math.min(w, h) - 15
+        self:SetSize(size, size)
+        self:SetPos( (w-size) / 2, (h-size) / 2 )
+    end
+
     self.OwnerLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
-    self.OwnerLabel:SetText( self.Owner )
+    self.OwnerLabel:SetText( "Owner: " .. self.Owner )
+    self.OwnerLabel:SetContentAlignment( 5 )
     self.OwnerLabel:Dock( TOP )
+    self.OwnerLabel:DockMargin( 5, 5, 5, 0 )
+
     self.MembersLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
-    self.MembersLabel:SetText( ( self.Members .. "/" .. self.MaxMembers ) )
-    self.MembersLabel:Dock( TOP )
+    self.MembersLabel:SetText( "Members: " .. ( self.Members .. "/" .. self.MaxMembers ) )
+    self.MembersLabel:SetContentAlignment( 5 )
+    self.MembersLabel:Dock( FILL )
+    self.MembersLabel:DockMargin( 5, 0, 5, 0 )
+
     self.KillsDeathsLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
-    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "/" .. "Deaths: " .. self.Deaths ) )
-    self.KillsDeathsLabel:Dock( TOP )
+    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths ) )
+    self.KillsDeathsLabel:SetContentAlignment( 5 )
+    self.KillsDeathsLabel:Dock( BOTTOM )
+    self.KillsDeathsLabel:DockMargin( 5, 0, 5, 5 )
 
     self:SetFactionName( "Uninitialized Faction" )
     self:SetFactionDescription(nil)
+    self:SetFactionPrivate( false )
 
-end
---faction functions to set this panel up
-function PANEL:SetFactionName( name )
-    local Name = ""
-    if Name == nil or #Name == 0 then
-        Name = "Uninitialized Faction"
-    else
-        Name = string.Trim( name )
-        if #Name >= 256 then
-            Name = string.Sub( Name, 1, 255 )
+    -- Mouse event wasn't been captured so I put it on EVERYTHING.
+    -- Calls the original, don't worry :)
+    for k, v in pairs(self:GetTable()) do
+        if type(v) == "Panel" then
+            self:AddMouseEvent(v)
         end
     end
-    self.FactionName = Name
-    self.FactionNameLabel:SetText( self.FactionName )
+
+end
+
+function PANEL:PerformLayout(w, h)
+    self.LeftInnerPanel:SetWide(w * 0.4)
+    self.RightInnerPanel:SetWide(w * 0.4)
+end
+
+--faction functions to set this panel up
+function PANEL:SetFactionName( name )
+    if name == nil or #name == 0 then
+        name = "Uninitialized Faction"
+    else
+        name = string.Trim( name )
+        if #name >= 256 then
+            name = string.Sub( name, 1, 255 )
+        end
+    end
+    self.FactionName = name
+    if #name > 30 then
+        name = string.sub(name, 1, 28) .. "..."
+    end
+    self.FactionNameLabel:SetText( name )
 end
 function PANEL:SetFactionPrivate( isprivate )
     self.FactionLocked = isprivate
-    if self.FactionLocked then
-        self.FactionPrivateIcon:SetImage( "resource/icons/lock_icon/lock_locked.png" )
-    else
-        self.FactionPrivateIcon:SetImage( "resource/icons/lock_icon/lock_unlocked.png" )
-    end
+    self.FactionPrivateIcon:SetVisible(self.FactionLocked)
 end
 function PANEL:SetFactionID( id )
     self.FactionID = id
@@ -170,23 +224,45 @@ function PANEL:SetFactionKD( kills, deaths )
     self:SetFactionDeaths( deaths )
 end
 function PANEL:SetFactionDescription( description )
-    local Text = description
-    if Text == nil then 
-        Text = "No description provided."
+    if description == nil then
+        self.DescriptionTitleLabel:SetText("No description provided.")
+        self.Description = ""
     else
-       Text = string.Trim( Text )
+        self.DescriptionTitleLabel:SetText("Description:")
+        self.Description = string.Trim( description )
     end
-    self.Description = Text
-    self.DescriptionLabel:SetText( 'Description: ' .. self.Description )
-    self.LeftInnerPanel:SizeToContents()
+    self.DescriptionLabel:SetText( self.Description )
 end
+
 function PANEL:GetFactionID()
-    local ReturnID = self.FactionID and self.FactionID > 0 or nil 
+    local ReturnID = self.FactionID > 0 and self.FactionID or nil 
     return ReturnID 
 end
 
-function PANEL:OnMousePressed( keyCode ) 
-    if keyCode == MOUSE_FIRST then
-        self:SetPaintBorderEnabled( true ) 
+function PANEL:AddMouseEvent(panel)
+    panel:SetMouseInputEnabled( true )
+    local fPanel = self
+    local oldMousePressed = panel.OnMousePressed
+    function panel:OnMousePressed( keyCode )
+        if keyCode == MOUSE_RIGHT then
+            local Menu = DermaMenu()
+            Menu:AddOption( "Copy ID", function()
+                SetClipboardText(tostring(fPanel:GetFactionID()))
+            end)
+            -- I imagine this will have to work out local player access rights, and a bunch of other shit, so lets out-source it
+            hook.Run("CFC_FactionPanel_PopulateMenu", fPanel, Menu) -- Passes in menu to populate
+            Menu:Open()
+        end
+        if oldMousePressed then
+            oldMousePressed(self, keyCode)
+        end
     end
  end
+
+hook.Add("CFC_FactionPanel_PopulateMenu", "Example", function(panel, Menu)
+    
+    Menu:AddSpacer()
+    Menu:AddOption( "Rename" )
+    Menu:AddOption( "Delete" )
+    -- etc.
+end)

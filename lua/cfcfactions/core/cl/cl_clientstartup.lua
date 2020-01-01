@@ -4,11 +4,11 @@ function cfcFactions:DisplayMenu()
         self.MainFrame = vgui.Create( "DFrame" )
         self.MainFrame:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
         self.MainFrame:SetDeleteOnClose( false )
+        self.MainFrame:Center()
         self.MainFrame.Paint = nil
         
         self.MainPanel = vgui.Create("D_cfcmainderma", self.MainFrame)
         self.MainPanel:Dock( FILL )
-        self.MainPanel:CopyWidth(  self.MainFrame )
         self.MainFrame:SetVisible( false ) 
         self.MainFrame:SetDraggable( false )
     end
@@ -36,9 +36,17 @@ net.Receive('CFC_Fac_ToggleDerma', function(length)
     cfcFactions:DisplayMenu()
 end )
 
+-- TEMP
+-- Seems PlayerButtonDown is being called twice for every key press (on my client at least), causes menu to often not open
+-- Simple shitty temporary fix:
+
+local lastHit = 0
+
 hook.Add( "PlayerButtonDown", "CFC_Fac_MenukeyDown", function( player, button )
-    if MENU_KEY == button then
+    local cTime = CurTime()
+    if MENU_KEY == button and cTime - lastHit > 0.1 then
         net.Start("CFC_Fac_RequestDerma")
         net.SendToServer()
     end
+    lastHit = cTime
 end )
