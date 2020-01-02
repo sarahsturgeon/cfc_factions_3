@@ -46,10 +46,10 @@ function factioneers:registerUser( user )
 
     print('Registering new user #P=' .. user:SteamID64() )
     factioneers[user:SteamID64()]  = ReturnDefaultTable()
-    factioneers[user:SteamID64()] .DisplayName = user:Nick()
-    factioneers[user:SteamID64()] .SteamID = user:SteamID()
+    factioneers[user:SteamID64()].DisplayName = user:Nick()
+    factioneers[user:SteamID64()].SteamID = user:SteamID()
 
-    --Save to DB!
+    --[TODO] Save to DB!
 end
 
 -- Checks if a user is already registered
@@ -79,11 +79,11 @@ local function IsValidString( str )
 end
 
 -- Returns a table of the user's stuff
-function factioneers:User( player ) 
-    if not ( type( player ) == "Player" ) then return nil end
-    if IsValid(player) and player:IsPlayer() then
-        if factioneers:UserExists( player ) then
-            return factioneers[player:SteamID64()]
+function factioneers:User( ply ) 
+    if not ( type( ply ) == "Player" ) then return nil end
+    if IsValid(ply) and ply:IsPlayer() then
+        if factioneers:UserExists( ply ) then
+            return factioneers[ply:SteamID64()]
         end
     else
         return nil

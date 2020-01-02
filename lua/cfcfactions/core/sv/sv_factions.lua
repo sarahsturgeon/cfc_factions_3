@@ -18,13 +18,11 @@ local factioneers = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
 
-local function TrimStringSize(string, max)
-    local TemporaryString = string
+local function TrimStringSize( str, max )
+    local TemporaryString = str
     local MaxCharTrim = max and max > 0 or 32
-     if #TemporaryString > 32 then
-        TemporaryString = string.Trim(TemporaryString)
-        TemporaryString = string.sub( TemporaryString, 1, #TemporaryString and #TemporaryString < MaxCharTrim or MaxCharTrim ) 
-    end   
+    
+    return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
     return TemporaryString
 end
 
@@ -128,15 +126,12 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
         ["NeedsCleanUp"] = false,
         ["Owner"] = factionOwner:SteamID64(),
         ["Ranks"] = cfcFactions.fpm.defaultRanks,
-        ["Temporary"] factionIsTemporary
+        ["Temporary"] = factionIsTemporary
     }
     local FinalFaction = cfcFactions.Factions[PlayerIDStamp]
 
-    -- function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
-
-
     factioneers:UpdateUser( PlayerIDStamp, FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
-    -- SQL: Save to database
+    -- [TODO] SQL: Save to database
     -- function cfcFactions:SaveFaction( factionid )
     -- function cfcFactions:SaveUser( userid )
 
