@@ -4,7 +4,6 @@ File Name: sv_factionmanagment.lua
 Purpose: server-side commands to manipulate cfcFactions
 ]]--
 if not SERVER then return end
-local table = table
 local string = string
 local os = os
 local fpm = cfcFactions.fpm

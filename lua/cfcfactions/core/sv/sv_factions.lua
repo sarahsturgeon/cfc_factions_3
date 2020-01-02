@@ -8,10 +8,8 @@ Global Tables: cfcFactions.Factions
 if not SERVER then return end
 
 local file = file
-local table = table
 local net = net
 local util = util
-local table = table
 local fpm = cfcFactions.fpm
 local cfg = cfcFactions.Config.Server
 local factioneers = cfcFactions.Users
