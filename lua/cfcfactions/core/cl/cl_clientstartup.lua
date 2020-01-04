@@ -2,7 +2,7 @@ function cfcFactions:DisplayMenu()
 
     if not self.MainFrame then
         self.MainFrame = vgui.Create( "DFrame" )
-        self.MainFrame:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+        self.MainFrame:SetSize( math.Clamp( 800, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
         self.MainFrame:SetDeleteOnClose( false )
         self.MainFrame:Center()
         self.MainFrame.Paint = nil

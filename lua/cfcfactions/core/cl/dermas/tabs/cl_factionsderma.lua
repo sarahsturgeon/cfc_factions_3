@@ -60,17 +60,18 @@ function PANEL:Init()
     self.MiddleContainer:SetBackgroundColor( cfg.InlinePanel )
     self.MiddleContainer:InvalidateParent( true )
 
-    self.SplitPanelLeft = vgui.Create( "DPanel", self.MiddleContainer )
-    self.SplitPanelLeft:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
-    self.SplitPanelLeft:AlignLeft()
+    self.SplitPanelLeft = vgui.Create( "DScrollPanel", self.MiddleContainer )
+    --self.SplitPanelLeft:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+    self.SplitPanelLeft:Dock(FILL)
+    self.SplitPanelLeft:GetVBar():SetWide(0)
     self.SplitPanelLeft:SetBackgroundColor( cfg.Transparent )
     self.SplitPanelLeft:InvalidateParent( true )
 
-    self.SplitPanelRight = vgui.Create( "DPanel", self.MiddleContainer )
-    self.SplitPanelRight:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
-    self.SplitPanelRight:AlignRight()
-    self.SplitPanelRight:SetBackgroundColor( cfg.Transparent )
-    self.SplitPanelRight:InvalidateParent( true )
+    -- self.SplitPanelRight = vgui.Create( "DPanel", self.MiddleContainer )
+    -- self.SplitPanelRight:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+    -- self.SplitPanelRight:AlignRight()
+    -- self.SplitPanelRight:SetBackgroundColor( cfg.Transparent )
+    -- self.SplitPanelRight:InvalidateParent( true )
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
     self.BottomGrid:Dock( BOTTOM )
@@ -135,7 +136,7 @@ function PANEL:Init()
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
 
-    for K=1, 10 do
+    for K=1, 5 do
         self:DebugAddFaction( K )  
     end
 end
@@ -143,11 +144,11 @@ end
 -- Fixes weird issue with one of the panels being larger than its parent
 function PANEL:PerformLayout(w, h)
     if self.MiddleContainer then
-        self.SplitPanelLeft:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
-        self.SplitPanelLeft:AlignLeft()
-        self.SplitPanelRight:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
-        self.SplitPanelRight:AlignRight()
-        local h = self.MiddleContainer:GetTall() / 5
+        --self.SplitPanelLeft:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+        --self.SplitPanelLeft:AlignLeft()
+        --self.SplitPanelRight:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+        --self.SplitPanelRight:AlignRight()
+        local h = self.MiddleContainer:GetTall() / 4
         for k, v in pairs(self.Test) do
             v:SetSize( v:GetWide(), h )
         end
@@ -190,9 +191,11 @@ function PANEL:DebugAddFaction( id )
     self.Test[id]:SetFactionID( id )
     self.Test[id]:SetFactionDescription( "This is a test faction. It has a really long description lol, sure do hope it doesn't break anything :)" )
     self.Test[id]:Dock( TOP )
+    self.Test[id]:DockMargin( 100, 10, 100, 10 )
     self.Test[id]:SetFactionPrivate(math.random() > 0.5)
     self.Test[id]:SetFactionOwner( LocalPlayer():Nick() )
     self.Test[id]:SetPaintBorderEnabled( true )
+    self.Test[id]:SetFactionKD(10, 2)
 end
 function PANEL:AddFactionRow( faction )
     self.Rows[faction] = vgui.Create( "" )

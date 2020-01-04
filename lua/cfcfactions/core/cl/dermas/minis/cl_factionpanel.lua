@@ -83,7 +83,7 @@ function PANEL:Init()
     self.FactionPrivateIcon:SetImage( "resource/icons/lock.png" )
     self.FactionPrivateIcon:SetSize( 16, 16 )
     self.FactionPrivateIcon:AlignLeft( 5 )
-    self.FactionPrivateIcon:CenterVertical()
+    self.FactionPrivateIcon:CenterVertical( 0.55 )
 
     self.FactionNameLabel = vgui.Create( "DLabel", self.TopBarMiddle )
     self.FactionNameLabel:SetFont( "CFC_Normal_Bold" )
@@ -114,16 +114,16 @@ function PANEL:Init()
     self.RightInnerPanel:Dock( RIGHT )
     self.RightInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
-    self.DescriptionTitleLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
-    self.DescriptionTitleLabel:Dock( TOP )
-    self.DescriptionTitleLabel:DockMargin( 8, 5, 5, 0 )
+    -- self.DescriptionTitleLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
+    -- self.DescriptionTitleLabel:Dock( TOP )
+    -- self.DescriptionTitleLabel:DockMargin( 8, 5, 5, 0 )
 
-    self.DescriptionLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
+    self.DescriptionLabel = vgui.Create( "DLabel", self.RightInnerPanel )
     self.DescriptionLabel:Dock( FILL )
     self.DescriptionLabel:DockMargin( 8, 0, 5, 5 )
-    self.DescriptionLabel:SetContentAlignment( 7 )
     self.DescriptionLabel:SetWrap( true )
-    self.DescriptionLabel:SetTextColor( Color(180, 180, 180, 255) ) -- Faded text colour, should probably be in ColorSchemes?
+    self.DescriptionLabel:SetContentAlignment( 5 )
+    --self.DescriptionLabel:SetTextColor( Color(180, 180, 180, 255) ) -- Faded text colour, should probably be in ColorSchemes?
 
     self.AvatarImage = vgui.Create( "DImageCircle", self.MiddleInnerPanel )
     self.AvatarImage:SetImage( "resource/icons/no_avatar.png" )
@@ -136,23 +136,23 @@ function PANEL:Init()
         self:SetPos( (w-size) / 2, (h-size) / 2 )
     end
 
-    self.OwnerLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
+    self.OwnerLabel = vgui.Create( "DLabel" , self.LeftInnerPanel )
     self.OwnerLabel:SetText( "Owner: " .. self.Owner )
     self.OwnerLabel:SetContentAlignment( 5 )
     self.OwnerLabel:Dock( TOP )
-    self.OwnerLabel:DockMargin( 5, 5, 5, 0 )
+    self.OwnerLabel:DockMargin( 5, 20, 5, 0 )
 
-    self.MembersLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
+    self.MembersLabel = vgui.Create( "DLabel" , self.LeftInnerPanel )
     self.MembersLabel:SetText( "Members: " .. ( self.Members .. "/" .. self.MaxMembers ) )
     self.MembersLabel:SetContentAlignment( 5 )
     self.MembersLabel:Dock( FILL )
     self.MembersLabel:DockMargin( 5, 0, 5, 0 )
 
-    self.KillsDeathsLabel = vgui.Create( "DLabel" , self.RightInnerPanel )
+    self.KillsDeathsLabel = vgui.Create( "DLabel" , self.LeftInnerPanel )
     self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths ) )
     self.KillsDeathsLabel:SetContentAlignment( 5 )
     self.KillsDeathsLabel:Dock( BOTTOM )
-    self.KillsDeathsLabel:DockMargin( 5, 0, 5, 5 )
+    self.KillsDeathsLabel:DockMargin( 5, 0, 5, 20 )
 
     self:SetFactionName( "Uninitialized Faction" )
     self:SetFactionDescription(nil)
@@ -169,8 +169,8 @@ function PANEL:Init()
 end
 
 function PANEL:PerformLayout(w, h)
-    self.LeftInnerPanel:SetWide(w * 0.4)
-    self.RightInnerPanel:SetWide(w * 0.4)
+    self.LeftInnerPanel:SetWide(w * 0.35)
+    self.RightInnerPanel:SetWide(w * 0.35)
 end
 
 --faction functions to set this panel up
@@ -214,21 +214,26 @@ function PANEL:SetFactionMaxMembers( number )
     self.MembersLabel:SetText( ( self.Members .. "/" .. self.MaxMembers ) )
 end
 function PANEL:SetFactionKills( kills )
-    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "/" .. "Deaths: " .. self.Deaths ) )
+    self.Kills = kills
+    self:UpdateKDLabel()
 end
 function PANEL:SetFactionDeaths( deaths )
-    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "/" .. "Deaths: " .. self.Deaths ) )
+    self.Deaths = deaths
+    self:UpdateKDLabel()
 end
 function PANEL:SetFactionKD( kills, deaths )
     self:SetFactionKills( kills )
     self:SetFactionDeaths( deaths )
 end
+function PANEL:UpdateKDLabel()
+    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths .. "   KD: " .. (math.Round(self.Kills/self.Deaths, 2)) ) )
+end
 function PANEL:SetFactionDescription( description )
     if description == nil then
-        self.DescriptionTitleLabel:SetText("No description provided.")
+        --self.DescriptionTitleLabel:SetText("No description provided.")
         self.Description = ""
     else
-        self.DescriptionTitleLabel:SetText("Description:")
+        --self.DescriptionTitleLabel:SetText("Description:")
         self.Description = string.Trim( description )
     end
     self.DescriptionLabel:SetText( self.Description )

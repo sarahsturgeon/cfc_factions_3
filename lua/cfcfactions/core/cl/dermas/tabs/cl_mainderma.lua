@@ -39,8 +39,7 @@ function PANEL:Init()
     local ButtonTextWidthModifier = 7
     local ButtonTextTallModifier = 0.5
 
-    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:Dock(FILL)
 
     -- window buttons
     self.CloseButton = vgui.Create( 'DButton', self )
@@ -50,6 +49,9 @@ function PANEL:Init()
     self.CloseButton:SetColor( Color( 255, 255, 255 ) )
     self.CloseButton:SetSize( 32, 32 )
     self.CloseButton:SetPos( self:GetWide() - 45, 5 )
+    function self:PerformLayout(w, h)
+        self.CloseButton:SetPos( self:GetWide() - 45, 5 )
+    end
 
     self.CloseButton.DoClick = function()
         cfcFactions:DisplayMenu()
