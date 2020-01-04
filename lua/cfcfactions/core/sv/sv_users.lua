@@ -9,11 +9,13 @@ cfcFactions.Users = cfcFactions.Users or {}
 local factioneers = cfcFactions.Users
 local fpm = cfcFactions.fpm
 
+
 -- What a user should have when first logging into the server
 local function ReturnDefaultTable()
     local PreUserTable = {
+        ["SteamID"] = "",
         ["CFCPermissions"] = {},
-        ["DisplayName"] = nil,
+        ["DisplayName"] = "",
         -- data only pretaining to a user inside a faction
         ["FactionMetadata"] = {
             ["DateAdded"] = cfcFactions:TimeStamp(),
@@ -30,7 +32,7 @@ local function ReturnDefaultTable()
 end
 
 -- Registers a new user to be accessible by factions
-function factioneers:registeruser( user )
+function factioneers:registerUser( user )
 
     if not user:IsPlayer() then
         -- Error out, not a player
@@ -38,19 +40,23 @@ function factioneers:registeruser( user )
     end
 
     if factioneers:UserExists( user ) then
-        -- Error out, already exsists
+        -- Error out if already exist
         return
     end
 
-    factioneers[user:SteamID64()] = ReturnDefaultTable()
+    print('Registering new user #P=' .. user:SteamID64() )
+    factioneers[user:SteamID64()]  = ReturnDefaultTable()
     factioneers[user:SteamID64()].DisplayName = user:Nick()
+    factioneers[user:SteamID64()].SteamID = user:SteamID()
+
+    --[TODO] Save to DB!
 end
 
 -- Checks if a user is already registered
 function factioneers:UserExists( user )
     if not ( user and IsValid( user ) ) then
         -- Error out, not a player
-        return
+        return false
     end
 
     if factioneers[user:SteamID64()] ~= nil then
@@ -72,6 +78,17 @@ local function IsValidString( str )
     return IsValidAndOfType( str, 'string' )
 end
 
+-- Returns a table of the user's stuff
+function factioneers:User( ply ) 
+    if not ( type( ply ) == "Player" ) then return nil end
+    if IsValid(ply) and ply:IsPlayer() then
+        if factioneers:UserExists( ply ) then
+            return factioneers[ply:SteamID64()]
+        end
+    else
+        return nil
+    end
+end
 
 -- Used to update a player's table of associated variables
 function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
@@ -84,7 +101,7 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
     end
 
     if not factioneers:UserExists( user ) then
-        factioneers:registeruser( user )
+        factioneers:registerUser( user )
     end
 
     local userTable = factioneers[user:SteamID64()]
@@ -166,7 +183,7 @@ end
 
 function factioneers:RemoveUser( user )
     factioneers[user:SteamID64()].FactionMetadata = nil
-    factioneers[user:SteamID64()].FactionMetadata = ReturnDefaultTable.FactionMetadata
+    factioneers[user:SteamID64()].FactionMetadata = ReturnDefaultTable().FactionMetadata
 end
 
 function factioneers:HasExistingInvite( user, id )

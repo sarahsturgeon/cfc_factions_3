@@ -33,16 +33,20 @@ local NamedNetworkVars = {
     -- PlayerInfo/State
     "CFC_Fac_RequestPlayerInfo",
     "CFC_Fac_SendPlayerInfo",
+    --Faction Deletion
+    "CFC_Fac_RequestDelete", 
     -- Menu
     "CFC_Fac_ToggleDerma",
     "CFC_Fac_RequestNotifcation",
     "CFC_Fac_SendNotifcation",
-    -- FactionDeletion
-    "CFC_Fac_RequestFactionRemoval",
-    -- UserLeaving
+    -- Faction Specific Stuff
+    "CFC_Fac_FactionRemoval",
+    "CFC_Fac_FactionCreation",
+    "CFC_Fac_FactionEdited",
+
+    -- User Specific Stuff
     "CFC_Fac_FactionUserRemoval",
-    -- FactionsRefresh
-    "CFC_Fac_FactionRefresh"
+
 }
 
 -- loop through and auto gens netvar names
