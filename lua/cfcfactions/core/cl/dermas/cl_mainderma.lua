@@ -81,8 +81,16 @@ function Panel:SetupMenubars( Menubar )
 end
 
 function Panel:Init()
-    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ScrW() / 2 ) - ( self:GetWide() / 2 ), ( ScrH() / 2 ) - ( self:GetTall() / 2 ) )
+    local MAX_WIDTH = 1024
+    local MAX_HEIGHT = 800
+
+    local sizeW = math.Clamp( MAX_WIDTH, 0, ScrW() )
+    local sizeH = math.Clamp( MAX_HEIGHT, 0, ScrH() )
+    self:SetSize( sizeW, sizeH )
+
+    local posX = ( ScrW() / 2 ) - ( self:GetWidt() / 2)
+    local posY = ( ScrH() / 2 ) - ( self:GetTall() / 2 )
+    self:SetPos( posX, posY )
 
     -- window buttons
     self.CloseButton = vgui.Create( "DButton", self )
@@ -154,13 +162,13 @@ function Panel:Init()
 end
 
 function Panel:Paint( w, h )
-        Derma_DrawBackgroundBlur( self )
-        draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
-        surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
-        surface.DrawOutlinedRect( 0, 0, w, h )
+    Derma_DrawBackgroundBlur( self )
+    draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
+    surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
+    surface.DrawOutlinedRect( 0, 0, w, h )
 
-        -- surface.DrawOutlinedRect( 0, 0, w, h )
-        draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText )
+    -- surface.DrawOutlinedRect( 0, 0, w, h )
+    draw.SimpleText( string.format( cfg.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 5, cfg.ColorSchemes.HeaderText )
 end
 
 function Panel:Think()
