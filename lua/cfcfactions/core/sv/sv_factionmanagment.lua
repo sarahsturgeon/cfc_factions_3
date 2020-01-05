@@ -29,7 +29,8 @@ local function allowFactionPermission( ply, cmd, args )
         if fpm:addPermission( ply, args[1] ) == true then
             ply:ChatPrint( string.format( "You have been granted access: %s", args[1] ) )
         else
-            -- TODO: What happens here?
+            -- TODO:
+            Error("TODO: What happens here?")
         end
     else
         ply:ChatPrint( "You require developer level permissions for this command." )
@@ -48,7 +49,8 @@ local function removeFactionPermission( ply, cmd, args )
         if fpm:revokePermission( ply, args[1] ) then
             print( string.format( "Success on removing permission %s", args[1] ) )
         else
-            -- TODO: What happens here?
+            -- TODO:
+            Error("TODO: What happens here?")
         end
     else
         ply:ChatPrint( "You require developer level permissions for this command." )

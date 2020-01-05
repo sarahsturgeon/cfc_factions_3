@@ -232,7 +232,7 @@ end
 function fpm:addPermission( ply, permission )
     local isValidPlayer = IsValid( ply ) or not ply:IsPlayer()
 
-    if not IsValidPlayer then
+    if not isValidPlayer then
         print( "Unable to add permission, invalid ply" )
         return false
     end
