@@ -15,7 +15,8 @@ ColorSchemes = {
     BackgroundButton = Color( 36, 128, 185 ),
     PressedButton = Color( 244, 244, 244 ),
     DebugPanel = Color( 255, 0, 0, 255 ),
-    InlinePanel = Color( 32, 32, 32, 255 )
+    InlinePanel = Color( 32, 32, 32, 255 ),
+    Transparent = Color( 0, 0, 0, 0 )
 }
 MsgType = {
     Error = Color( 255, 0, 0 ),

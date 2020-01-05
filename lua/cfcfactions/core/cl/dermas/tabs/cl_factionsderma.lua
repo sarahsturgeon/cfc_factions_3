@@ -2,6 +2,14 @@ local PANEL = {}
 local cfg = ColorSchemes
 vgui.Register( 'D_cfcfactionsderma', PANEL )
 
+surface.CreateFont("CFC_Normal_Bold", 
+    {
+        font = "arial",
+        size = 17,
+        weight = 800
+    }
+)
+
 function PANEL:Init()
     self.Rows = nil
     self.Test = {}
@@ -9,12 +17,12 @@ function PANEL:Init()
     self.CurrentRequestAmountMin = 1
     self.CurrentRequestAmountMax = 10
 
-    self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
+    self.IsPrettyView = true
 
     self.ChangeViewPanel = vgui.Create( "DPanel", self )
     self.ChangeViewPanel:Dock( TOP )
     self.ChangeViewPanel:SetWide( self:GetWide() )
-    self.ChangeViewPanel:SetTall( 15 )
+    self.ChangeViewPanel:SetTall( 25 )
     self.ChangeViewPanel:SetBackgroundColor( cfg.InlinePanel )
 
     self.PrettyView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
@@ -22,42 +30,54 @@ function PANEL:Init()
     self.PrettyView:SetValue( true )
     self.PrettyView:SizeToContents()
     self.PrettyView:Dock( LEFT )   
-    --( number paddingLeft, number paddingTop, number paddingRight, number paddingBottom ) 
-    self.PrettyView:DockPadding( 5, 0, 15, 5 )
+    self.PrettyView:DockMargin( 5, 0, 0, 0 )
+    self.PrettyView.Label:Dock( RIGHT ) -- Label is badly styled in vgui
+    local factionsDerma = self
+    function self.PrettyView:OnChange(state)
+        factionsDerma:SetIsPrettyView( true )
+    end
+
 
     self.QuickView = vgui.Create( "DCheckBoxLabel", self.ChangeViewPanel )
     self.QuickView:SetText( "Quick View")
-    self.QuickView:Dock( LEFT )
     self.QuickView:SizeToContents()
-    self.QuickView:DockPadding( 15, 0, 10, 5 )
+    self.QuickView:Dock( LEFT )
+    self.QuickView:DockMargin( 15, 0, 0, 0 )
+    self.QuickView.Label:Dock( RIGHT )
+    function self.QuickView:OnChange(state)
+        factionsDerma:SetIsPrettyView( false )
+    end
+
 
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
-    self.MainContainer:SetWide( self:GetWide() )
     self.MainContainer:DockPadding( 0, 0, 0, 5 )
+    self.MainContainer:InvalidateParent( true )
 
     self.MiddleContainer = vgui.Create( "DPanel", self.MainContainer )
     self.MiddleContainer:Dock( FILL )
     self.MiddleContainer:SetPaintBorderEnabled( true ) 
-    self.MiddleContainer:SetWide( self.MainContainer:GetWide() )
-    self.MiddleContainer:SetBackgroundColor( cfg.BackgroundPanel )
+    self.MiddleContainer:SetBackgroundColor( cfg.InlinePanel )
+    self.MiddleContainer:InvalidateParent( true )
 
+    self.SplitPanelLeft = vgui.Create( "DScrollPanel", self.MiddleContainer )
+    --self.SplitPanelLeft:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+    self.SplitPanelLeft:Dock(FILL)
+    self.SplitPanelLeft:GetVBar():SetWide(0)
+    self.SplitPanelLeft:SetBackgroundColor( cfg.Transparent )
+    self.SplitPanelLeft:InvalidateParent( true )
 
-    self.SplitPanelLeft = vgui.Create( "DPanel", self.MainContainer )
-    self.SplitPanelLeft:SetSize( self.MainContainer:GetWide() / 2, self.MainContainer:GetTall() )
-    self.SplitPanelLeft:Dock( LEFT )
-    self.SplitPanelLeft:SetBackgroundColor( cfg.BackgroundPanel )
-
-    self.SplitPanelRight = vgui.Create( "DPanel", self.MainContainer )
-    self.SplitPanelRight:SetSize( self.MainContainer:GetWide() / 2, self.MainContainer:GetTall() )
-    self.SplitPanelRight:Dock( RIGHT )
-    self.SplitPanelRight:SetBackgroundColor( cfg.BackgroundPanel )
+    -- self.SplitPanelRight = vgui.Create( "DPanel", self.MiddleContainer )
+    -- self.SplitPanelRight:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+    -- self.SplitPanelRight:AlignRight()
+    -- self.SplitPanelRight:SetBackgroundColor( cfg.Transparent )
+    -- self.SplitPanelRight:InvalidateParent( true )
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
     self.BottomGrid:Dock( BOTTOM )
     self.BottomGrid:SetWide( self:GetWide() )
     self.BottomGrid:SetTall( 50 )
-    self.BottomGrid:InvalidateParent( true )
+    --self.BottomGrid:InvalidateParent( true )
 
     self.BottomContainerTop = vgui.Create( "DPanel", self.BottomGrid )
     self.BottomContainerTop:Dock( TOP )
@@ -116,9 +136,22 @@ function PANEL:Init()
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
     --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
 
-
-    for K=1, 12 do
+    for K=1, 5 do
         self:DebugAddFaction( K )  
+    end
+end
+
+-- Fixes weird issue with one of the panels being larger than its parent
+function PANEL:PerformLayout(w, h)
+    if self.MiddleContainer then
+        --self.SplitPanelLeft:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+        --self.SplitPanelLeft:AlignLeft()
+        --self.SplitPanelRight:SetSize( self.MiddleContainer:GetWide() / 2, self.MiddleContainer:GetTall() )
+        --self.SplitPanelRight:AlignRight()
+        local h = self.MiddleContainer:GetTall() / 4
+        for k, v in pairs(self.Test) do
+            v:SetSize( v:GetWide(), h )
+        end
     end
 end
 
@@ -129,34 +162,40 @@ end
 function PANEL:Think()
 
 end
+
+function PANEL:SetIsPrettyView( state )
+    self.PrettyView:SetChecked( state )
+    self.QuickView:SetChecked( not state )
+    self.IsPrettyView = state
+end
+
 function PANEL:DebugAddFaction( id )
-    local name 
-        local T = ""
-    for N=1, 256 do
-        T = T .. "V"
+    local name = string.rep("A", 31)
+    if self.Test[id] then 
+        self.Test[id]:Remove()
     end
-    name = T
-    if self.Test[id] then return end
-    local CurrentNumberOfFactions = #self.Test
+
     local PanelToAttach = self.SplitPanelLeft
     self.Test[id] = {}
-    if CurrentNumberOfFactions >= 6 and CurrentNumberOfFactions < 12 then
-        PanelToAttach = self.SplitPanelRight
-        self.Test[id].SIDE = "RIGHT"
-    elseif CurrentNumberOfFactions >= 0 and CurrentNumberOfFactions <= 6 then
+    if id >= 1 and id <= 5 then
         PanelToAttach = self.SplitPanelLeft
-        self.Test[id].SIDE = "LEFT"
+    elseif id >= 6 and id <= 10 then
+        PanelToAttach = self.SplitPanelRight
     else
         return
     end
+
     self.Test[id] = vgui.Create("D_factionpanel", PanelToAttach)
     self.Test[id]:SetSize( PanelToAttach:GetWide(), 100 )
     self.Test[id]:SetFactionName( name )
     self.Test[id]:SetFactionID( id )
-    self.Test[id]:SetFactionDescription( "This is a test faction." )
+    self.Test[id]:SetFactionDescription( "This is a test faction. It has a really long description lol, sure do hope it doesn't break anything :)" )
     self.Test[id]:Dock( TOP )
+    self.Test[id]:DockMargin( 100, 10, 100, 10 )
+    self.Test[id]:SetFactionPrivate(math.random() > 0.5)
     self.Test[id]:SetFactionOwner( LocalPlayer():Nick() )
     self.Test[id]:SetPaintBorderEnabled( true )
+    self.Test[id]:SetFactionKD(10, 2)
 end
 function PANEL:AddFactionRow( faction )
     self.Rows[faction] = vgui.Create( "" )

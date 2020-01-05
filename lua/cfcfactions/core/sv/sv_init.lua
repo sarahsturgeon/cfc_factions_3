@@ -34,7 +34,10 @@ AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_newsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_creditsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_alertsderma.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/dermas/tabs/cl_logsderma.lua" )
+AddCSLuaFile( "cfcfactions/core/cl/dermas/util/d_imagecircle.lua" )
 resource.AddFile( "resource/fonts/coolvetica.ttf" )
+resource.AddFile( "resource/icons/lock.png" )
+resource.AddFile( "resource/icons/no_avatar.png" )
 
 
 function cfcFactions:LoadNews()
@@ -44,7 +47,7 @@ function cfcFactions:LoadNews()
     return NewsFile
 end
 
--- Core function to initilizeFactions
+-- Core function to initializeFactions
 -- Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
     if not SERVER then return end
@@ -53,14 +56,14 @@ function cfcFactions:InitializeFactions()
 
     -- Make sure tables exsist
     if sql_db == nil then
-        ErrorNoHalt( "Unable to initilize mysql data object. Make sure there are no errors in config." )
+        ErrorNoHalt( "Unable to initialize mysql data object. Make sure there are no errors in config." )
     end
 
-    sql_db:initilize()
+    sql_db:initialize()
 
     -- un needed but might as well
-    if not file.IsDir( 'cfcFactions', 'DATA' ) then
-        file.CreateDir( 'cfcFactions', 'DATA' )
+    if not file.IsDir( 'cfcfactions', 'DATA' ) then
+        file.CreateDir( 'cfcfactions', 'DATA' )
     end
 
     if not file.Exists( "cfcfactions/news.txt", "DATA" ) then

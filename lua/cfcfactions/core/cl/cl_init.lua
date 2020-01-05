@@ -14,3 +14,11 @@ include( "cfcfactions/core/cl/cl_utilities.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_creditsderma.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_alertsderma.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_logsderma.lua" )
+include( "cfcfactions/core/cl/dermas/util/d_imagecircle.lua" )
+
+--TODO remove for deployment
+concommand.Add("cfc_factions_reload", function()
+	cfcFactions.MainFrame = nil
+	print("RELOAD")
+	include("cfcfactions/core/cl/cl_init.lua")
+end)
