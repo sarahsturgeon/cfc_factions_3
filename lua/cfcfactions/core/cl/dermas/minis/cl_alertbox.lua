@@ -3,13 +3,11 @@ local cfg = cfcFactions.Config.Client
 
 local Panel = {}
 
-local ErrMsg = nil
-local ErrType = nil
 local AlertInc = 0
 
 function Panel:Init()
     self:SetSize( 250, 50 )
-    if not type( msgtype ) == "table" then msgtype = cfg.MsgType.Msg end
+    if type( msgtype ) ~= "table" then msgtype = cfg.MsgType.Msg end
 
     self.MiniPanel = vgui.Create( "DPanel", self )
     self.MiniPanel:SetSize( self:GetWide(), self:GetTall() )
@@ -23,7 +21,7 @@ function Panel:Init()
     self.ErrMsg = vgui.Create( "DLabel", self.MiniPanel )
     self.ErrMsg:Dock( RIGHT )
     self.ErrMsg:SetColor( msgtype and msgtype ~= nil or Color( 255, 0, 0 ) )
-    self.ErrMsg:SetText( msg and msg ~= nil or cfcFactions.ErrorMessages["general-error"] )
+    self.ErrMsg:SetText( msg or cfcFactions.ErrorMessages["general-error"] )
 
     self.CreationTime = CurTime()
     self.MiniPanel:SetWide( #self.ErrMsg:GetText() * 6 )
@@ -36,8 +34,8 @@ function Panel:Paint()
     self.CreationTime = CurTime()
     self:Remove()
 
-    AlertInc = AlertInc +1
+    AlertInc = AlertInc + 1
 end
 
 -- ui/chat_display_text.wav
-vgui.Register( 'D_cfcalertboxpanel', Panel )
+vgui.Register( "D_cfcalertboxpanel", Panel )
