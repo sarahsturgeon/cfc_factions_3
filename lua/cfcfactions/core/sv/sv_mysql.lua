@@ -8,7 +8,6 @@ Purpose: Core functions that handle saving and loading from the mysql-db. Loads 
 
 require( 'mysqloo' )
 local mysqloo = mysqloo
-local table = table
 local string = string
 
 local config = cfcFactions.Config.Server.MySQL
@@ -90,7 +89,7 @@ function sql_db:initialize()
         end
 
         function q:onError( err, sql )
-            MsgN( string.format( 'CfcFactions MySQLOO: Query Failure: %s \n "%s" ', err, sql ) )
+            MsgN( string.format( "CfcFactions MySQLOO: Query Failure: %s \n '%s' ", err, sql ) )
             MsgN( "When attempting query " )
             MsgN( q )
         end
@@ -119,7 +118,7 @@ function sql_db:escapeQueryArgs( query, ... )
         else
             error( "Unsupported type: " .. type( v ) )
         end
-        safeArgs[#safeArgs+1] = arg
+        safeArgs[#safeArgs + 1] = arg
     end
 
     return string.format( query, unpack( safeArgs ) )
