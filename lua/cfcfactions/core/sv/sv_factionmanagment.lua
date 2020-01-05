@@ -5,7 +5,6 @@ Purpose: server-side commands to manipulate cfcFactions
 ]]--
 if not SERVER then return end
 local string = string
-local os = os
 local fpm = cfcFactions.fpm
 local factioneers = cfcFactions.Users
 
@@ -115,8 +114,8 @@ concommand.Add( "fpvp_factionmenu", factionMenu )
 -- HOOKS
 --------------------------------------------------------------------------------------------------------------
 
-local function factionsPlayerInitialSpawn( player )
-    cfcFactions.fpm:authUser( player )
-end
-
+-- TODO: delete or use
+-- local function factionsPlayerInitialSpawn( player )
+--     cfcFactions.fpm:authUser( player )
+-- end
 
