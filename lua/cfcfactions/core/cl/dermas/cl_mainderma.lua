@@ -32,7 +32,6 @@ surface.CreateFont( "CFC_Alert_Small",
 
 local cfg = cfcFactions.Config.Client
 local Panel = {}
-local menutabs = {}
 
 -- Adds the menu bars and handles adding any extras that aren't apart of hard coded items
 function Panel:SetupMenubars( Menubar )
@@ -83,12 +82,12 @@ end
 
 function Panel:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:SetPos( ( ScrW() / 2 ) - ( self:GetWide() / 2 ), ( ScrH() / 2 ) - ( self:GetTall() / 2 ) )
 
     -- window buttons
-    self.CloseButton = vgui.Create( 'DButton', self )
-    self.CloseButton:SetFont( 'CFC_Normal' )
-    self.CloseButton:SetText( '[X]' )
+    self.CloseButton = vgui.Create( "DButton", self )
+    self.CloseButton:SetFont( "CFC_Normal" )
+    self.CloseButton:SetText( "[X]" )
     self.CloseButton.Paint = function() end
     self.CloseButton:SetColor( Color( 255, 255, 255 ) )
     self.CloseButton:SetSize( 32, 32 )
@@ -122,12 +121,12 @@ function Panel:Init()
     self.Statusbar = vgui.Create( "DPanel", self )
     self.Statusbar:DockMargin( 0, 0, 0, 0 )
     self.Statusbar:Dock( BOTTOM )
-    self.Statusbar:SetSize( self:GetWide(), self:GetTall()-750 )
+    self.Statusbar:SetSize( self:GetWide(), self:GetTall() - 750 )
     self.Statusbar:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
 
     -- alertbox
     if self.AlertPanel == nil then
-        self.AlertPanel = vgui.Create( 'DPanel', self.Container )
+        self.AlertPanel = vgui.Create( "DPanel", self.Container )
         self.AlertPanel:Dock( TOP )
         self.AlertPanel:SetSize( self.Container:GetWide(), 55 )
         self.AlertPanel:SetBackgroundColor( Color( 0, 0, 0, 0 ) )
@@ -214,4 +213,4 @@ function Panel:CreateAlert( msg, type )
     surface.PlaySound( "buttons/button15.wav" )
 end
 
-vgui.Register( 'D_cfcmainderma', Panel )
+vgui.Register( "D_cfcmainderma", Panel )
