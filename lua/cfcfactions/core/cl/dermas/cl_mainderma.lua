@@ -97,7 +97,7 @@ function Panel:Init()
     self.CloseButton.DoClick = function()
         cfcFactions:DisplayMenu()
     end
-    
+
     -- self.Menubar : Contains the autoloaded elements defined in
     --  cfcFactions:RegisterDermaMenu( string )
     --      cfcFactions.Dermas

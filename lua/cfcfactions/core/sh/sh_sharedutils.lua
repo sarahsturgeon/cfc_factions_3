@@ -47,7 +47,7 @@ cfcFactions.ErrorMessages = {
     ["invalid-string-type"]   = "Not a valid StringType",
     ["invalid-table-type"]    = "Not a valid TableType",
     ["invalid-int-type"]      = "Not a valid IntType",
-    ["invalid-bool-type"]     = "Not a valid BoolType", 
+    ["invalid-bool-type"]     = "Not a valid BoolType",
     ["is-in-faction"]         = "Already in a faction",
     ["factions-unavailable"]  = "Unable to create a faction right now",
     ["database-connect-fail"] = "Unable to connect to database.",
@@ -148,11 +148,11 @@ function cfcFactions:SendNotifcation( msg, mtype, player )
 end
 
 
-function cfcFactions.colorToInt( c ) 
+function cfcFactions.colorToInt( c )
     return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
 end
 
-function cfcFactions.intToColor(n)
+function cfcFactions.intToColor( n )
     return Color(
         bit.band( bit.rshift( n, 16 ), 0xFF ),
         bit.band( bit.rshift( n, 8 ), 0xFF ),

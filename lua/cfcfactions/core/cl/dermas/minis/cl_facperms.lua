@@ -13,7 +13,7 @@ function addPermCheckbox( perm, par )
     check:DockMargin( 20, 10, 0, 0 )
     check:SetText( perm )
     check:SetValue( 0 )
-    
+
     function check:OnChange( val )
         -- networking magic goes here
     end
@@ -22,7 +22,7 @@ end
 function Panel:Init()
     self:SetSize( 300, 450 )
     self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
-    
+
     local f = vgui.Create( "DFrame", self )
     f:SetDraggable( false )
     f:Dock( FILL )
@@ -34,7 +34,7 @@ function Panel:Init()
     addPermCheckbox( "ur mom?", f )
     addPermCheckbox( "ur dad?", f )
     addPermCheckbox( "ur bald headed granny?", f )
-    
+
     addPermCategory( "stupid", f )
     addPermCheckbox( "ur mom?", f )
     ]]

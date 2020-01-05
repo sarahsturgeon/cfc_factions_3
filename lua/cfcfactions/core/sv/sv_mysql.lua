@@ -42,16 +42,16 @@ function sql_db:initialize()
                  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                  edited timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                  PRIMARY KEY ( `faction_id` )
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+            ) ENGINE = InnoDB DEFAULT CHARSET = latin1
         ]],
-        
+
         create_ranks_table = sql_db:query [[
             CREATE TABLE IF NOT EXISTS `cfcfactions_rank_data` (
                 faction bigint NOT NULL,
                 rank_name varchar( 100 ) NOT NULL,
                 permissions JSON NOT NULL,
-                UNIQUE KEY unique_rank_faction (rank_name,faction),
-                FOREIGN KEY (faction) REFERENCES cfcfactions_data(faction_id)
+                UNIQUE KEY unique_rank_faction ( rank_name, faction ),
+                FOREIGN KEY ( faction ) REFERENCES cfcfactions_data( faction_id )
                 ON DELETE CASCADE
             )
 
@@ -60,14 +60,14 @@ function sql_db:initialize()
         create_users_table = sql_db:query [[
                 CREATE TABLE IF NOT EXISTS `cfcusers_data` (
                     user_id bigint NOT NULL AUTO_INCREMENT,
-                    steam_id64 varchar(17) NOT NULL UNIQUE,
+                    steam_id64 varchar( 17 ) NOT NULL UNIQUE,
                     faction bigint,
                     faction_rank varchar( 32 ),
                     permissions JSON NOT NULL,
                     PRIMARY KEY( `user_id` ),
-                    FOREIGN KEY (faction) REFERENCES cfcfactions_data(faction_id)
+                    FOREIGN KEY ( faction ) REFERENCES cfcfactions_data( faction_id )
                     ON DELETE SET NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+                ) ENGINE = InnoDB DEFAULT CHARSET = latin1
         ]],
         -- logs, typically related to administrative actions
         create_log_table = sql_db:query [[
@@ -75,11 +75,11 @@ function sql_db:initialize()
                     log_id int NOT NULL AUTO_INCREMENT,
                     user_id bigint NOT NULL,
                     faction_id bigint,
-                    action varchar(100) NOT NULL,
+                    action varchar( 100 ) NOT NULL,
                     info JSON,
                     created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     PRIMARY KEY( `log_id` )
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+                ) ENGINE = InnoDB DEFAULT CHARSET = latin1
         ]],
 
     }
@@ -107,17 +107,17 @@ function sql_db:escapeQueryArgs( query, ... )
 
     for _, v in ipairs( args ) do
         local arg
-        if type(v) == "number" then
-            arg = tostring(v)
-        elseif type(v) == "string" then
-            arg = self:escape(v)
-        elseif type(v) == "boolean" then
-            arg = v and "TRUE" or "FALSE" 
-        elseif type(v) == "table" then
-            local jsonData = util.TableToJSON( v, false ) 
-            arg = self:escape( jsonData ) 
+        if type( v ) == "number" then
+            arg = tostring( v )
+        elseif type( v ) == "string" then
+            arg = self:escape( v )
+        elseif type( v ) == "boolean" then
+            arg = v and "TRUE" or "FALSE"
+        elseif type( v ) == "table" then
+            local jsonData = util.TableToJSON( v, false )
+            arg = self:escape( jsonData )
         else
-            error( "Unsupported type: "..type(v) )
+            error( "Unsupported type: " .. type( v ) )
         end
         safeArgs[#safeArgs+1] = arg
     end
@@ -126,7 +126,7 @@ function sql_db:escapeQueryArgs( query, ... )
 end
 
 local function defaultErrorCallback( self, err, sql )
-    print( "Query failed with err: "..err )
+    print( "Query failed with err: " .. err )
 end
 
 local function defaultSuccessCallback( self, data )
@@ -134,7 +134,7 @@ local function defaultSuccessCallback( self, data )
 end
 
 function sql_db:doQuery( queryString, callback, errorCallback )
-    print(queryString)
+    print( queryString )
     local query = sql_db:query( queryString )
 
     query.onError = errorCallback or defaultErrorCallback
@@ -144,17 +144,17 @@ function sql_db:doQuery( queryString, callback, errorCallback )
 end
 
 --------------------------------------------------------------------------------------------------------------
---factions_data functions
+-- factions_data functions
 --------------------------------------------------------------------------------------------------------------
---creates a new faction with name:string, description:string, color:int, invite:bool, owner:int
+-- creates a new faction with name:string, description:string, color:int, invite:bool, owner:int
 function sql_db:createFaction( factionData, onSuccess, onError )
     local q = [[
-    INSERT INTO cfcfactions_data 
-    (name, description, color, invite, owner)
-    VALUES ( '%s', '%s', %s, %s, %s);
+    INSERT INTO cfcfactions_data
+    ( name, description, color, invite, owner )
+    VALUES ( '%s', '%s', %s, %s, %s );
     ]]
     q = sql_db:escapeQueryArgs(
-        q, 
+        q,
         factionData.name,
         factionData.description,
         factionData.color,
@@ -167,12 +167,12 @@ end
 -- updates a faction with name:string, description:string, color:int, invite:bool, id:int
 function sql_db:updateFaction( factionData, onSuccess, onError )
     local q = [[
-    UPDATE cfcfactions_data SET 
+    UPDATE cfcfactions_data SET
         name = '%s',
         description = '%s',
         color = %s,
         invite = %s,
-        edited=CURRENT_TIMESTAMP
+        edited = CURRENT_TIMESTAMP
     WHERE faction_id = %s;
     ]]
 
@@ -192,12 +192,12 @@ function sql_db:getFaction( id, onSuccess, onError )
     local q = [[
     SELECT * FROM cfcfactions_data WHERE faction_id = %s;
     ]]
-    q = sql_db:escapeQueryArgs(q, id, onSuccess, onError)
-    sql_db:doQuery(q)
+    q = sql_db:escapeQueryArgs( q, id, onSuccess, onError )
+    sql_db:doQuery( q )
 end
 
 -- returns <amount> factions from database starting at start
-function sql_db:getFactions( start, amount, onSuccess, onError)
+function sql_db:getFactions( start, amount, onSuccess, onError )
     local q = [[
     SELECT * FROM cfcfactions_data LIMIT %s, %s;
     ]]
@@ -224,23 +224,23 @@ end
 -- gets a users permissions in their current faction
 function sql_db:getUserFactionPermissions( userId, onSuccess, onError )
     local q = [[
-        SELECT ranks.permissions FROM 
-        cfcfactions_rank_data ranks, cfcusers_data users WHERE 
-        users.user_id=%s AND 
-        ranks.rank_name=users.faction_rank AND 
-        ranks.faction=users.faction;
+        SELECT ranks.permissions FROM
+        cfcfactions_rank_data ranks, cfcusers_data users WHERE
+        users.user_id = %s AND
+        ranks.rank_name = users.faction_rank AND
+        ranks.faction = users.faction;
     ]]
     q = sql_db:escapeQueryArgs( q, userId )
-    sql_db:doQuery( q, onSuccess, onError)
+    sql_db:doQuery( q, onSuccess, onError )
 end
 ----------------------------------------------------------------------------------------------------------
---user_data functions
+-- user_data functions
 --------------------------------------------------------------------------------------------------------------
 function sql_db:createUser( steamId, onSuccess, onError )
     local q = [[
     INSERT IGNORE INTO cfcusers_data
-    (steam_id64)
-    VALUES ('%s');
+    ( steam_id64 )
+    VALUES ( '%s' );
     ]]
     q = sql_db:escapeQueryArgs( q, steamId )
     sql_db:doQuery( q, onSuccess, onError )
@@ -249,10 +249,10 @@ end
 -- updates a user with faction:int, faction_rank:string, id:int
 function sql_db:updateUser( userData, onSuccess, onError )
     local q =  [[
-    UPDATE cfcusers_data SET 
+    UPDATE cfcusers_data SET
         faction = %s,
         faction_rank = '%s'
-    WHERE user_id=%s;
+    WHERE user_id = %s;
     ]]
     q = sql_db:escapeQueryArgs(
         q,
@@ -280,23 +280,23 @@ function sql_db:getUserFromSteamID( steamId, onSuccess, onError )
 end
 
 -- returns <amount> users from database starting at start
-function sql_db:getUsers( start, amount, onSuccess, onError)
+function sql_db:getUsers( start, amount, onSuccess, onError )
     local q = [[
     SELECT * FROM cfcusers_data LIMIT %s, %s;
     ]]
     q = sql_db:escapeQueryArgs( q, start, amount )
-    sql_db:doQuery(q, onSuccess, onError )
+    sql_db:doQuery( q, onSuccess, onError )
 end
 
 ---------------------------------------------------------------------------------------------------------------------
---logs
+-- logs
 ---------------------------------------------------------------------------------------------------------------------
 -- creates a new log with user_id:int, faction_id:int, action:string, info:table
 function sql_db:createLog( logData, onSuccess, onError )
     local q = [[
     INSERT INTO cfcfactions_log
-        (user_id, faction_id, action, info)
-        VALUES (%s, %s, '%s', '%s');
+        ( user_id, faction_id, action, info )
+        VALUES ( %s, %s, '%s', '%s' );
     ]]
     q = sql_db:escapeQueryArgs(
         q,

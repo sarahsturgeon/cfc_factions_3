@@ -8,12 +8,12 @@ function cfcFactions:GetUser( ply )
     if SERVER then
         return cfcFactions.Users[ply:SteamID64()]
     else
-        --clientside get the user 
+        -- clientside get the user
     end
 end
 
---old function, make sure to redo when this is called
---should return a table of your fellow factioneers ( of same id )
+-- old function, make sure to redo when this is called
+-- should return a table of your fellow factioneers ( of same id )
 function cfcFactions:GetFactionUsers( factionid )
     local tmp = {}
     for _, ply in pairs( cfcFactions.Users ) do

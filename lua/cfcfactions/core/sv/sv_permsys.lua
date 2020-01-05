@@ -218,7 +218,7 @@ function fpm:addPermission( player, permission )
          return false
     end
 
-    local usr = factioneers:User( player ) 
+    local usr = factioneers:User( player )
     if fpm:IsSpecialPermission( permission ) == false then
         table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )
     else

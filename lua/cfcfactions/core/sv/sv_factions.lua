@@ -19,19 +19,19 @@ cfcFactions.Factions = cfcFactions.Factions or {}
 local function TrimStringSize( str, max )
     local TemporaryString = str
     local MaxCharTrim = max and max > 0 or 32
-    
+
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
     return TemporaryString
 end
 
 -- Instead of generating a random ID, we'll just fetch total factions + 1
 local function GenerateID()
-    --In the future, grab factions from DB and increment by 1 for total factions
+    -- In the future, grab factions from DB and increment by 1 for total factions
     return ( ( #cfcFactions.Factions ) + 1 )
 end
 
 -- function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
-function cfcFactions:Faction( id ) 
+function cfcFactions:Faction( id )
     return cfcFactions.Factions[id]
 end
 
@@ -39,7 +39,7 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     if not IsValid( ply ) then
         return
     end
-    --change to look up total_factions = total_factions + 1
+    -- change to look up total_factions = total_factions + 1
     local TmpUnqID = GenerateID()
 
     local factionOwner = ply
@@ -99,9 +99,9 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
         factionIsTemporary = false
     end
 
-    --Lets keep this short, no need for a book in a name or description. 
-    factionName = TrimStringSize(factionName, 25)
-    factionDescription = TrimStringSize(factionDescription, 255)
+    -- Lets keep this short, no need for a book in a name or description.
+    factionName = TrimStringSize( factionName, 25 )
+    factionDescription = TrimStringSize( factionDescription, 255 )
 
 
     local CurrentTimeStamp = cfcFactions:TimeStamp()
@@ -135,9 +135,9 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
 
     -- Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, PlayerIDStamp )
-    
+
     net.Start( "CFC_Fac_FactionCreation" )
-        --private, name, description, owner, k/d, id
+        -- private, name, description, owner, k/d, id
         net.WriteInt( FinalFaction.ID, 32 )
         net.WriteBool( FinalFaction.Invite )
         net.WriteString( FinalFaction.Name )
@@ -154,7 +154,7 @@ end
 
 -- Checks a specifc string to see if it is unique amongst other factions.
 function cfcFactions:isUniqueName( faction_name )
-    --TODO: Change to check this on SQL side, not server!
+    -- TODO: Change to check this on SQL side, not server!
     for k, v in pairs( cfcFactions.Factions ) do
         if string.lower( string.Trim( v.Name ) ) == string.lower( string.Trim( faction_name ) ) then
             return false
@@ -192,16 +192,16 @@ end
 -- Edits a faction based on ID, player is who ever is editing it
 function cfcFactions:EditFaction( id, name, description, color, private, temporary  )
     local ErrorsToReturn = {}
-    local EditingFaction = cfcFactions.Factions[id] 
+    local EditingFaction = cfcFactions.Factions[id]
     ----------------
     --[type checks]
     ----------------
 
-    --Note: Since moving functions permission and type checking out to a net Receiver
-    --We cannot do anything with "Players" nor send a player message from here
+    -- Note: Since moving functions permission and type checking out to a net Receiver
+    -- We cannot do anything with "Players" nor send a player message from here
 
-    --Solution: this function will return a value on success or failure, if failure, the outer
-    --receiver can handle what to do
+    -- Solution: this function will return a value on success or failure, if failure, the outer
+    -- receiver can handle what to do
 
     -- if not type( util.GetBySteamID64( tbl.Owner ) ) == "Player" then
     --     -- Send Alert -> Not a valid PlayerType
@@ -218,43 +218,43 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
 
     if not cfcFactions:IsValidFaction( EditingFaction ) or table.IsEmpty( EditingFaction ) then
-        table.insert( ErrorsToReturn, "404-faction")
+        table.insert( ErrorsToReturn, "404-faction" )
     end
 
     if not type( EditName ) == "string" then
-        table.insert( ErrorsToReturn, "invalid-string-type")
+        table.insert( ErrorsToReturn, "invalid-string-type" )
     else
 
     end
 
     if not type( EditDescription ) == "string" then
-        table.insert( ErrorsToReturn, "invalid-string-type")
+        table.insert( ErrorsToReturn, "invalid-string-type" )
     else
 
     end
 
     if not type( EditColor ) == "Color" then
-        table.insert( ErrorsToReturn, "invalid-table-type")
+        table.insert( ErrorsToReturn, "invalid-table-type" )
     else
 
     end
 
     if not type( EditPrivate ) == "boolean" then
-        table.insert( ErrorsToReturn, "invalid-bool-type")
+        table.insert( ErrorsToReturn, "invalid-bool-type" )
     else
 
     end
 
     if not type( EditTemporary ) == "string" then
-        table.insert( ErrorsToReturn, "invalid-string-type")
+        table.insert( ErrorsToReturn, "invalid-string-type" )
     else
 
     end
 
-    EditName = TrimStringSize(EditName, 25)
-    EditDescription = TrimStringSize(EditDescription, 255)
+    EditName = TrimStringSize( EditName, 25 )
+    EditDescription = TrimStringSize( EditDescription, 255 )
 
-    --Finish up and ether edit, or return the errors
+    -- Finish up and ether edit, or return the errors
     if table.Count( ErrorsToReturn > 0 ) then
         return ErrorsToReturn
     else
@@ -269,10 +269,10 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
         hook.Call( "CFC_Factionhook_FactionEdited" )
 
 
-        --TODO! be sure to call save to database as well
+        -- TODO! be sure to call save to database as well
 
 
-        net.Start("CFC_Fac_FactionChanged")
+        net.Start( "CFC_Fac_FactionChanged" )
             net.WriteInt( id, 32 )
             net.WriteString( EditingFaction.EditName )
             net.WriteString( EditingFaction.EditDescription )
@@ -340,7 +340,7 @@ local function RequestFactionDetails( len, ply )
 
     -- Check if user has proper permission to edit each part of a faction
     -- CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
-    
+
     if not IsValid( ply ) then
         return
     end
@@ -382,7 +382,7 @@ local function RequestFactionDetails( len, ply )
     -- If editing returns a table, then errors occured
     local Results = cfcFactions:EditFaction( TmpID, TmpName, TmpDescription, TmpColor, TmpPrivate, TmpTemporary  )
     if table.Count( Results ) > 0   then
-        local ErrorsToSend = 'The following errors occured when editing faction: ' .. table.ToString( Results, "Errors", false ) 
+        local ErrorsToSend = 'The following errors occured when editing faction: ' .. table.ToString( Results, "Errors", false )
         cfcFactions:SendNotifcation( ErrorsToSend, 1, TmpOwner )
     end
 end
@@ -391,7 +391,7 @@ end
 net.Receive( "CFC_Fac_RequestFactionEdit", RequestFactionDetails )
 
 -- Handles removing a faction and its attached users properly
--- player who initated the delete (if there is one), id of faction that was deleted
+-- player who initated the delete ( if there is one ), id of faction that was deleted
 function cfcFactions:RemoveFaction( ply, id )
     -- delete the faction and any players inside that faction.
 
@@ -405,46 +405,46 @@ function cfcFactions:RemoveFaction( ply, id )
                 factioneers:RemoveUser( Player )
             end
         end
-        net.Start("CFC_Fac_FactionDeleted")
-            net.WriteInt(factionID, 32)
+        net.Start( "CFC_Fac_FactionDeleted" )
+            net.WriteInt( factionID, 32 )
         net.Broadcast()
     end
 
 end
 
-local function RequestFactionDeletion(len, ply)
+local function RequestFactionDeletion( len, ply )
 
-    local FactionToDelete = net.ReadInt(32)
+    local FactionToDelete = net.ReadInt( 32 )
     if ply and not IsValid( ply ) then return end
-    --Need to check if player (If NOT a admin, or NOT a dev), is in the faction)
+    -- Need to check if player ( If NOT a admin, or NOT a dev ), is in the faction )
     if fpm:IsFactionAdmin( ply ) or fpm:IsDev( ply ) then
         cfcFactions:RemoveFaction( ply, FactionToDelete )
-        --allow them to delete the faction no matter what
-        --untested for now
+        -- allow them to delete the faction no matter what
+        -- untested for now
     elseif ply:IsInFaction( FactionToDelete ) then
-        --Can they even disband?
-        ErrorNoHalt( "Needs Testing", "RequestFactionDeletion(len, ply)" )
-        if fpm:hasPermission( ply, "CanDisbandFaction") then
-            --Does the faction exist?
-            if cfcFactions:Faction(FactionToDelete) ~= nil then 
-                --Lastily, to prevent minging, is the faction owner the same player requesting the deletion?
-                if cfcFactions:Faction(FactionToDelete.Owner == ply:SteamID64() ) then
-                    --delete!
+        -- Can they even disband?
+        ErrorNoHalt( "Needs Testing", "RequestFactionDeletion( len, ply )" )
+        if fpm:hasPermission( ply, "CanDisbandFaction" ) then
+            -- Does the faction exist?
+            if cfcFactions:Faction( FactionToDelete ) ~= nil then
+                -- Lastily, to prevent minging, is the faction owner the same player requesting the deletion?
+                if cfcFactions:Faction( FactionToDelete.Owner == ply:SteamID64() ) then
+                    -- delete!
                     cfcFactions:RemoveFaction( ply, FactionToDelete )
 
                 end
             end
         end
-        --Check if player has proper permission to delete the faction
-        --aka, owner
+        -- Check if player has proper permission to delete the faction
+        -- aka, owner
     else
-        --Tell the player they cannot delete the great infinite void of nothingness
+        -- Tell the player they cannot delete the great infinite void of nothingness
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
     end
 
 end
 
-net.Receive("CFC_Fac_RequestDelete", RequestFactionDeletion )
+net.Receive( "CFC_Fac_RequestDelete", RequestFactionDeletion )
 
 local function requestFactionNews( len, ply )
     -- Look into a better way of sending faction news to client

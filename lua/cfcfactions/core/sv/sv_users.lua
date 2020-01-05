@@ -44,7 +44,7 @@ function factioneers:registerUser( user )
         return
     end
 
-    print('Registering new user #P=' .. user:SteamID64() )
+    print( 'Registering new user #P = ' .. user:SteamID64() )
     factioneers[user:SteamID64()]  = ReturnDefaultTable()
     factioneers[user:SteamID64()].DisplayName = user:Nick()
     factioneers[user:SteamID64()].SteamID = user:SteamID()
@@ -79,9 +79,9 @@ local function IsValidString( str )
 end
 
 -- Returns a table of the user's stuff
-function factioneers:User( ply ) 
+function factioneers:User( ply )
     if not ( type( ply ) == "Player" ) then return nil end
-    if IsValid(ply) and ply:IsPlayer() then
+    if IsValid( ply ) and ply:IsPlayer() then
         if factioneers:UserExists( ply ) then
             return factioneers[ply:SteamID64()]
         end
@@ -130,12 +130,12 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
                 userFactionTable["FactionRank"] = factionrank
             end
         else
-          --Conditional Statement for if a faction is NOT valid.
-          --We can likely send error to client stateing that.
+          -- Conditional Statement for if a faction is NOT valid.
+          -- We can likely send error to client stateing that.
           return
         end
-        --alert user not a proper number
-        --Conditional Statement for if a faction id is not a number
+        -- alert user not a proper number
+        -- Conditional Statement for if a faction id is not a number
         return
     end
 

@@ -21,7 +21,7 @@ function Panel:Init()
 
     for _, ply in pairs( player.GetHumans() ) do
         if ply:IsValid() and ply:IsPlayer() then
-            --self.CategoryList( ply:SteamID(), ply:Name(), ply:Frags(), ply:Deaths(), ply:GetFaction().Name, ply:GetRank() )
+            -- self.CategoryList( ply:SteamID(), ply:Name(), ply:Frags(), ply:Deaths(), ply:GetFaction().Name, ply:GetRank() )
             playerList[ iterator ] = ply
             iterator = iterator + 1
         end
@@ -35,10 +35,10 @@ function Panel:Init()
         end ):SetIcon( "icon16/page_edit.png" )
 
         optionMenu:AddOption( "Copy FactionID", function()
-            --SetClipboardText( playerList[id]:GetFactionID() )
+            -- SetClipboardText( playerList[id]:GetFactionID() )
         end ):SetIcon( "icon16/page_edit.png" )
 
-        --[[if LocalPlayer():canKick() then
+        --[[ if LocalPlayer():canKick() then
             optionMenu:AddOption( "Kick Player", function()
                 playerList[id]:KickPlayerFromFaction()
             end ):SetIcon( "icon16/lock.png" )
@@ -53,11 +53,11 @@ function Panel:Init()
             parent:SetIcon( "icon16/shield.png" )
 
             child:AddOption( "Kick From Faction", function()
-                --playerList[id]:KickPlayerFromFaction()
+                -- playerList[id]:KickPlayerFromFaction()
             end ):SetIcon( "icon16/asterisk_yellow.png" )
 
             child:AddOption( "Ban From Factions", function()
-                --playerList[id]:BanPlayerFromFactions()
+                -- playerList[id]:BanPlayerFromFactions()
             end ):SetIcon( "icon16/flag_red.png" )
         end
 
