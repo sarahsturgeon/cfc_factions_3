@@ -221,32 +221,22 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
     if type( EditName ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
-    else
-
     end
 
     if type( EditDescription ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
-    else
-
     end
 
     if type( EditColor ) ~= "Color" then
         table.insert( ErrorsToReturn, "invalid-table-type" )
-    else
-
     end
 
     if type( EditPrivate ) ~= "boolean" then
         table.insert( ErrorsToReturn, "invalid-bool-type" )
-    else
-
     end
 
     if type( EditTemporary ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
-    else
-
     end
 
     EditName = TrimStringSize( EditName, 25 )
@@ -425,7 +415,7 @@ local function RequestFactionDeletion( len, ply )
             local factionExists = cfcFactions:Faction( FactionToDelete) ~= nil
             local playerOwnsFaction = FactionToDelete.Owner == ply:SteamID64()
 
-            if factionExists and playerOwnsFactions then
+            if factionExists and playerOwnsFaction then
                 cfcFactions:RemoveFaction( ply, FactionToDelete )
             end
         end
