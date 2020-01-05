@@ -21,7 +21,7 @@ end
 
 function Panel:Init()
     self:SetSize( 300, 450 )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:SetPos( ( ScrW() / 2 ) - ( self:GetWide() / 2 ), ( ScrH() / 2 ) - ( self:GetTall() / 2 ) )
 
     local f = vgui.Create( "DFrame", self )
     f:SetDraggable( false )
