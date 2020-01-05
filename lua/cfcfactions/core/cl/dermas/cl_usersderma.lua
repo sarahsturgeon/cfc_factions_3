@@ -75,7 +75,7 @@ function Panel:Think()
 end
 ]]
 
-vgui.Register( 'D_cfcusersderma', Panel )
+vgui.Register( "D_cfcusersderma", Panel )
 
 -- TODO: tie into the system
 
