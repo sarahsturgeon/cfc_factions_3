@@ -1,6 +1,7 @@
 cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
 cfcFactions.Factions = cfcFactions.Factions or {}
+cfcFactions.logger = CFCLogger( "CFC Factions 3" )
 
 -- sh
 include( "cfcfactions/core/sh/sh_init.lua" )
