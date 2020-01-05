@@ -6,7 +6,7 @@ Purpose: Core functions that handle saving and loading from the mysql-db. Loads 
 ]]--
 
 
-require( 'mysqloo' )
+require( "mysqloo" )
 local mysqloo = mysqloo
 local string = string
 
@@ -15,11 +15,11 @@ local config = cfcFactions.Config.Server.MySQL
 sql_db = mysqloo.connect( config.hostname, config.username, config.password, config.database )
 
 function sql_db:onConnected()
-    MsgN( 'CFCFactions - MySql Successfully connected' )
+    MsgN( "CFCFactions - MySql Successfully connected" )
 end
 
 function sql_db:onConnectionFailed( error )
-    MsgN( 'CFCFactions MySQL: An error occured when connecting. Check local settings: ' .. error )
+    MsgN( "CFCFactions MySQL: An error occured when connecting. Check local settings: " .. error )
 end
 sql_db:connect()
 
@@ -27,7 +27,7 @@ sql_db:connect()
 -- Core Init
 --------------------------------------------------------------------------------------------------------------
 function sql_db:initialize()
-    MsgN( 'Initilizing SQL Database for ' .. cfcFactions.Config.NICE_NAME )
+    MsgN( "Initilizing SQL Database for " .. cfcFactions.Config.NICE_NAME )
     local queries = {
         -- factions data
         create_factions_table = sql_db:query [[
