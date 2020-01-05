@@ -276,7 +276,7 @@ function fpm:IsSpecialPermission( perm )
         end
     end
 
-    --TODO: What is the default behavior here if not valid permission?
+    -- TODO: What is the default behavior here if not valid permission?
 end
 
 -- Returns a list of permissions the ply currently has
