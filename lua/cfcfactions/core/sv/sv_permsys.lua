@@ -27,7 +27,6 @@ fpm.Permissions.CorePermissions = {
         ["CanEditColor"]             = {Description = "Allows a user to edit the faction's color."},
         ["CanEditInvite"]            = {Description = "Allows a user to edit the faction's invite status."},
 
-
         -- permssions
         ["CanEditPermissions"]       = {Description = "Allows a user to edit a faction's permission structure."},
         ["CanAddPermissions"]        = {Description = "Allows a user to add a permission to a member."},
@@ -120,7 +119,7 @@ end
 
 -- forces init for all current humans connected
 function fpm:authAllUsers()
-    for _, players in pairs ( ply.GetHumans() ) do
+    for _, players in pairs ( player.GetHumans() ) do
         fpm:authUser( players )
     end
 end
@@ -134,11 +133,12 @@ function fpm:authUser( authPlayer )
         return
     end
 
-    if factioneers:UserExists( authPlayer ) then
-        if factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil then
-            -- Error out, ply already has proper permissions for authentication
-            return
-        end
+    local userExists = factioneers:UserExists( authPlayer )
+    local hasPermissions = factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil
+
+    if userExists and hasPermissions then
+        -- Error out, ply already has proper permissions for authentication
+        return
     end
 
     factioneers:registerUser( authPlayer )
