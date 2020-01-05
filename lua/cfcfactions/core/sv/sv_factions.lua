@@ -7,11 +7,7 @@ Global Tables: cfcFactions.Factions
 ]]--
 if not SERVER then return end
 
--- dellocal file = file
---del local net = net
---del local util = util
 local fpm = cfcFactions.fpm
---del local cfg = cfcFactions.Config.Server
 local factioneers = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
@@ -21,7 +17,6 @@ local function TrimStringSize( str, max )
     local MaxCharTrim = max and max > 0 or 32
 
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
-    return TemporaryString
 end
 
 -- Instead of generating a random ID, we'll just fetch total factions + 1
@@ -350,7 +345,6 @@ local function RequestFactionDetails( len, ply )
 
     local TmpOwner = ply
     local TmpID = net.ReadInt( 32 )
-    --del local TmpInvite = net.ReadBool()
     local TmpName = net.ReadString()
     local TmpDescription = net.ReadString()
     local TmpTemporary = net.ReadBool()
