@@ -128,8 +128,8 @@ function cfcFactions:SendNotifcation( msg, mtype, ply )
             end
             net.SendToServer()
         else
-            --TODO: Log an event here
-            print("")
+            -- TODO: Log an event here
+            print( "" )
         end
     end
 
@@ -145,8 +145,8 @@ function cfcFactions:SendNotifcation( msg, mtype, ply )
                 MsgN( msg )
             end
         else
-            --TODO: Log an event here
-            print("")
+            -- TODO: Log an event here
+            print( "" )
         end
     end
 end

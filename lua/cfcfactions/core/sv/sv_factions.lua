@@ -413,7 +413,7 @@ local function RequestFactionDeletion( len, ply )
         ErrorNoHalt( "Needs Testing", "RequestFactionDeletion( len, ply )" )
 
         if fpm:hasPermission( ply, "CanDisbandFaction" ) then
-            local factionExists = cfcFactions:Faction( FactionToDelete) ~= nil
+            local factionExists = cfcFactions:Faction( FactionToDelete ) ~= nil
             local playerOwnsFaction = FactionToDelete.Owner == ply:SteamID64()
 
             if factionExists and playerOwnsFaction then

@@ -7,7 +7,6 @@ Global Tables: cfcFactions.Users
 ]]--
 cfcFactions.Users = cfcFactions.Users or {}
 local factioneers = cfcFactions.Users
---del local fpm = cfcFactions.fpm
 
 -- What a user should have when first logging into the server
 local function ReturnDefaultTable()
@@ -96,7 +95,7 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
 
     local playerIsInvalid = not ( IsValid( plyEnt ) and plyEnt:IsPlayer() )
 
-    --TODO: name this to describe what it is
+    -- TODO: name this to describe what it is
     local plyEntIsString = type( plyEnt ) == "string"
 
     if playerIsInvalid and plyEntIsString then

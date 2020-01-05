@@ -9,7 +9,7 @@ function cfcFactions:GetUser( ply )
         return cfcFactions.Users[ply:SteamID64()]
     end
 
-    --TODO: Get user on clientside
+    -- TODO: Get user on clientside
 end
 
 -- old function, make sure to redo when this is called
