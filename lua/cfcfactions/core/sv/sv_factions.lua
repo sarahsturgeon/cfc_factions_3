@@ -21,7 +21,6 @@ local function TrimStringSize( str, max )
     local MaxCharTrim = max and max > 0 or 32
 
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
-    return TemporaryString
 end
 
 -- Instead of generating a random ID, we'll just fetch total factions + 1
