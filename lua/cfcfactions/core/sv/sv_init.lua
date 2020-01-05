@@ -57,8 +57,8 @@ function cfcFactions:InitializeFactions()
     sql_db:initilize()
 
     -- un needed but might as well
-    if not file.IsDir( "cfcFactions", 'DATA' ) then
-        file.CreateDir( "cfcFactions", 'DATA' )
+    if not file.IsDir( "cfcFactions", "DATA" ) then
+        file.CreateDir( "cfcFactions", "DATA" )
     end
 
     if not file.Exists( "cfcfactions/news.txt", "DATA" ) then
@@ -78,7 +78,7 @@ local function cfcPlayerSay( ply, msg )
         if string.sub( msg, 0, #chatTrigger ) == chatTrigger then
             -- Handles both opening and closing
             ply:DisplayMenu()
-            return ''
+            return "" 
         end
     end
 end
