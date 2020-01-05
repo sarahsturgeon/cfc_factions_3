@@ -7,11 +7,11 @@ Global Tables: cfcFactions.Factions
 ]]--
 if not SERVER then return end
 
-local file = file
-local net = net
-local util = util
+-- dellocal file = file
+--del local net = net
+--del local util = util
 local fpm = cfcFactions.fpm
-local cfg = cfcFactions.Config.Server
+--del local cfg = cfcFactions.Config.Server
 local factioneers = cfcFactions.Users
 
 cfcFactions.Factions = cfcFactions.Factions or {}
@@ -21,12 +21,13 @@ local function TrimStringSize( str, max )
     local MaxCharTrim = max and max > 0 or 32
 
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
+    return TemporaryString
 end
 
 -- Instead of generating a random ID, we'll just fetch total factions + 1
 local function GenerateID()
     -- In the future, grab factions from DB and increment by 1 for total factions
-    return ( ( #cfcFactions.Factions ) + 1 )
+    return #cfcFactions.Factions + 1
 end
 
 -- function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
@@ -51,31 +52,31 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     ----------------
     --[type checks]
     ----------------
-    if not type( factionOwner ) == "Player" then
+    if type( factionOwner ) ~= "Player" then
         -- Send Alert -> Not a valid PlayerType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
         return
     end
 
-    if not type( factionName ) == "string" then
+    if type( factionName ) ~= "string" then
         -- Send Alert -> Not a valid NameType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, factionOwner )
         return
     end
 
-    if not type( factionColor ) == "Color" then
+    if type( factionColor ) ~= "Color" then
         -- Send Alert -> Not a valid ColorType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, factionOwner )
         return
     end
 
-    if not type( factionDescription ) == "string" then
+    if type( factionDescription ) ~= "string" then
         -- Send Alert -> Not a valid DescriptionType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, factionOwner )
         return
     end
 
-    if not type( factionInviteOnly ) == "boolean" then
+    if type( factionInviteOnly ) ~= "boolean" then
         -- Send Alert -> Not a valid IntType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, factionOwner )
         return
@@ -93,7 +94,7 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
         return
     end
 
-    if not type( factionIsTemporary ) == "boolean" then
+    if type( factionIsTemporary ) ~= "boolean" then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-bool-type"], 1, factionOwner )
         factionIsTemporary = false
     end
@@ -104,6 +105,9 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
 
 
     local CurrentTimeStamp = cfcFactions:TimeStamp()
+
+    -- TODO: Where does the FinalFaction come from?
+
     local PlayerIDStamp = player.GetBySteamID64( FinalFaction.Owner )
     -- What should a faction contain?
     cfcFactions.Factions[TmpUnqID] = {
@@ -125,6 +129,7 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
         ["Ranks"] = cfcFactions.fpm.defaultRanks,
         ["Temporary"] = factionIsTemporary
     }
+
     local FinalFaction = cfcFactions.Factions[PlayerIDStamp]
 
     factioneers:UpdateUser( PlayerIDStamp, FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
@@ -215,36 +220,35 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     local EditPrivate = private
     local EditTemporary = temporary
 
-
-    if not cfcFactions:IsValidFaction( EditingFaction ) or table.IsEmpty( EditingFaction ) then
+    if table.IsEmpty( EditingFaction ) or not cfcFactions:IsValidFaction( EditingFaction ) then
         table.insert( ErrorsToReturn, "404-faction" )
     end
 
-    if not type( EditName ) == "string" then
+    if type( EditName ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
     else
 
     end
 
-    if not type( EditDescription ) == "string" then
+    if type( EditDescription ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
     else
 
     end
 
-    if not type( EditColor ) == "Color" then
+    if type( EditColor ) ~= "Color" then
         table.insert( ErrorsToReturn, "invalid-table-type" )
     else
 
     end
 
-    if not type( EditPrivate ) == "boolean" then
+    if type( EditPrivate ) ~= "boolean" then
         table.insert( ErrorsToReturn, "invalid-bool-type" )
     else
 
     end
 
-    if not type( EditTemporary ) == "string" then
+    if type( EditTemporary ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
     else
 
@@ -346,10 +350,10 @@ local function RequestFactionDetails( len, ply )
 
     local TmpOwner = ply
     local TmpID = net.ReadInt( 32 )
-    local TmpInvite = net.ReadBool( )
-    local TmpName = net.ReadString( )
-    local TmpDescription = net.ReadString( )
-    local TmpTemporary= net.ReadBool()
+    --del local TmpInvite = net.ReadBool()
+    local TmpName = net.ReadString()
+    local TmpDescription = net.ReadString()
+    local TmpTemporary = net.ReadBool()
     local TmpColor = net.ReadColor()
     local EditingFaction = cfcFactions.Factions[TmpID]
 
@@ -381,7 +385,7 @@ local function RequestFactionDetails( len, ply )
     -- If editing returns a table, then errors occured
     local Results = cfcFactions:EditFaction( TmpID, TmpName, TmpDescription, TmpColor, TmpPrivate, TmpTemporary  )
     if table.Count( Results ) > 0   then
-        local ErrorsToSend = 'The following errors occured when editing faction: ' .. table.ToString( Results, "Errors", false )
+        local ErrorsToSend = "The following errors occured when editing faction: " .. table.ToString( Results, "Errors", false )
         cfcFactions:SendNotifcation( ErrorsToSend, 1, TmpOwner )
     end
 end
@@ -421,17 +425,14 @@ local function RequestFactionDeletion( len, ply )
         -- allow them to delete the faction no matter what
         -- untested for now
     elseif ply:IsInFaction( FactionToDelete ) then
-        -- Can they even disband?
         ErrorNoHalt( "Needs Testing", "RequestFactionDeletion( len, ply )" )
-        if fpm:hasPermission( ply, "CanDisbandFaction" ) then
-            -- Does the faction exist?
-            if cfcFactions:Faction( FactionToDelete ) ~= nil then
-                -- Lastily, to prevent minging, is the faction owner the same player requesting the deletion?
-                if cfcFactions:Faction( FactionToDelete.Owner == ply:SteamID64() ) then
-                    -- delete!
-                    cfcFactions:RemoveFaction( ply, FactionToDelete )
 
-                end
+        if fpm:hasPermission( ply, "CanDisbandFaction" ) then
+            local factionExists = cfcFactions:Faction( FactionToDelete) ~= nil
+            local playerOwnsFaction = FactionToDelete.Owner == ply:SteamID64()
+
+            if factionExists and playerOwnsFactions then
+                cfcFactions:RemoveFaction( ply, FactionToDelete )
             end
         end
         -- Check if player has proper permission to delete the faction
@@ -445,13 +446,14 @@ end
 
 net.Receive( "CFC_Fac_RequestDelete", RequestFactionDeletion )
 
-local function requestFactionNews( len, ply )
-    -- Look into a better way of sending faction news to client
-    for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
-        net.Start( "CFC_Fac_SendNews" )
-            net.WriteString( v .. "\n" )
-            net.WriteString( ply:Nick() )
-        net.Send( ply )
-    end
-end
+-- TODO: Delete this duplicate function definition
+-- local function requestFactionNews( len, ply )
+--     -- Look into a better way of sending faction news to client
+--     for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
+--         net.Start( "CFC_Fac_SendNews" )
+--             net.WriteString( v .. "\n" )
+--             net.WriteString( ply:Nick() )
+--         net.Send( ply )
+--     end
+-- end
 
