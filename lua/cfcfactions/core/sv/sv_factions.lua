@@ -102,8 +102,8 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     local CurrentTimeStamp = cfcFactions:TimeStamp()
 
     -- TODO: Where does the FinalFaction come from?
-
     local PlayerIDStamp = player.GetBySteamID64( FinalFaction.Owner )
+
     -- What should a faction contain?
     cfcFactions.Factions[TmpUnqID] = {
         ["Allies"] = {},
