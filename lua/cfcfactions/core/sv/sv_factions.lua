@@ -160,6 +160,7 @@ function cfcFactions:isUniqueName( faction_name )
             return false
         end
     end
+
     return true
 end
 
@@ -167,10 +168,10 @@ end
 -- REWORK
 function cfcFactions:IsValidFaction( tbl )
     if ( not tbl ) and ( table.IsEmpty( tbl ) ) then
-            return false
-    else
-        return true
+        return false
     end
+
+    return true
 end
 
 function cfcFactions:SetAlly( id, ally )
@@ -246,32 +247,32 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     -- Finish up and ether edit, or return the errors
     if table.Count( ErrorsToReturn > 0 ) then
         return ErrorsToReturn
-    else
-        -- Take whatever values are in tbl, and put them into the main faction's table.
-        -- Honestly, not sure about this but for now, it works
-        EditingFaction.Name = EditName
-        EditingFaction.Description = EditDescription
-        EditingFaction.Color = EditColor
-        EditingFaction.Invite = EditPrivate
-        EditingFaction.Temporary = EditTemporary
-
-        hook.Call( "CFC_Factionhook_FactionEdited" )
-
-
-        -- TODO! be sure to call save to database as well
-
-
-        net.Start( "CFC_Fac_FactionChanged" )
-            net.WriteInt( id, 32 )
-            net.WriteString( EditingFaction.EditName )
-            net.WriteString( EditingFaction.EditDescription )
-            net.WriteColor( EditingFaction.Color )
-            net.WriteBool( EditingFaction.Invite )
-            net.WriteBool( EditingFaction.Temporary )
-        net.Broadcast()
-        return {}
     end
 
+    -- Take whatever values are in tbl, and put them into the main faction's table.
+    -- Honestly, not sure about this but for now, it works
+    EditingFaction.Name = EditName
+    EditingFaction.Description = EditDescription
+    EditingFaction.Color = EditColor
+    EditingFaction.Invite = EditPrivate
+    EditingFaction.Temporary = EditTemporary
+
+    hook.Call( "CFC_Factionhook_FactionEdited" )
+
+
+    -- TODO! be sure to call save to database as well
+
+
+    net.Start( "CFC_Fac_FactionChanged" )
+        net.WriteInt( id, 32 )
+        net.WriteString( EditingFaction.EditName )
+        net.WriteString( EditingFaction.EditDescription )
+        net.WriteColor( EditingFaction.Color )
+        net.WriteBool( EditingFaction.Invite )
+        net.WriteBool( EditingFaction.Temporary )
+    net.Broadcast()
+
+    return {}
 end
 
 local function requestFactionNews( len, ply )
@@ -317,8 +318,8 @@ local function RequestFactionCreation( len, ply )
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["is-in-faction"], 1, fOwner )
         return
     end
-    cfcFactions:CreateFaction( PrebuiltFaction )
 
+    cfcFactions:CreateFaction( PrebuiltFaction )
 end
 
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
@@ -385,31 +386,35 @@ function cfcFactions:RemoveFaction( ply, id )
 
     local factionID = id
     local factionToDelete = cfcFactions:Faction( factionID )
+    local factionIsInvalid = not factionToDelete or table.IsEmpty( factionToDelete )
 
-     if factionToDelete and not table.IsEmpty( factionToDelete ) then
-        cfcFactions.Factions[factionID] = nil
-        for _, Player in pairs( player.GetHumans() ) do
-            if factioneers:IsInFaction( Player, factionID ) then
-                factioneers:RemoveUser( Player )
-            end
+    if factionIsInvalid then return end
+
+    cfcFactions.Factions[factionID] = nil
+    for _, Player in pairs( player.GetHumans() ) do
+        if factioneers:IsInFaction( Player, factionID ) then
+            factioneers:RemoveUser( Player )
         end
-        net.Start( "CFC_Fac_FactionDeleted" )
-            net.WriteInt( factionID, 32 )
-        net.Broadcast()
     end
 
+    net.Start( "CFC_Fac_FactionDeleted" )
+        net.WriteInt( factionID, 32 )
+    net.Broadcast()
 end
 
 local function RequestFactionDeletion( len, ply )
-
     local FactionToDelete = net.ReadInt( 32 )
     if ply and not IsValid( ply ) then return end
+
     -- Need to check if player ( If NOT a admin, or NOT a dev ), is in the faction )
     if fpm:IsFactionAdmin( ply ) or fpm:IsDev( ply ) then
         cfcFactions:RemoveFaction( ply, FactionToDelete )
         -- allow them to delete the faction no matter what
         -- untested for now
-    elseif ply:IsInFaction( FactionToDelete ) then
+        return
+    end
+
+    if ply:IsInFaction( FactionToDelete ) then
         ErrorNoHalt( "Needs Testing", "RequestFactionDeletion( len, ply )" )
 
         if fpm:hasPermission( ply, "CanDisbandFaction" ) then
@@ -422,11 +427,11 @@ local function RequestFactionDeletion( len, ply )
         end
         -- Check if player has proper permission to delete the faction
         -- aka, owner
-    else
-        -- Tell the player they cannot delete the great infinite void of nothingness
-        cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
+        return
     end
 
+    -- Tell the player they cannot delete the great infinite void of nothingness
+    cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
 end
 
 net.Receive( "CFC_Fac_RequestDelete", RequestFactionDeletion )

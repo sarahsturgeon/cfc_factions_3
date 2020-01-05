@@ -81,25 +81,39 @@ fpm.defaultRanks = {
     ["leader"] = " * ",
 
     -- Coleader, can do most things but can't disband
-    ["coleader"] = {"CanKick", "CanBan", "CanSendAllMessage", "CanSendFactionMessage", "CanDeclareWar",
-    "CanUndeclareWar", "CanDisbandFaction", "CanEditAll", "CanEditDescription",
-    "CanEditName", "CanEditColor", "CanEditInvite",
-    "CanReceiveFactionMessage", "CanEditPermissions",
-    "CanViewLogs", "CanViewAdminLogs", "CanViewGlobalLogs", "CanViewFactionWiki",
-    "CanEditFactionWiki", "CanSpawnXPOrb", "CanDeleteXPOrb", "CanSetAllies",
-    "CanSetEnemies", "CanRemoveAllies", "CanRemoveEnemies", "CanSendInvite", "CanRevokeInvite", "CanSetRanks", "CanRemoveRanks",
-    "CanSetPermissions", "CanRemovePermissions"},
+    ["coleader"] = {
+        "CanKick", "CanBan", "CanSendAllMessage", "CanSendFactionMessage", "CanDeclareWar",
+        "CanUndeclareWar", "CanDisbandFaction", "CanEditAll", "CanEditDescription",
+        "CanEditName", "CanEditColor", "CanEditInvite",
+        "CanReceiveFactionMessage", "CanEditPermissions",
+        "CanViewLogs", "CanViewAdminLogs", "CanViewGlobalLogs", "CanViewFactionWiki",
+        "CanEditFactionWiki", "CanSpawnXPOrb", "CanDeleteXPOrb", "CanSetAllies",
+        "CanSetEnemies", "CanRemoveAllies", "CanRemoveEnemies", "CanSendInvite", "CanRevokeInvite", "CanSetRanks", "CanRemoveRanks",
+        "CanSetPermissions", "CanRemovePermissions"
+    },
+
     -- admin, can handle things like user managment and permission managment
-    ["admin"] = {"CanKick", "CanBan", "CanSendAllMessage", "CanSendFactionMessage",
-    "CanReceiveFactionMessage", "CanViewLogs", "CanViewAdminLogs", "CanViewFactionWiki",
-    "CanEditFactionWiki", "CanSpawnXPOrb", "CanDeleteXPOrb", "CanSetAllies",
-    "CanSetEnemies", "CanRemoveAllies", "CanRemoveEnemies", "CanSendInvite", "CanRevokeInvite"},
+    ["admin"] = {
+        "CanKick", "CanBan", "CanSendAllMessage", "CanSendFactionMessage",
+        "CanReceiveFactionMessage", "CanViewLogs", "CanViewAdminLogs", "CanViewFactionWiki",
+        "CanEditFactionWiki", "CanSpawnXPOrb", "CanDeleteXPOrb", "CanSetAllies",
+        "CanSetEnemies", "CanRemoveAllies", "CanRemoveEnemies", "CanSendInvite", "CanRevokeInvite"
+    },
+
     -- a normal member
-    ["member"] = {"CanSendAllMessage", "CanSendFactionMessage",
-    "CanReceiveFactionMessage", "CanSendInvite"},
+    ["member"] = {
+        "CanSendAllMessage",
+        "CanSendFactionMessage",
+        "CanReceiveFactionMessage",
+        "CanSendInvite"
+    },
+
     -- a user
-    ["user"] = {"CanSendAllMessage", "CanSendFactionMessage",
-    "CanReceiveFactionMessage"}
+    ["user"] = {
+        "CanSendAllMessage",
+        "CanSendFactionMessage",
+        "CanReceiveFactionMessage"
+    }
 }
 
 -- Returns a copy of merged tables for all permissions ( Special and core ).
@@ -109,12 +123,13 @@ end
 
 -- Revokes a user's permissions, essentialy removing them from cfcFaction's permission system
 function fpm:revokeUser( ply )
-    if ply:IsPlayer() and IsValid( ply ) then
-        factioneers[ply:SteamID64()].CFCPermissions = nil
-        return true
-    end
+    local isValidPlayer = ply:IsPlayer() and IsValid( ply )
 
-    return false
+    if not isValidPlayer then return false end
+
+    factioneers[ply:SteamID64()].CFCPermissions = nil
+
+    return true
 end
 
 -- forces init for all current humans connected
@@ -170,6 +185,7 @@ function fpm:hasPermission( ply, permission )
     if not ply:IsPlayer() then
         return
     end
+
     if not self:IsValidPermission( permission ) then
         return false
     end
@@ -180,6 +196,7 @@ function fpm:hasPermission( ply, permission )
     if PlayerTable == nil then
         return false
     end
+
     if PlayerFactionTable == nil then
         return false
     end
@@ -188,6 +205,7 @@ function fpm:hasPermission( ply, permission )
     if table.HasValue( PlayerTable, "IsDeveloper" )  then
         return true
     end
+
     -- If they can't even access factions, just return false for everything.
     if not table.HasValue( PlayerTable,  "AccessAll" ) then
         return false
@@ -212,33 +230,43 @@ end
 
 -- Adds a permission to the ply. True if success, false if otherwise
 function fpm:addPermission( ply, permission )
-    if not IsValid( ply ) or not ply:IsPlayer() then print( "Unable to add permission, invalid ply" ) return false end
+    local isValidPlayer = IsValid( ply ) or not ply:IsPlayer()
+
+    if not IsValidPlayer then
+        print( "Unable to add permission, invalid ply" )
+        return false
+    end
+
     if not fpm:IsValidPermission( permission ) then
         ply:ChatPrint( "Unable to add permission. Unknown string." )
-         return false
+        return false
     end
 
     local usr = factioneers:User( ply )
+
     if fpm:IsSpecialPermission( permission ) == false then
         table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )
     else
         table.insert( usr.CFCPermissions, permission )
     end
+
     return true
 end
 
 -- Revokes a permission( s ) from the ply. True if success, false if otherwise
 function fpm:revokePermission( ply, permission_string )
     local usr = factioneers[ply:SteamID64()]
+
     for Key, Permission in pairs( usr.CFCPermissions ) do
         if Permission == permission_string then
             usr.CFCPermissions[k] = nil
             return true
         end
-
     end
+
     return false
 end
+
 function fpm:IsSpecialPermission( perm )
     if fpm:IsValidPermission( perm ) then
         if ( fpm.Permissions.SpecialPermissions[perm] ~= nil ) then
@@ -248,19 +276,21 @@ function fpm:IsSpecialPermission( perm )
         end
     end
 
+    --TODO: What is the default behavior here if not valid permission?
 end
+
 -- Returns a list of permissions the ply currently has
 function fpm:getPermissionList( ply )
     return fpm.Users.AuthUsers[ply:SteamID64()]
 end
 
 function fpm:IsValidPermission( permission )
-    if permission == nil then return end
+    if not permission then return end
+
     for perm, v in pairs( fpm.Permissions.CorePermissions ) do
         if string.lower( perm ) == string.lower( permission ) then
             return true
         end
-
     end
 
     for n, m in pairs( fpm.Permissions.SpecialPermissions ) do
@@ -271,13 +301,11 @@ function fpm:IsValidPermission( permission )
 end
 
 function fpm:IsDev( ply )
-    if self:hasPermission( ply, "IsDeveloper" ) then return true end
-    return false
+    return self:hasPermission( ply, "IsDeveloper" )
 end
 
 function fpm:IsFactionAdmin( ply )
-    if self:hasPermission( ply, "IsFactionsAdmin" ) then return true end
-    return false
+    return self:hasPermission( ply, "IsFactionsAdmin" )
 end
 
 hook.Add( "Initialize", "cfcInitializeUsers", fpm:authAllUsers() )

@@ -12,12 +12,11 @@ meta = FindMetaTable( "Player" )
 local fpm = cfcFactions.fpm
 function meta:CFCToggleMenu()
     if not fpm:hasPermission( self, "AccessAll" ) then
-        cfcFactions:SendNotifcation( "factions-ban", mtype, player )
-        return
-    else
-        net.Start( "CFC_Fac_ToggleDerma" )
-        net.Send( self )
+        return cfcFactions:SendNotifcation( "factions-ban", mtype, player )
     end
+
+    net.Start( "CFC_Fac_ToggleDerma" )
+    net.Send( self )
 end
 
 --[[
@@ -53,25 +52,25 @@ end
 -- TODO: Make these return values consistent
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
+
     if not self:IsInFaction() then
         return false
     end
 
+    local faction = cfcFactions.Factions[self:GetFactionID()]
 
-    if cfcFactions.Factions[self:GetFactionID()] ~= 0 then
-        return cfcFactions.Factions[self:GetFactionID()]
-    end
+    if faction == 0 then return end
+
+    return faction
 end
 
 -- Sets a player's faction based on given id. ply being who is doing the setting
 function meta:SetFactionID( id )
     fpm.Users[self:SteamID64()].FactionID = id
-
 end
 
 function meta:SetFactionRank( rank )
     fpm.Users[self:SteamID64()].FactionRank = rank
-
 end
 
 function meta:IsMerc()
