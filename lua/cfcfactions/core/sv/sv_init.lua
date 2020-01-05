@@ -57,8 +57,8 @@ function cfcFactions:InitializeFactions()
     sql_db:initilize()
 
     -- un needed but might as well
-    if not file.IsDir( 'cfcFactions', 'DATA' ) then
-        file.CreateDir( 'cfcFactions', 'DATA' )
+    if not file.IsDir( "cfcFactions", 'DATA' ) then
+        file.CreateDir( "cfcFactions", 'DATA' )
     end
 
     if not file.Exists( "cfcfactions/news.txt", "DATA" ) then
@@ -82,7 +82,7 @@ local function cfcPlayerSay( ply, msg )
         end
     end
 end
-hook.Add( 'PlayerSay', 'cfcPlayerSay', cfcPlayerSay )
+hook.Add( "PlayerSay", "cfcPlayerSay", cfcPlayerSay )
 
 -- InitialSpawn hook, fetches the data and properly sets it serverside
 local function cfcOnPlayerInitialSpawn( ply )
