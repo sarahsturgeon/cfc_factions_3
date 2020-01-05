@@ -2,8 +2,6 @@ local Panel = {}
 -- Commenting out till later completion. Useless menu clutter
 -- cfcFactions:RegisterDermaMenu( "View Logs", Panel, 1 )
 
-local LocalPanelView = 1 -- 1 is Normal logs, 2 is admin logs
-
 function Panel:Init()
     -- Switch between 2 views
     -- Regular Logs, Admin Logs ( Sees ALL logs )
@@ -17,7 +15,7 @@ function Panel:Think()
 
 end
 
-vgui.Register( 'D_logsdermasderma', Panel )
+vgui.Register( "D_logsdermasderma", Panel )
 
 -- TODO: tie in to the system
 
