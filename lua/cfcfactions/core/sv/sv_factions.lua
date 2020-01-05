@@ -101,8 +101,9 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
 
     local CurrentTimeStamp = cfcFactions:TimeStamp()
 
-    -- TODO: Where does the FinalFaction come from?
-    local PlayerIDStamp = player.GetBySteamID64( FinalFaction.Owner )
+    -- TODO: Something is wrong with the IDs here. cfcFactions.Factions[TmpUnqID] is used to set it, but then it's retrieved with cfcFactions.Factions[PlayerIDStamp]
+
+    local PlayerIDStamp = factionOwner:SteamID64()
 
     -- What should a faction contain?
     cfcFactions.Factions[TmpUnqID] = {
@@ -120,7 +121,7 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
         ["LastSaved"] = "",
         ["Name"] = factionName,
         ["NeedsCleanUp"] = false,
-        ["Owner"] = factionOwner:SteamID64(),
+        ["Owner"] = PlayerIDStamp,
         ["Ranks"] = cfcFactions.fpm.defaultRanks,
         ["Temporary"] = factionIsTemporary
     }
