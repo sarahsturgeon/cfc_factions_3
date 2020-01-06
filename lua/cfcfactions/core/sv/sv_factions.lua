@@ -244,7 +244,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     if type( EditDescription ) ~= "string" then
         -- Fine to NOT flag true for aborting.
         table.insert( ErrorsToReturn, "invalid-string-type")
-    else
+    end
 
     if type( EditTemporary ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
