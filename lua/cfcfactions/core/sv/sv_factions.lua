@@ -410,7 +410,7 @@ function cfcFactions:RemoveFaction( ply, id )
     for _, Player in pairs( player.GetHumans() ) do
         if factioneers:IsInFaction( Player, factionID ) then
                 -- TODO Change to SetUserFaction instead of RemoveUser
-                -- RemoveUser completely wipes their data. 
+            -- RemoveUser completely wipes their data. 
             factioneers:RemoveUser( Player )
         end
     end
@@ -452,4 +452,3 @@ local function RequestFactionDeletion( len, ply )
     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
 end
 net.Receive( "CFC_Fac_RequestDelete", RequestFactionDeletion )
-
