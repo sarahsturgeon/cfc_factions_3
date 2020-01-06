@@ -1,3 +1,7 @@
+local PANEL = {}
+local cfg = ColorSchemes
+vgui.Register( 'D_cfcmainderma', PANEL )
+
 surface.CreateFont( "CFC_Normal",
     {
         font = "arial",
@@ -29,10 +33,6 @@ surface.CreateFont( "CFC_Alert_Small",
         weight = 100
     }
 )
-
-local PANEL = {}
-local cfg = ColorSchemes
-vgui.Register( 'D_cfcmainderma', PANEL )
 
 function PANEL:Init()
     --Magic numbers to subtly adjust the panel's size
