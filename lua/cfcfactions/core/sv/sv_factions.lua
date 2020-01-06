@@ -274,7 +274,6 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
         -- TODO! be sure to call save to database as well
 
-
         net.Start("CFC_Fac_FactionChanged")
             net.WriteInt( id, 32 )
             net.WriteString( EditingFaction.EditName )
