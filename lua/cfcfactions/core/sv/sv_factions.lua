@@ -228,7 +228,8 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
         -- Todo, set the flag for aborting to true. Read the lengthy comment above to understand
     end
 
-    if  type( EditName ) ~= "string" then
+
+    if type( EditName ) ~= "string" then
         -- Fine to NOT flag true for aborting.
         table.insert( ErrorsToReturn, "invalid-string-type")
     end
@@ -271,9 +272,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
         hook.Call( "CFC_Factionhook_FactionEdited" )
 
-
         -- TODO! be sure to call save to database as well
-
 
         net.Start("CFC_Fac_FactionChanged")
             net.WriteInt( id, 32 )
@@ -409,8 +408,8 @@ function cfcFactions:RemoveFaction( ply, id )
     cfcFactions.Factions[factionID] = nil
     for _, Player in pairs( player.GetHumans() ) do
         if factioneers:IsInFaction( Player, factionID ) then
-                -- TODO Change to SetUserFaction instead of RemoveUser
-                -- RemoveUser completely wipes their data. 
+            -- TODO Change to SetUserFaction instead of RemoveUser
+            -- RemoveUser completely wipes their data. 
             factioneers:RemoveUser( Player )
         end
     end
@@ -452,4 +451,3 @@ local function RequestFactionDeletion( len, ply )
     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
 end
 net.Receive( "CFC_Fac_RequestDelete", RequestFactionDeletion )
-
