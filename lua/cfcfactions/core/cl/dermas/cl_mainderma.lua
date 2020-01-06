@@ -88,7 +88,7 @@ function Panel:Init()
     local sizeH = math.Clamp( MAX_HEIGHT, 0, ScrH() )
     self:SetSize( sizeW, sizeH )
 
-    local posX = ( ScrW() / 2 ) - ( self:GetWidt() / 2)
+    local posX = ( ScrW() / 2 ) - ( self:GetWide() / 2)
     local posY = ( ScrH() / 2 ) - ( self:GetTall() / 2 )
     self:SetPos( posX, posY )
 
