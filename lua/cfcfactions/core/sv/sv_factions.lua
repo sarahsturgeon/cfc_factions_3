@@ -271,7 +271,6 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
         hook.Call( "CFC_Factionhook_FactionEdited" )
 
-
         -- TODO! be sure to call save to database as well
 
         net.Start("CFC_Fac_FactionChanged")
