@@ -139,7 +139,6 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     
 
     --TODO: Send a notifcation to ALL other players ( not the owner ) that a new Faction, "%name" was created!
-    --
 
     net.Start( "CFC_Fac_FactionCreation" )
         --private, name, description, owner, k/d, id
@@ -478,4 +477,3 @@ local function requestFactionNews( len, ply )
         net.Send( ply )
     end
 end
-
