@@ -8,6 +8,8 @@ join or leave but are never shown to the user. ( While a notifcation ) can affec
 things and display to the user. Logging is simply a way to keep track of everything.
 
 Global Tables: cfcFactions.Logs
+
+TODO: This can probably be safetly deleted eventually
 ]]--
 
 cfcFactions.Logs = cfcFactions or {}
