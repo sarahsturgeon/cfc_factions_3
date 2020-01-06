@@ -168,7 +168,6 @@ function cfcFactions:isUniqueName( faction_name )
     return true
 end
 
-
 -- TODO: Rework, potentially test types inside the table, and if anything is nil that shouldn't be.
 function cfcFactions:IsValidFaction( tbl )
     if ( not tbl ) and ( table.IsEmpty( tbl ) ) then
