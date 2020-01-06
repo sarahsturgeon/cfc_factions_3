@@ -19,14 +19,14 @@ local function TrimStringSize( str, max )
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
 end
 
--- Instead of generating a random ID, we'll just fetch total factions + 1
+-- TODO: Instead of generating a random ID, we'll just fetch total factions + 1
 local function GenerateID()
     -- In the future, grab factions from DB and increment by 1 for total factions
     return #cfcFactions.Factions + 1
 end
 
--- function cfcFactions:CreateFaction( owner, name, color, description, inviteOnly, temporary )
-function cfcFactions:Faction( id )
+function cfcFactions:Faction( id ) 
+    -- TODO: If the faction does not return anything, we'll get nil here. Correct behavior or something to change, perhaps an empty table?
     return cfcFactions.Factions[id]
 end
 
@@ -136,6 +136,8 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     -- Let the owner of the faction know they successfully created the faction
     cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, PlayerIDStamp )
 
+    -- TODO: Send a notifcation to ALL other players ( not the owner ) that a new Faction, "%name" was created!
+
     net.Start( "CFC_Fac_FactionCreation" )
         -- private, name, description, owner, k/d, id
         net.WriteInt( FinalFaction.ID, 32 )
@@ -153,6 +155,7 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
 end
 
 -- Checks a specifc string to see if it is unique amongst other factions.
+-- This is kinda useless since we need to check from the sqldb first instead of just server tables.
 function cfcFactions:isUniqueName( faction_name )
     -- TODO: Change to check this on SQL side, not server!
     for k, v in pairs( cfcFactions.Factions ) do
@@ -164,8 +167,7 @@ function cfcFactions:isUniqueName( faction_name )
     return true
 end
 
-
--- REWORK
+-- TODO: Rework, potentially test types inside the table, and if anything is nil that shouldn't be.
 function cfcFactions:IsValidFaction( tbl )
     if ( not tbl ) and ( table.IsEmpty( tbl ) ) then
         return false
@@ -174,18 +176,19 @@ function cfcFactions:IsValidFaction( tbl )
     return true
 end
 
+-- TODO: Lets a faction set another faction as ally. Both factions should be notified when this happens. 
 function cfcFactions:SetAlly( id, ally )
 
 end
-
+-- TODO: Lets a faction set another faction as enemy. Both factions should be notified when this happens. 
 function cfcFactions:SetEnemy( id, enemy )
 
 end
-
+-- TODO: Lets a faction remove an ally. Both factions should be notified when this happens. 
 function cfcFactions:RemoveAlly( id, ally )
 
 end
-
+-- TODO: Lets a faction remove an enemy. Both factions should be notified when this happens. 
 function cfcFactions:RemoveEnemy( id, enemy )
 
 end
@@ -195,39 +198,41 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     local ErrorsToReturn = {}
     local EditingFaction = cfcFactions.Factions[id]
     ----------------
-    --[type checks]
+    -- [type checks]
     ----------------
+
 
     -- Note: Since moving functions permission and type checking out to a net Receiver
     -- We cannot do anything with "Players" nor send a player message from here
-
+    -- this is strictly type checking and making sure things are valid. NOT, PLAYER, PERMISSIONS
     -- Solution: this function will return a value on success or failure, if failure, the outer
     -- receiver can handle what to do
-
-    -- if not type( util.GetBySteamID64( tbl.Owner ) ) == "Player" then
-    --     -- Send Alert -> Not a valid PlayerType
-
-    --     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
-    --     owner = player.GetBySteamID64( Faction.Owner )
-    -- end
 
     local EditName = name
     local EditDescription = description
     local EditColor = color
     local EditPrivate = private
     local EditTemporary = temporary
+    -- TODO: Add a local variable to handle 'aborting' , if a ErrorsToReturn is critical enough to not
+    -- Lengthy explanation here
 
-    if table.IsEmpty( EditingFaction ) or not cfcFactions:IsValidFaction( EditingFaction ) then
-        table.insert( ErrorsToReturn, "404-faction" )
+    -- EditFaction can receieve nil. description, can be nil. Because in my head, whats happening here is a client will try to edit 
+    -- something they may not have permission to edit. If they CANNOT edit description and they sure as hell try to edit it, we'll pass nil
+    -- in the net receiver check ( Which handles if they have proper permission to edit )
+    -- So they try to edit everything else and they DO have proper permission to. So what happens here is they're allowed to edit the faction 
+    -- expect the permission they can't. If we were to return on ALL errors, we'll never get anywhere. Instead, we'll just return on something critical
+    -- like a completely missing faction. That seems like something to be upset about. 
+
+    if not cfcFactions:IsValidFaction( EditingFaction ) or table.IsEmpty( EditingFaction ) then
+        table.insert( ErrorsToReturn, "404-faction")
+        -- Todo, set the flag for aborting to true. Read the lengthy comment above to understand
     end
 
-    if type( EditName ) ~= "string" then
-        table.insert( ErrorsToReturn, "invalid-string-type" )
-    end
+    if not type( EditName ) == "string" then
+        -- Fine to NOT flag true for aborting.
+        table.insert( ErrorsToReturn, "invalid-string-type")
+    else
 
-    if type( EditDescription ) ~= "string" then
-        table.insert( ErrorsToReturn, "invalid-string-type" )
-    end
 
     if type( EditColor ) ~= "Color" then
         table.insert( ErrorsToReturn, "invalid-table-type" )
@@ -237,6 +242,12 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
         table.insert( ErrorsToReturn, "invalid-bool-type" )
     end
 
+    if type( EditDescription ) ~= "string" then
+        -- Fine to NOT flag true for aborting.
+        table.insert( ErrorsToReturn, "invalid-string-type")
+    else
+
+
     if type( EditTemporary ) ~= "string" then
         table.insert( ErrorsToReturn, "invalid-string-type" )
     end
@@ -245,38 +256,40 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     EditDescription = TrimStringSize( EditDescription, 255 )
 
     -- Finish up and ether edit, or return the errors
+    -- TODO: In order to include the flag for aborting, we'll check if aborting is true here, if its false, continue on 
+    -- but get the original faction values instead.
     if table.Count( ErrorsToReturn > 0 ) then
         return ErrorsToReturn
+    else
+        -- Take whatever values are in tbl, and put them into the main faction's table.
+        -- Honestly, not sure about this but for now, it works
+        EditingFaction.Name = EditName
+        EditingFaction.Description = EditDescription
+        EditingFaction.Color = EditColor
+        EditingFaction.Invite = EditPrivate
+        EditingFaction.Temporary = EditTemporary
+
+        hook.Call( "CFC_Factionhook_FactionEdited" )
+
+
+        -- TODO! be sure to call save to database as well
+
+
+        net.Start("CFC_Fac_FactionChanged")
+            net.WriteInt( id, 32 )
+            net.WriteString( EditingFaction.EditName )
+            net.WriteString( EditingFaction.EditDescription )
+            net.WriteColor( EditingFaction.Color )
+            net.WriteBool( EditingFaction.Invite )
+            net.WriteBool( EditingFaction.Temporary )
+        net.Broadcast()
+        -- TODO return the full edited faction
+        return EditingFaction
     end
-
-    -- Take whatever values are in tbl, and put them into the main faction's table.
-    -- Honestly, not sure about this but for now, it works
-    EditingFaction.Name = EditName
-    EditingFaction.Description = EditDescription
-    EditingFaction.Color = EditColor
-    EditingFaction.Invite = EditPrivate
-    EditingFaction.Temporary = EditTemporary
-
-    hook.Call( "CFC_Factionhook_FactionEdited" )
-
-
-    -- TODO! be sure to call save to database as well
-
-
-    net.Start( "CFC_Fac_FactionChanged" )
-        net.WriteInt( id, 32 )
-        net.WriteString( EditingFaction.EditName )
-        net.WriteString( EditingFaction.EditDescription )
-        net.WriteColor( EditingFaction.Color )
-        net.WriteBool( EditingFaction.Invite )
-        net.WriteBool( EditingFaction.Temporary )
-    net.Broadcast()
-
-    return {}
 end
 
+-- TODO: Probably a better way to load faction news
 local function requestFactionNews( len, ply )
-    -- Look into a better way of sending faction news to client
     for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
         net.Start( "CFC_Fac_SendNews" )
             net.WriteString( v .. "\n" )
@@ -287,7 +300,7 @@ end
 
 net.Receive( "CFC_Fac_RequestNews", requestFactionNews )
 
--- When client submits a faction to create, we receive it here
+-- When client submits a faction to create, we receive it here. This is a net side, we'll check perms here but not valid types (We probably should)
 local function RequestFactionCreation( len, ply )
 
     if ply and not IsValid( ply ) then return end
@@ -324,7 +337,7 @@ end
 
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
 
---  Net Receiver to handle editing a player's faction
+-- Net Receiver to handle editing a player's faction
 -- Both owners, and anyone who has permission, as well as admins can edit a faction.
 local function RequestFactionDetails( len, ply )
 
@@ -347,6 +360,9 @@ local function RequestFactionDetails( len, ply )
     -- If they do not pass that AND the data submitted is not empty or nil, we'll tell them improper permission
     -- This way clients send only the data they think they need to edit a faction, if they try to sneak around it
     -- and submit data they do not have access to, we'll tell them they're missing the permission and not assign anything
+
+    -- TODO: We should eventually do the notifcation system here to return a table of all error message keys that were triggered, then
+    -- send that small table all at once saying "Hey, you can't edit the name, color, and invite"
     if not fpm:hasPermission( TmpOwner, "CanEditName" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, TmpOwner )
         TmpName = EditingFaction.Name
@@ -393,6 +409,8 @@ function cfcFactions:RemoveFaction( ply, id )
     cfcFactions.Factions[factionID] = nil
     for _, Player in pairs( player.GetHumans() ) do
         if factioneers:IsInFaction( Player, factionID ) then
+                -- TODO Change to SetUserFaction instead of RemoveUser
+                -- RemoveUser completely wipes their data. 
             factioneers:RemoveUser( Player )
         end
     end
@@ -433,17 +451,5 @@ local function RequestFactionDeletion( len, ply )
     -- Tell the player they cannot delete the great infinite void of nothingness
     cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["faction-delete-fail"], 1, TmpOwner )
 end
-
 net.Receive( "CFC_Fac_RequestDelete", RequestFactionDeletion )
-
--- TODO: Delete this duplicate function definition
--- local function requestFactionNews( len, ply )
---     -- Look into a better way of sending faction news to client
---     for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
---         net.Start( "CFC_Fac_SendNews" )
---             net.WriteString( v .. "\n" )
---             net.WriteString( ply:Nick() )
---         net.Send( ply )
---     end
--- end
 

@@ -20,7 +20,7 @@ function meta:CFCToggleMenu()
 end
 
 --[[
-    TODO: rework a lot of this into sv_users.lua
+    TODO: rework a lot of this into fetching from sv_users.lua
 ]]--
 
 -- Checks to see if a player is currently in a faction. returns false if not in one.

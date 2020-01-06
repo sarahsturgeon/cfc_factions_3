@@ -142,7 +142,7 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
 
 end
 
--- Uses mysql.lua to save to database
+-- TODO: Uses mysql.lua to save to database
 function factioneers:SaveUser( user )
 
 end
@@ -182,9 +182,11 @@ function factioneers:SetUserFaction( user, id, rank )
     self:UpdateUser( user, _, id, rank )
 end
 
+--This completely removes a user's data. Ill advised if they have important stuff and use factions
 function factioneers:RemoveUser( user )
     factioneers[user:SteamID64()].FactionMetadata = nil
     factioneers[user:SteamID64()].FactionMetadata = ReturnDefaultTable().FactionMetadata
+    -- TODO: Save to DB!
 end
 
 function factioneers:HasExistingInvite( user, id )
@@ -221,6 +223,7 @@ end
 
 function factioneers:IsInFaction( user )
 
+    --TODO, rework to use sql checking instead of internal server tables
     if type( user == "string" ) then
         user = player.GetBySteamID( user )
     end
