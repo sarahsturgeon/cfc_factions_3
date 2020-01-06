@@ -409,7 +409,7 @@ function cfcFactions:RemoveFaction( ply, id )
     cfcFactions.Factions[factionID] = nil
     for _, Player in pairs( player.GetHumans() ) do
         if factioneers:IsInFaction( Player, factionID ) then
-                -- TODO Change to SetUserFaction instead of RemoveUser
+            -- TODO Change to SetUserFaction instead of RemoveUser
             -- RemoveUser completely wipes their data. 
             factioneers:RemoveUser( Player )
         end
