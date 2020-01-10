@@ -25,7 +25,7 @@ local function GenerateID()
     return #cfcFactions.Factions + 1
 end
 
-function cfcFactions:Faction( id ) 
+function cfcFactions:Faction( id )
     -- TODO: If the faction does not return anything, we'll get nil here. Correct behavior or something to change, perhaps an empty table?
     return cfcFactions.Factions[id]
 end
@@ -176,21 +176,21 @@ function cfcFactions:IsValidFaction( tbl )
     return true
 end
 
--- TODO: Lets a faction set another faction as ally. Both factions should be notified when this happens. 
+-- TODO: Lets a faction set another faction as ally. Both factions should be notified when this happens.
 function cfcFactions:SetAlly( id, ally )
-
 end
--- TODO: Lets a faction set another faction as enemy. Both factions should be notified when this happens. 
+
+-- TODO: Lets a faction set another faction as enemy. Both factions should be notified when this happens.
 function cfcFactions:SetEnemy( id, enemy )
-
 end
--- TODO: Lets a faction remove an ally. Both factions should be notified when this happens. 
+
+-- TODO: Lets a faction remove an ally. Both factions should be notified when this happens.
 function cfcFactions:RemoveAlly( id, ally )
 
 end
--- TODO: Lets a faction remove an enemy. Both factions should be notified when this happens. 
-function cfcFactions:RemoveEnemy( id, enemy )
 
+-- TODO: Lets a faction remove an enemy. Both factions should be notified when this happens.
+function cfcFactions:RemoveEnemy( id, enemy )
 end
 
 -- Edits a faction based on ID, player is who ever is editing it
@@ -216,12 +216,12 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     -- TODO: Add a local variable to handle 'aborting' , if a ErrorsToReturn is critical enough to not
     -- Lengthy explanation here
 
-    -- EditFaction can receieve nil. description, can be nil. Because in my head, whats happening here is a client will try to edit 
+    -- EditFaction can receieve nil. description, can be nil. Because in my head, whats happening here is a client will try to edit
     -- something they may not have permission to edit. If they CANNOT edit description and they sure as hell try to edit it, we'll pass nil
     -- in the net receiver check ( Which handles if they have proper permission to edit )
-    -- So they try to edit everything else and they DO have proper permission to. So what happens here is they're allowed to edit the faction 
+    -- So they try to edit everything else and they DO have proper permission to. So what happens here is they're allowed to edit the faction
     -- expect the permission they can't. If we were to return on ALL errors, we'll never get anywhere. Instead, we'll just return on something critical
-    -- like a completely missing faction. That seems like something to be upset about. 
+    -- like a completely missing faction. That seems like something to be upset about.
 
     if not cfcFactions:IsValidFaction( EditingFaction ) or table.IsEmpty( EditingFaction ) then
         table.insert( ErrorsToReturn, "404-faction")
@@ -254,7 +254,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     EditDescription = TrimStringSize( EditDescription, 255 )
 
     -- Finish up and ether edit, or return the errors
-    -- TODO: In order to include the flag for aborting, we'll check if aborting is true here, if its false, continue on 
+    -- TODO: In order to include the flag for aborting, we'll check if aborting is true here, if its false, continue on
     -- but get the original faction values instead.
     if table.Count( ErrorsToReturn > 0 ) then
         return ErrorsToReturn
@@ -406,7 +406,7 @@ function cfcFactions:RemoveFaction( ply, id )
     for _, Player in pairs( player.GetHumans() ) do
         if factioneers:IsInFaction( Player, factionID ) then
             -- TODO Change to SetUserFaction instead of RemoveUser
-            -- RemoveUser completely wipes their data. 
+            -- RemoveUser completely wipes their data.
             factioneers:RemoveUser( Player )
         end
     end
