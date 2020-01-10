@@ -44,7 +44,7 @@ end
 
 -- If the defined key is properly set, users can use that specific key to also open/close the derma
 local function menuKeyDown( ply, button )
-    if input.GetKeyName( button ) == cfcFactions.Config.CLIENT_KEY then
+    if input.GetKeyName( button ) == cfcFactions.Config.Client.CLIENT_KEY then
         cfcFactions:DisplayMenu()
     end
 end

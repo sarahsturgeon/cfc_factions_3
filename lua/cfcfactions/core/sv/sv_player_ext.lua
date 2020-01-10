@@ -9,7 +9,6 @@ but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 ]]--
 
 meta = FindMetaTable( "Player" )
-local fusers = cfcFactions.Users
 local fpm = cfcFactions.fpm
 function meta:CFCToggleMenu()
     if not fpm:hasPermission( self, "AccessAll" ) then
@@ -22,7 +21,7 @@ function meta:CFCToggleMenu()
 end
 
 --[[
-    TODO: rework a lot of this into sv_users.lua
+    TODO: rework a lot of this into fetching from sv_users.lua
 ]]--
 
 -- Checks to see if a player is currently in a faction. returns false if not in one.

@@ -89,7 +89,8 @@ hook.Add( 'PlayerSay', 'cfcPlayerSay', cfcPlayerSay )
 local function cfcOnPlayerInitialSpawn( ply )
 
     -- Always load a user as if never exsisted. Afterwards, load their proper data from source
-    cfcFactions.Users:registeruser( ply )
+    -- TODO: Instead of RegisteringUser, we load them from sql, if they're not found, THEN, we register them
+    cfcFactions.Users:registerUser( ply )
 
     for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
         net.Start( "CFC_Fac_SendNews" )
@@ -103,6 +104,7 @@ hook.Add( "PlayerInitialSpawn", "cfcPlayerInitialSpawn", cfcOnPlayerInitialSpawn
 
 -- PlayerSpawn hook
 -- handles loading the user and properly setting their faction upon entering the server
+--TODO: We can probably remove this eventually, since initalSpawn loads the proper details
 local function cfcPlayerSpawn( ply )
     if not IsValid( ply ) then return end
     ply:FetchUserData()

@@ -9,7 +9,7 @@ Global Tables: fpm.Permissions, fpm.Users.AuthUsers
 cfcFactions.fpm = cfcFactions.fpm or {}
 local fpm = cfcFactions.fpm
 fpm.Permissions = {}
-local cfcuser = cfcFactions.Users
+local factioneers = cfcFactions.Users
 
 fpm.Permissions.CorePermissions = {
         --  NamedKey = table( description )
@@ -111,13 +111,12 @@ end
 -- Revokes a user's permissions, essentialy removing them from cfcFaction's permission system
 function fpm:revokeUser( player )
     if player:IsPlayer() and IsValid( player ) then
-        cfcuser[player:SteamID64()].CFCPermissions = nil
+        factioneers[player:SteamID64()].CFCPermissions = nil
         return true
     end
 
     return false
 end
-
 
 -- forces init for all current humans connected
 function fpm:authAllUsers()
@@ -135,14 +134,14 @@ function fpm:authUser( authPlayer )
         return
     end
 
-    if cfcuser:UserExists( authPlayer ) then
-        if ( not ( cfcuser[authPlayer:SteamID64()].CFCPermissions == nil ) ) then
+    if factioneers:UserExists( authPlayer ) then
+        if ( not ( factioneers[authPlayer:SteamID64()].CFCPermissions == nil ) ) then
             -- Error out, player already has proper permissions for authentication
             return
         end
     end
 
-    cfcuser:registeruser( authPlayer )
+    factioneers:registerUser( authPlayer )
 
     -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
     local AuthUserPerms = {
@@ -175,8 +174,8 @@ function fpm:hasPermission( player, permission )
         return false
     end
 
-    local PlayerTable = cfcuser[player:SteamID64()].CFCPermissions
-    local PlayerFactionTable = cfcuser[player:SteamID64()].FactionMetadata.InternalFactionPermissions
+    local PlayerTable = factioneers[player:SteamID64()].CFCPermissions
+    local PlayerFactionTable = factioneers[player:SteamID64()].FactionMetadata.InternalFactionPermissions
 
     if PlayerTable == nil then
         return false
@@ -190,7 +189,7 @@ function fpm:hasPermission( player, permission )
         return true
     end
     -- If they can't even access factions, just return false for everything.
-    if table.HasValue( PlayerTable,  "AccessAll" ) then
+    if not table.HasValue( PlayerTable,  "AccessAll" ) then
         return false
     end
 
@@ -219,7 +218,7 @@ function fpm:addPermission( player, permission )
          return false
     end
 
-    local usr = cfcuser[player:SteamID64()]
+    local usr = factioneers:User( player ) 
     if fpm:IsSpecialPermission( permission ) == false then
         table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )
     else
@@ -230,7 +229,7 @@ end
 
 -- Revokes a permission( s ) from the player. True if success, false if otherwise
 function fpm:revokePermission( player, permission_string )
-    local usr = cfcuser[player:SteamID64()]
+    local usr = factioneers[player:SteamID64()]
     for Key, Permission in pairs( usr.CFCPermissions ) do
         if Permission == permission_string then
             usr.CFCPermissions[k] = nil
