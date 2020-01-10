@@ -8,6 +8,7 @@ local table = table
 local string = string
 local os = os
 local fpm = cfcFactions.fpm
+local logger = cfcFactions.logger
 
 --------------------------------------------------------------------------------------------------------------
 -- FACTIONS MANAGMENT COMMANDS
@@ -24,12 +25,15 @@ local function allowFactionPermission( ply, cmd, args )
         if fpm:hasPermission( ply, "IsDeveloper" ) then
             if fpm:addPermission( ply, args[1] ) == true then
                 ply:ChatPrint( string.format( "You have been granted access: %s", args[1] ) )
+                logger:info( string.format( "%s has been granted access to %s", ply:GetName(), args[1] ) )
             end
         else
             ply:ChatPrint( "You require developer level permissions for this command." )
+            logger:info( string.format( "%s requires developer level to edit permissions.", ply:GetName() ) )
         end
     else
         ply:ChatPrint( "Unknown permission was not added." )
+        logger:info( string.format( "Invalid permission: %s", args[1] ) )
     end
 end
 
@@ -40,13 +44,14 @@ local function removeFactionPermission( ply, cmd, args )
     if fpm:IsValidPermission( args[1] ) then
         if fpm:hasPermission( ply, "IsDeveloper" ) then
             if fpm:revokePermission( ply, args[1] ) then
-                print( string.format( "Success on removing permission %s", args[1] ) )
+                logger:info( string.format( "%s has been denied access to %s", ply:GetName(), args[1] ) )
             end
         else
             ply:ChatPrint( "You require developer level permissions for this command." )
+            logger:info( string.format( "%s requires developer level to edit permissions.", ply:GetName() ) )
         end
     else
-        print( string.format( "Failure on removing permission %s", args[1] ) )
+        logger:info( string.format( "Invalid permission: %s", args[1] ) )
     end
 end
 
@@ -56,12 +61,12 @@ concommand.Add( "fpvp_removepermission", removeFactionPermission )
 local function checkFactionPermission( ply, cmd, args )
     if fpm:IsValidPermission( args[1] ) then
         if fpm:hasPermission( ply, args[1] ) then
-            print( string.format( "Player has proper permission %s.", args[1] ) )
+            logger:info( string.format( "Player has proper permission %s.", args[1] ) )
         else
-            print( string.format( "Player does not have proper permission %s.", args[1] ) )
+            logger:info( string.format( "Player does not have proper permission %s.", args[1] ) )
         end
     else
-        print( string.format( "%s is not a valid permission.", args[1] ) )
+        logger:info( string.format( "%s is not a valid permission.", args[1] ) )
     end
 end
 
