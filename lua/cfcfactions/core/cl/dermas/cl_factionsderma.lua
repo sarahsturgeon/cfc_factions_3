@@ -167,7 +167,7 @@ local function addFaction( tbl )
     local Faction = tbl
     local tmpLock = Faction.Invite and "L" or ""
     local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
-    local killDeathRatio = Factions.Kills .. "/" .. Faction.Deaths
+    local killDeathRatio = Faction.Kills .. "/" .. Faction.Deaths
 
     -- Add faction to clientside table
     cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, killDeathRatio, Faction.ID )
