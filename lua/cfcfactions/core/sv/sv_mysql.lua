@@ -8,7 +8,6 @@ Purpose: Core functions that handle saving and loading from the mysql-db. Loads 
 
 require( 'mysqloo' )
 local mysqloo = mysqloo
-local table = table
 local string = string
 
 local config = cfcFactions.Config.Server.MySQL

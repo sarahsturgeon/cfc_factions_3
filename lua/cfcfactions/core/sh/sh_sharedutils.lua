@@ -9,7 +9,6 @@ Global Tables: cfcFactions.Dermas, cfcFactions.Alerts, cfcFactions.ErrorMessages
 
 local net = net
 local string = string
-local table = table
 cfcFactions.Credits = cfcFactions.Credits or {}
 -- Sends a notifaction msg:string, mtype:number, player:entity
 
