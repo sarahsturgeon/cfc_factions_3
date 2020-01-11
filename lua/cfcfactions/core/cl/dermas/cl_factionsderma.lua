@@ -5,12 +5,8 @@ cfcFactions.Factions = cfcFactions.Factions or {}
 cfcFactions.FactionsListView = nil
 local Panel = {}
 local cfg = cfcFactions.Config.Client
-local MinQuery = 1
-local MaxQuery = 15
 
 cfcFactions:RegisterDermaMenu( "View Factions", Panel, 1 )
-
-
 
 function Panel:Init()
     cfcFactions.FactionsView = 1
@@ -171,8 +167,10 @@ local function addFaction( tbl )
     local Faction = tbl
     local tmpLock = Faction.Invite and "L" or ""
     local PrettyOwnerName = player.GetBySteamID64( Faction.Owner ):Nick()
+    local killDeathRatio = Faction.Kills .. "/" .. Faction.Deaths
+
     -- Add faction to clientside table
-    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, ( Faction.Kills .. "/" .. Faction.Deaths ), Faction.ID )
+    cfcFactions.FactionsListView:AddLine( tmpLock, Faction.Name, Faction.Description, PrettyOwnerName, killDeathRatio, Faction.ID )
     cfcFactions.FactionsListView:DataLayout()
 
 end
@@ -198,9 +196,9 @@ end
 
 net.Receive( "CFC_Fac_SendFactionSubmit", factionCreated )
 
-local function factionEdited()
-
-end
+-- TODO: Define or remove
+-- local function factionEdited()
+-- end
 
 local function FactionRefresh()
     local IncomingJSONVar = net.ReadString()
@@ -221,4 +219,4 @@ end
 
 net.Receive( "CFC_Fac_FactionRefresh", FactionRefresh )
 
-vgui.Register( 'D_cfcfactionsderma', Panel )
+vgui.Register( "D_cfcfactionsderma", Panel )

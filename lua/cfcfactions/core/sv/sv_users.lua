@@ -7,8 +7,6 @@ Global Tables: cfcFactions.Users
 ]]--
 cfcFactions.Users = cfcFactions.Users or {}
 local factioneers = cfcFactions.Users
-local fpm = cfcFactions.fpm
-
 
 -- What a user should have when first logging into the server
 local function ReturnDefaultTable()
@@ -44,7 +42,7 @@ function factioneers:registerUser( user )
         return
     end
 
-    print('Registering new user #P=' .. user:SteamID64() )
+    print( "Registering new user #P = " .. user:SteamID64() )
     factioneers[user:SteamID64()]  = ReturnDefaultTable()
     factioneers[user:SteamID64()].DisplayName = user:Nick()
     factioneers[user:SteamID64()].SteamID = user:SteamID()
@@ -71,33 +69,38 @@ local function IsValidAndOfType( item, gtype )
 end
 
 local function IsValidNumber( num )
-    return IsValidAndOfType( num, 'number' )
+    return IsValidAndOfType( num, "number" )
 end
 
 local function IsValidString( str )
-    return IsValidAndOfType( str, 'string' )
+    return IsValidAndOfType( str, "string" )
 end
 
 -- Returns a table of the user's stuff
-function factioneers:User( ply ) 
-    if not ( type( ply ) == "Player" ) then return nil end
-    if IsValid(ply) and ply:IsPlayer() then
-        if factioneers:UserExists( ply ) then
-            return factioneers[ply:SteamID64()]
-        end
-    else
-        return nil
-    end
+function factioneers:User( ply )
+    if type( ply ) ~= "Player" then return end
+
+    local playerIsValid = IsValid( ply ) and ply:IsPlayer()
+    local playerExists = factioneers:UserExists( ply )
+
+    if not playerIsValid then return end
+    if not playerExists then return end
+
+    return factioneers[ply:SteamID64()]
 end
 
 -- Used to update a player's table of associated variables
 function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
-    local PlayerEnt = user
-    if not ( IsValid( PlayerEnt ) and PlayerEnt:IsPlayer() ) then
-        if ( type( PlayerEnt ) == "string" ) then
-            PlayerEnt = player.GetBySteamID64( user )
-            factioneers:UpdateUser( PlayerEnt, lastonline, factionid, kills, deaths, factionrank )
-        end
+    local plyEnt = user
+
+    local playerIsInvalid = not ( IsValid( plyEnt ) and plyEnt:IsPlayer() )
+
+    -- TODO: name this to describe what it is
+    local plyEntIsString = type( plyEnt ) == "string"
+
+    if playerIsInvalid and plyEntIsString then
+        plyEnt = player.GetBySteamID64( user )
+        factioneers:UpdateUser( plyEnt, lastonline, factionid, kills, deaths, factionrank )
     end
 
     if not factioneers:UserExists( user ) then
@@ -113,9 +116,7 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
         userTable["LastOnline"] = lastonline
     end
 
-    if not IsValidNumber( factionid ) then
-
-    else
+    if IsValidNumber( factionid ) then
         if cfcFactions:IsValidFaction( cfcFactions.Factions[factionid] ) then
             userFactionTable["FactionID"] = factionid
             if IsValidNumber( kills ) then
@@ -130,12 +131,12 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
                 userFactionTable["FactionRank"] = factionrank
             end
         else
-          --Conditional Statement for if a faction is NOT valid.
-          --We can likely send error to client stateing that.
+          -- Conditional Statement for if a faction is NOT valid.
+          -- We can likely send error to client stateing that.
           return
         end
-        --alert user not a proper number
-        --Conditional Statement for if a faction id is not a number
+        -- alert user not a proper number
+        -- Conditional Statement for if a faction id is not a number
         return
     end
 
@@ -189,31 +190,35 @@ function factioneers:RemoveUser( user )
 end
 
 function factioneers:HasExistingInvite( user, id )
-    if Isvalid( user ) and user:IsPlayer() then
-        if table.hasValue( factioneers[user:SteamID64()].PendingInvites.FactionID, id ) then
-            return true
-        else
-            return false
-        end
-        return
+    local playerIsValid = IsValid( user ) and user:IsPlayer()
+
+    if not playerIsValid then return end
+
+    if table.hasValue( factioneers[user:SteamID64()].PendingInvites.FactionID, id ) then
+        return true
     end
+
+    return false
 end
 
 function factioneers:AddUserInvite( user, id, inviter )
-    if Isvalid( user ) and user:IsPlayer() then
-        if not factioneers:HasExistingInvite( user, id ) then
-            table.insert( factioneers[user:SteamID64()].PendingInvites, {
-                ["FactionID"] = id,
-                ["InviterSteamID"] = inviter:SteamID64()
-            } )
-        end
+    local playerIsValid = IsValid( user ) and user:IsPlayer()
+    local hasInvitesPending = factioneers:HasExistingInvite( user, id )
+
+    if playerIsValid and not hasInvitesPending then
+        table.insert( factioneers[user:SteamID64()].PendingInvites, {
+            ["FactionID"] = id,
+            ["InviterSteamID"] = inviter:SteamID64()
+        } )
     end
 end
 
 function factioneers:RemoveUserInvite( user, id )
-    if Isvalid( user ) and user:IsPlayer() then
-        factioneers[user:SteamID64()].PendingInvites[id] =nil
-    end
+    local playerIsValid = IsValid( user ) and user:IsPlayer()
+
+    if not playerIsValid then return end
+
+    factioneers[user:SteamID64()].PendingInvites[id] = nil
 end
 
 function factioneers:IsInFaction( user )
@@ -250,11 +255,11 @@ function factioneers:IsInFaction( user, id )
     end
 end
 
-local function SendUserRefresh( data )
+-- TODO: Delete or fill
+-- local function SendUserRefresh( data )
+-- end
 
-end
-
-local function factionsPlayerInitialSpawn( player )
-    cfcFactions.fpm:authUser( player )
+local function factionsPlayerInitialSpawn( ply )
+    cfcFactions.fpm:authUser( ply )
 end
 hook.Add( "PlayerInitialSpawn", "CFC_Fac_PlayerInitialSpawn", factionsPlayerInitialSpawn )
