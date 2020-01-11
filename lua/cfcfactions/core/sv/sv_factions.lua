@@ -420,7 +420,7 @@ local function RequestFactionDeletion( len, ply )
     local FactionToDelete = net.ReadInt( 32 )
     if ply and not IsValid( ply ) then return end
 
-    -- Need to check if player ( If NOT a admin, or NOT a dev ), is in the faction )
+    -- Need to check if player ( If NOT an admin, or NOT a dev ), is in the faction )
     if fpm:IsFactionAdmin( ply ) or fpm:IsDev( ply ) then
         cfcFactions:RemoveFaction( ply, FactionToDelete )
         -- allow them to delete the faction no matter what
