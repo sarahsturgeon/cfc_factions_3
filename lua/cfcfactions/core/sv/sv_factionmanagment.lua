@@ -5,7 +5,6 @@ Purpose: server-side commands to manipulate cfcFactions
 ]]--
 if not SERVER then return end
 local string = string
-local os = os
 local fpm = cfcFactions.fpm
 local factioneers = cfcFactions.Users
 
@@ -20,16 +19,21 @@ local factioneers = cfcFactions.Users
 --------------------------------------------------------------------------------------------------------------
 -- Grants a player permission based on "Player Name":player, "Permission":string
 local function allowFactionPermission( ply, cmd, args )
-    if fpm:IsValidPermission( args[1] ) then
-        if fpm:hasPermission( ply, "IsDeveloper" ) then
-            if fpm:addPermission( ply, args[1] ) == true then
-                ply:ChatPrint( string.format( "You have been granted access: %s", args[1] ) )
-            end
+    if not fpm:IsValidPermission( args[1] ) then
+        return ply:ChatPrint( "Unknown permission was not added." )
+    end
+
+    local isDeveloper = fpm:hasPermission( ply, "IsDeveloper" )
+
+    if isDeveloper then
+        if fpm:addPermission( ply, args[1] ) == true then
+            ply:ChatPrint( string.format( "You have been granted access: %s", args[1] ) )
         else
-            ply:ChatPrint( "You require developer level permissions for this command." )
+            -- TODO:
+            Error("TODO: What happens here?")
         end
     else
-        ply:ChatPrint( "Unknown permission was not added." )
+        ply:ChatPrint( "You require developer level permissions for this command." )
     end
 end
 
@@ -37,16 +41,19 @@ concommand.Add( "fpvp_allowpermission", allowFactionPermission )
 
 -- Removes a player permission based on "Player Name":player, "Permission":string
 local function removeFactionPermission( ply, cmd, args )
-    if fpm:IsValidPermission( args[1] ) then
-        if fpm:hasPermission( ply, "IsDeveloper" ) then
-            if fpm:revokePermission( ply, args[1] ) then
-                print( string.format( "Success on removing permission %s", args[1] ) )
-            end
+    if not fpm:IsValidPermission( args[1] ) then
+        return print( string.format( "Failure on removing permission %s", args[1] ) )
+    end
+
+    if fpm:hasPermission( ply, "IsDeveloper" ) then
+        if fpm:revokePermission( ply, args[1] ) then
+            print( string.format( "Success on removing permission %s", args[1] ) )
         else
-            ply:ChatPrint( "You require developer level permissions for this command." )
+            -- TODO:
+            Error("TODO: What happens here?")
         end
     else
-        print( string.format( "Failure on removing permission %s", args[1] ) )
+        ply:ChatPrint( "You require developer level permissions for this command." )
     end
 end
 
@@ -54,15 +61,16 @@ concommand.Add( "fpvp_removepermission", removeFactionPermission )
 
 -- Checks if a player has permission based on "Player Name":player, "Permission":string
 local function checkFactionPermission( ply, cmd, args )
-    if fpm:IsValidPermission( args[1] ) then
-        if fpm:hasPermission( ply, args[1] ) then
-            print( string.format( "Player has proper permission %s.", args[1] ) )
-        else
-            print( string.format( "Player does not have proper permission %s.", args[1] ) )
-        end
-    else
+    if not fpm:IsValidPermission( args[1] ) then
         print( string.format( "%s is not a valid permission.", args[1] ) )
+        return
     end
+
+    if fpm:hasPermission( ply, args[1] ) then
+        return print( string.format( "Player has proper permission %s.", args[1] ) )
+    end
+
+    print( string.format( "Player does not have proper permission %s.", args[1] ) )
 end
 
 concommand.Add( "fpvp_checkpermission", checkFactionPermission )
@@ -78,11 +86,11 @@ concommand.Add( "fpvp_printpermissions", printFactionPermissions )
 
 -- Makes the player leave their faction
 local function leaveFaction( ply, cmd, args )
-    if fpm:hasPermission( ply, "CanLeaveFaction" ) then
-        factioneers:RemoveUser( ply )
-    else
-        cfcFactions:SendNotifcation( "You do not have the permission to leave the faction.", 4, ply )
+    if not fpm:hasPermission( ply, "CanLeaveFaction" ) then
+        return cfcFactions:SendNotifcation( "You do not have the permission to leave the faction.", 4, ply )
     end
+
+    factioneers:RemoveUser( ply )
 end
 
 concommand.Add( "fpvp_leavefaction", leaveFaction )
@@ -93,6 +101,7 @@ concommand.Add( "fpvp_leavefaction", leaveFaction )
 -- player:player, faction_id:number
 local function forceSetFaction( ply, cmd, args )
     local factionid = args[1]
+
     if factionid == nil then -- err out
         return
     end
@@ -115,8 +124,8 @@ concommand.Add( "fpvp_factionmenu", factionMenu )
 -- HOOKS
 --------------------------------------------------------------------------------------------------------------
 
-local function factionsPlayerInitialSpawn( player )
-    cfcFactions.fpm:authUser( player )
-end
-
+-- TODO: delete or use
+-- local function factionsPlayerInitialSpawn( player )
+--     cfcFactions.fpm:authUser( player )
+-- end
 

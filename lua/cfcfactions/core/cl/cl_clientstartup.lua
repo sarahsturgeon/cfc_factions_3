@@ -56,25 +56,24 @@ local function toogleFactionDerma( len, ply )
     cfcFactions:DisplayMenu()
 end
 
-net.Receive( 'CFC_Fac_ToggleDerma', toogleFactionDerma )
+net.Receive( "CFC_Fac_ToggleDerma", toogleFactionDerma )
 
 local function sendFactionMessage( len, ply )
 
 end
 
-net.Receive( 'CFC_Fac_SendMessage', sendFactionMessage )
+net.Receive( "CFC_Fac_SendMessage", sendFactionMessage )
 
 local function sendServerTextAlert( len, ply )
     local msg = net.ReadString()
     local mtype = net.ReadInt( 4 )
-    local ment = net.ReadEntity()
 
-    if cfcFactions.MainDerma ~= nil then
-        cfcFactions.MainDerma:CreateAlert( msg, mtype )
-    end
+    if not cfcFactions.MainDerma then return end
+
+    cfcFactions.MainDerma:CreateAlert( msg, mtype )
 end
 
-net.Receive( 'CFC_Fac_SendServerTextAlert', sendServerTextAlert )
+net.Receive( "CFC_Fac_SendServerTextAlert", sendServerTextAlert )
 
 function FetchFactionRefresh( len, ply )
 

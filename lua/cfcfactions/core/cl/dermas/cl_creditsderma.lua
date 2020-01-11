@@ -28,4 +28,4 @@ function Panel:Think()
 
 end
 
-vgui.Register( 'D_cfccreditssderma', Panel )
+vgui.Register( "D_cfccreditssderma", Panel )
