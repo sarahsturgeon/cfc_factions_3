@@ -47,8 +47,11 @@ end
 -- Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
     if not SERVER then return end
-    MsgN( "Initializing cfcFactions" )
 
+    logger:on( "error" ):call( ErrorNoHalt )
+    logger:on( "fatal" ):call( error )
+
+    MsgN( "Initializing cfcFactions" )
 
     -- Make sure tables exsist
     if sql_db == nil then
