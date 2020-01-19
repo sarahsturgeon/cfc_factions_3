@@ -1,7 +1,13 @@
 cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
 cfcFactions.Factions = cfcFactions.Factions or {}
+
 cfcFactions.logger = CFCLogger( "CFC Factions 3" )
+local logger = cfcFactions.logger
+
+-- Logger callbacks
+logger:on( "error" ):call( ErrorNoHalt )
+logger:on( "fatal" ):call( error )
 
 -- sh
 include( "cfcfactions/core/sh/sh_init.lua" )
@@ -50,9 +56,6 @@ end
 -- Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
     if not SERVER then return end
-
-    logger:on( "error" ):call( ErrorNoHalt )
-    logger:on( "fatal" ):call( error )
 
     logger:info( "Initializing cfcFactions" )
 
