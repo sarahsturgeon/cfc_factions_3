@@ -7,6 +7,7 @@ Global Tables: cfcFactions.Users
 ]]--
 cfcFactions.Users = cfcFactions.Users or {}
 local factioneers = cfcFactions.Users
+local logger = cfcFactions.logger
 
 -- What a user should have when first logging into the server
 local function ReturnDefaultTable()
@@ -34,15 +35,17 @@ function factioneers:registerUser( user )
 
     if not user:IsPlayer() then
         -- Error out, not a player
+        logger:error( "Cannot register user, player is invalid!" )
         return
     end
 
     if factioneers:UserExists( user ) then
         -- Error out if already exist
+        logger:error( "Cannot register user, user " .. user:SteamID() .. " already exists!" )
         return
     end
 
-    print( "Registering new user #P = " .. user:SteamID64() )
+    logger:info( "Registering new user #P = " .. user:SteamID64() )
     factioneers[user:SteamID64()]  = ReturnDefaultTable()
     factioneers[user:SteamID64()].DisplayName = user:Nick()
     factioneers[user:SteamID64()].SteamID = user:SteamID()
@@ -54,6 +57,7 @@ end
 function factioneers:UserExists( user )
     if not ( user and IsValid( user ) ) then
         -- Error out, not a player
+        logger:error( "Cannot verify user, player is invalid!" )
         return false
     end
 
@@ -133,11 +137,14 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
         else
           -- Conditional Statement for if a faction is NOT valid.
           -- We can likely send error to client stateing that.
+          logger:error( "Cannot update user, user's faction is not valid!" )
           return
         end
         -- alert user not a proper number
         -- Conditional Statement for if a faction id is not a number
         return
+    else
+        logger:error( "Faction ID is not a proper number!" )
     end
 
 end
