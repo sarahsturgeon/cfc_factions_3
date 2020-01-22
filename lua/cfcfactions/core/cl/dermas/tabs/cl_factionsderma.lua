@@ -18,6 +18,7 @@ function PANEL:Init()
     self.CurrentRequestAmountMax = 10
 
     self.IsPrettyView = true
+    self.CurrentlySelectedFaction = nil
 
     self.ChangeViewPanel = vgui.Create( "DPanel", self )
     self.ChangeViewPanel:Dock( TOP )
@@ -44,7 +45,7 @@ function PANEL:Init()
     self.QuickView:Dock( LEFT )
     self.QuickView:DockMargin( 15, 0, 0, 0 )
     self.QuickView.Label:Dock( RIGHT )
-    function self.QuickView:OnChange(state)
+    function self.QuickView:OnChange( state )
         factionsDerma:SetIsPrettyView( false )
     end
 
@@ -116,6 +117,13 @@ function PANEL:Init()
     self.EditFaction = vgui.Create( "DButton", self.BottomButtonsControlGrid )
     self.EditFaction:SetText( "Edit Faction" )
     self.EditFaction:Dock( LEFT )
+    self.EditFaction.OnMouseReleased = function( keyCode )
+        if keyCode == MOUSE_LEFT then
+            if self.CurrentlySelectedFaction ~= nil then
+                local EditingFactionPanel
+            end
+        end
+    end
     self.DeleteFaction = vgui.Create( "DButton", self.BottomButtonsControlGrid )
     self.DeleteFaction:SetText( "Delete Faction" )
     self.DeleteFaction:Dock( LEFT )
@@ -134,7 +142,7 @@ function PANEL:Init()
 
 
     -- self.ButtonsContainer:SetWide( self.FirstPage:GetWide() + self.PreviousPage:GetWide() + self.NextPage:GetWide() + self.LastPage:GetWide() )
-    --cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
+    --  cfcFactions:ResizeParentFromChildren( self.ButtonsContainer )
 
     for K=1, 5 do
         self:DebugAddFaction( K )  
@@ -170,7 +178,9 @@ function PANEL:SetIsPrettyView( state )
 end
 
 function PANEL:DebugAddFaction( id )
-    local name = string.rep("A", 31)
+    --TODO REMOVE
+    Msg("[Debugging]" .. id)
+    local name = string.rep( "A", 31 )
     if self.Test[id] then 
         self.Test[id]:Remove()
     end
@@ -185,27 +195,34 @@ function PANEL:DebugAddFaction( id )
         return
     end
 
-    self.Test[id] = vgui.Create("D_factionpanel", PanelToAttach)
+    self.Test[id] = vgui.Create( "D_factionpanel", PanelToAttach )
     self.Test[id]:SetSize( PanelToAttach:GetWide(), 100 )
     self.Test[id]:SetFactionName( name )
     self.Test[id]:SetFactionID( id )
     self.Test[id]:SetFactionDescription( "This is a test faction. It has a really long description lol, sure do hope it doesn't break anything :)" )
     self.Test[id]:Dock( TOP )
     self.Test[id]:DockMargin( 100, 10, 100, 10 )
-    self.Test[id]:SetFactionPrivate(math.random() > 0.5)
+    self.Test[id]:SetFactionPrivate( math.random() > 0.5 )
     self.Test[id]:SetFactionOwner( LocalPlayer():Nick() )
     self.Test[id]:SetPaintBorderEnabled( true )
-    self.Test[id]:SetFactionKD(10, 2)
+    self.Test[id]:SetFactionKD( 10, 2 )
+    self.Test[id].OnMouseReleased = function() 
+        self:SetSelectedFaction( self.Test[id] )
+    end
 end
 function PANEL:AddFactionRow( faction )
     self.Rows[faction] = vgui.Create( "" )
 
-    local Test = vgui.Create("D_factionpanel", self.MiddleContainer )
+    local Test = vgui.Create( "D_factionpanel", self.MiddleContainer )
     Test:SetSize( 355, 100 )
-    Test:SetFactionName( "A test faction")
-    --Test:Dock( TOP )
-    Test:SetPaintBorderEnabled( true )
-
+    Test:SetFactionName( faction:GetName() )
 end
 
+function PANEL:SetSelectedFaction( panel )
+    Msg("Selecting faction")
+    if panel:IsValid() ~= false then
+        return
+    end
+    self.CurrentlySelectedFaction = panel
+end
 

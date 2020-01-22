@@ -38,8 +38,9 @@ function PANEL:Init()
     --Magic numbers to subtly adjust the panel's size
     local ButtonTextWidthModifier = 7
     local ButtonTextTallModifier = 0.5
+    self.SubMainViewPanel = {}
 
-    self:Dock(FILL)
+    self:Dock( FILL )
 
     -- window buttons
     self.CloseButton = vgui.Create( 'DButton', self )
@@ -62,8 +63,6 @@ function PANEL:Init()
     self.MenuBar:Dock( TOP )
     self.MenuBar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
     self.MenuBar:SetBackgroundColor( cfg.BackgroundPanel )
-
-    
 
     --Used to manage MenuBar buttons
     self.ButtonState = {}
@@ -185,7 +184,7 @@ function PANEL:AddToMainView( panel, state )
     if self.MainView:IsValid() then
         --Clear any PANELs currently in the main view
         self.MainView:Clear()
-        self.SubMainViewPanel = vgui.Create( panel, self.MainView )   
+        self.SubMainViewPanel = vgui.Create( panel, self.MainView )  
         self.SubMainViewPanel:SetSize( self.MainView:GetWide(), self.MainView:GetTall() )
         self.SubMainViewPanel:Dock( FILL )
     end
