@@ -18,15 +18,15 @@ local function AssignFactionID()
 end
 --Takes a string to check, and a number to limit the string to and returns a EDITED string for less than the max number given
 local function TrimStringSize( str, max )
+    if #str == 0 then return "" end
     local TemporaryString = str
     local MaxCharTrim = max and max > 0 or 32
     
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
-    return TemporaryString
 end
 --Arguments: id:number, owner:ply, name:string, color:table, description:string, private:boolean, markForDeletion:boolean
 --Purpose: Create a faction with specific parameters. id, owner, name are atleast needed
-function Faction:Create( id, owner, name, color, description, private, temporary, markForDeletion )
+function Faction:Create( id, owner, name, color, description, private, markForDeletion )
     self:Init()
     self:SetID( id )
     self:SetOwner( owner )
@@ -35,6 +35,7 @@ function Faction:Create( id, owner, name, color, description, private, temporary
     self:EditDescription( description )
     self:SetMarkForDeletion( markForDeletion )
     self:SetPrivateFaction( private )
+    self:SetFactionSave( true )
 end
 --Arguments: none
 --Purpose: Inits a faction to be used
@@ -55,7 +56,7 @@ function Faction:Init()
     self.Owner = ""
     self.Ranks = {}
     self.MarkFactionForDeletion = true -- Alias of IsTemporary
-
+    self.MarkFactionForSave = false
     --Extras
     self.Allies = {}
     self.Enemies = {}
@@ -84,31 +85,37 @@ end
 --Purpose: Change a faction's name
 function Faction:SetName( name )
     self.Name = TrimStringSize( name, 32 )
+    self:SetFactionSave( true )
 end
 --Arguments: color:color
 --Purpose: Change a faction's color
 function Faction:SetColor( color )
     self.Color = color
+    self:SetFactionSave( true )
 end
 --Arguments: datetime:string
 --Purpose: Change a faction's creation date
 function Faction:SetEditedDate( datetime )
     self.Created = datetime
+    self:SetFactionSave( true )
 end
 --Arguments: datetime:string
 --Purpose: Change a faction's edited date
 function Faction:SetEditedDate( datetime )
     self.Edited = datetime
+    self:SetFactionSave( true )
 end
 --Arguments: desc:string
 --Purpose: Change a faction's description
 function Faction:SetDescription( desc )
     self.Description = MaxCharTrim( desc, 255 )
+    self:SetFactionSave( true )
 end
 --Arguments: datetime:string
 --Purpose: Change a faction's last saved date
 function Faction:SetLastSavedDate( datetime )
     self.LastSaved = datetime
+    self:SetFactionSave( true )
 end
 --Arguments: group:string, perms:table
 --Purpose: Add a new rank to the faction with a table of perms. If the group exists, return false else true
@@ -116,6 +123,7 @@ function Faction:AddRank( group, perms )
     if group == nil or perms == nil then return false end
     if self.Ranks[group] == nil then
         self.Ranks[group] = perms
+        self:SetFactionSave( true )
         return true
     else
         return false
@@ -125,52 +133,103 @@ end
 --Purpose: Set whether the faction should be private or not
 function Faction:SetPrivateFaction( boolean )
     self.PrivateFaction = boolean
+    self:SetFactionSave( true )
 end
 --Arguments: boolean:bool
 --Purpose: Set whether the faction should be marked for deletion or not
 function Faction:SetMarkForDeletion( boolean )
     self.MarkFactionForDeletion = boolean
+    self:SetFactionSave( true )
 end
 --Arguments: id:number, status:string, reason:string
---Purpose: Set whether the faction should be marked for deletion or not
-function cfcFactions:SetRelationship( id, status, reason )
-    if self.Allies[id] ~= nil then
-        self.Allies[id].status = status
-        self.Allies[id].reason = MaxCharTrim( reason, 255 )
-    elseif self.Enemies[id] ~= nil then
+--Purpose: Set a relationship to another faction
+function Faction:SetRelationship( id, status, reason )
+    if id == nil then return false end
 
+    if status == "ENEMY" then
+        self.Enemies[id] = {
+            ["status"] = "ENEMY",
+            ["reason"] = MaxCharTrim( reason, 255 )
+        }
+        self.Allies[id] = nil
+        self:SetFactionSave( true )
+        return true
+    elseif status == "ALLY" then
+        self.Allies[id] = {
+            ["status"] = "ALLY",
+            ["reason"] = MaxCharTrim( reason, 255 )
+        }
+         self.Enemies[id] = nil
+         self:SetFactionSave( true )
+        return true
     else
+        return false
+    end
 
     end
 end
---Arguments: string
---Purpose: Change a faction's name
-function Faction:SetAllies( )
-
+--Arguments: boolean:bool
+--Purpose: Sets a faction to be saved to database
+function Faction:SetFactionSave( boolean )
+    self.MarkFactionForSave = boolean
+    self:SetFactionSave( true )
 end
---Arguments: string
---Purpose: Change a faction's name
-function Faction:SetEnemies( )
 
+--Arguments: id:number, reason:string
+--Purpose: Set an ally of the faction
+function Faction:SetAlly( id, reason )
+    self:SetRelationship( id, "ALLY", reason )
 end
---Arguments: string
---Purpose: Change a faction's name
-function Faction:SetCurrency( )
+--Arguments: id:number, reason:string
+--Purpose: Set an enemy of the faction
+function Faction:SetEnemy( id, reason )
+    self:SetRelationship( id, "ENEMY", reason )
+end
+--Arguments: currencyName:string, currencyValue:number
+--Purpose: Set a faction's currency. They can name their own currency
+function Faction:SetCurrency( currencyName, currencyValue )
+    if currencyName == nil then
+        currencyName = "Points"
+    end
+    if currencyValue < 0 then 
+        currencyValue = 0
+    end
+    self.Currency = {
+        ["CurrencyName"] = MaxCharTrim( currencyName, 25 ),
+        ["CurrencyValue"] = currencyValue and currencyValue > 0 or 0
+    }
+    self:SetFactionSave( true )
+end
+--Arguments: deaths:number
+--Purpose: Set a faction's deaths
+function Faction:SetDeaths( deaths )
+    self.Deaths = deaths
+    self:SetFactionSave( true )
+end
+--Arguments: kills:number
+--Purpose: Set a faction's kills
+function Faction:SetKills( kills )
+    self.kills = kills
+    self:SetFactionSave( true )
+end
 
+function Faction:AddDeath( )
+    self.Deaths = self.Deaths + 1
+    self:SetFactionSave( true )
 end
---Arguments: string
---Purpose: Change a faction's name
-function Faction:SetDeaths( )
 
+function Faction:AddKill( )
+    self.Kills = self.Kills + 1
+    self:SetFactionSave( true )
 end
---Arguments: string
---Purpose: Change a faction's name
-function Faction:SetKills( )
 
-end
 --Arguments: string
 --Purpose: Change a faction's name
 function Faction:ToggleMarkForDeletion()
-    self.MarkFactionForDeletion = !self.MarkFactionForDeletion
+    self:SetMarkForDeletion( !self.MarkFactionForDeletion )
     return self.MarkFactionForDeletion
+end
+
+function Faction:ToJSON()
+
 end
