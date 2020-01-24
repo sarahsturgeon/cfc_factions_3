@@ -11,7 +11,7 @@ include( "cfcfactions/core/sv/sv_netvars.lua" )
 include( "cfcfactions/core/sv/sv_users.lua" )
 include( "cfcfactions/core/sv/sv_permsys.lua" )
 include( "cfcfactions/core/sv/sv_mysql.lua" )
-
+include( "cfcfactions/core/sv/sv_factionobject.lua" )
 include( "cfcfactions/core/sv/sv_factions.lua" )
 include( "cfcfactions/core/sv/sv_factionmanagment.lua" )
 include( "cfcfactions/core/sv/sv_player_ext.lua" )

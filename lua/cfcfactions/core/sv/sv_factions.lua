@@ -35,7 +35,7 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
         return
     end
     -- change to look up total_factions = total_factions + 1
-    local TmpUnqID = GenerateID()
+    local factionID = GenerateID()
 
     local factionOwner = ply
     local factionName = name
@@ -105,55 +105,45 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
 
     local PlayerIDStamp = factionOwner:SteamID64()
 
-    -- What should a faction contain?
-    cfcFactions.Factions[TmpUnqID] = {
-        ["Allies"] = {},
-        ["Color"] = factionColor,
-        ["Created"] = CurrentTimeStamp,
-        ["Currency"] = 0,
-        ["Deaths"] = 0,
-        ["Description"] = factionDescription,
-        ["Edited"] = CurrentTimeStamp,
-        ["Enemies"] = {},
-        ["ID"] = TmpUnqID,
-        ["Invite"] = factionInviteOnly,
-        ["Kills"] = 0,
-        ["LastSaved"] = "",
-        ["Name"] = factionName,
-        ["NeedsCleanUp"] = false,
-        ["Owner"] = PlayerIDStamp,
-        ["Ranks"] = cfcFactions.fpm.defaultRanks,
-        ["Temporary"] = factionIsTemporary
-    }
-
-    local FinalFaction = cfcFactions.Factions[PlayerIDStamp]
-
-    factioneers:UpdateUser( PlayerIDStamp, FinalFaction.Created, FinalFaction.ID, 0, 0, "Leader" )
-    -- [TODO] SQL: Save to database
-    -- function cfcFactions:SaveFaction( factionid )
-    -- function cfcFactions:SaveUser( userid )
+    cfcFactions.Factions[factionID] = Faction:Create( factionID, PlayerIDStamp, factionName, factionColor, factionDescription, true, false )
+    local ThisFaction = cfcFactions.Factions[factionID]
+    factioneers:UpdateUser( PlayerIDStamp, ThisFaction:GetCreationDate(), ThisFaction:GetID(), 0, 0, "Leader" )
+    cfcFactions:SaveFaction( ThisFaction )
 
     -- Let the owner of the faction know they successfully created the faction
-    cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", FinalFaction.Name, FinalFaction.ID ), 1, PlayerIDStamp )
+    cfcFactions:SendNotifcation( string.format( "Successfully created \"%s\" with ID [%s]", ThisFaction:GetName(), ThisFaction:GetID(), 1, ThisFaction:GetOwner() ) )
 
     -- TODO: Send a notifcation to ALL other players ( not the owner ) that a new Faction, "%name" was created!
 
     net.Start( "CFC_Fac_FactionCreation" )
-        -- private, name, description, owner, k/d, id
-        net.WriteInt( FinalFaction.ID, 32 )
-        net.WriteBool( FinalFaction.Invite )
-        net.WriteString( FinalFaction.Name )
-        net.WriteString( FinalFaction.Description )
-        net.WriteString( FinalFaction.Owner )
-        net.WriteColor( FinalFaction.Color )
+        -- ID, Private, Name, Description, Owner, Color
+        net.WriteInt( ThisFaction:GetID(), 32 )
+        net.WriteBool( ThisFaction:GetPrivate() )
+        net.WriteString( ThisFaction:GetName() )
+        net.WriteString( ThisFaction:GetDescription() )
+        net.WriteString( ThisFaction:GetOwner() )
+        net.WriteColor( ThisFaction:GetColor() )
     net.Broadcast()
 
-    hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
+    hook.Call( "CFC_Factionhook_FactionCreated", _, ThisFaction:GetName(), ThisFaction:GetOwner(), ThisFaction:GetID() )
 
     --- Returns the newly created faction as a table
     return FinalFaction
 end
-
+--Saves the faction object to database
+function cfcFactions:SaveFaction( faction )
+    -- [TODO] SQL: Save to database
+end
+function cfcFactions:PrintLoadedCurrentFactions()
+    local Text = {}
+    for Indx, Factions in cfcFactions.Factions do
+        table.insert(Text, string.format("{0} {1} {3} {4} {5}", Factions:GetID(), Factions:GetName(), Factions:GetDescription(), Factions:GetOwner(), Factions:GetPrivate() ))
+    end
+end
+-- Checks a specifc number to see if it is unique amongst other factions.
+function cfcFactions:isUniqueID( id )
+    --TODO lookup all faction ids and compare
+end
 -- Checks a specifc string to see if it is unique amongst other factions.
 -- This is kinda useless since we need to check from the sqldb first instead of just server tables.
 function cfcFactions:isUniqueName( faction_name )
@@ -168,29 +158,12 @@ function cfcFactions:isUniqueName( faction_name )
 end
 
 -- TODO: Rework, potentially test types inside the table, and if anything is nil that shouldn't be.
-function cfcFactions:IsValidFaction( tbl )
-    if ( not tbl ) and ( table.IsEmpty( tbl ) ) then
+function cfcFactions:IsValidFaction( faction )
+    if ( not faction ) and ( table.IsEmpty( faction ) ) then
         return false
     end
 
     return true
-end
-
--- TODO: Lets a faction set another faction as ally. Both factions should be notified when this happens.
-function cfcFactions:SetAlly( id, ally )
-end
-
--- TODO: Lets a faction set another faction as enemy. Both factions should be notified when this happens.
-function cfcFactions:SetEnemy( id, enemy )
-end
-
--- TODO: Lets a faction remove an ally. Both factions should be notified when this happens.
-function cfcFactions:RemoveAlly( id, ally )
-
-end
-
--- TODO: Lets a faction remove an enemy. Both factions should be notified when this happens.
-function cfcFactions:RemoveEnemy( id, enemy )
 end
 
 -- Edits a faction based on ID, player is who ever is editing it
@@ -259,13 +232,13 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     if table.Count( ErrorsToReturn > 0 ) then
         return ErrorsToReturn
     else
-        -- Take whatever values are in tbl, and put them into the main faction's table.
-        -- Honestly, not sure about this but for now, it works
-        EditingFaction.Name = EditName
-        EditingFaction.Description = EditDescription
-        EditingFaction.Color = EditColor
-        EditingFaction.Invite = EditPrivate
-        EditingFaction.Temporary = EditTemporary
+
+        local FactionToEdit = cfcFactions.Factions[factionID]
+        FactionToEdit:SetName( EditName )
+        FactionToEdit:SetDescription( EditDescription )
+        FactionToEdit:SetColor( EditColor )
+        FactionToEdit:SetPrivateFaction( EditPrivate )
+        FactionToEdit:SetMarkForDeletion( EditTemporary )
 
         hook.Call( "CFC_Factionhook_FactionEdited" )
 
@@ -273,14 +246,13 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
         net.Start("CFC_Fac_FactionChanged")
             net.WriteInt( id, 32 )
-            net.WriteString( EditingFaction.EditName )
-            net.WriteString( EditingFaction.EditDescription )
-            net.WriteColor( EditingFaction.Color )
-            net.WriteBool( EditingFaction.Invite )
-            net.WriteBool( EditingFaction.Temporary )
+            net.WriteString( FactionToEdit:GetName() )
+            net.WriteString( FactionToEdit::GetDescription() )
+            net.WriteColor( FactionToEdit:GetColor() )
+            net.WriteBool( FactionToEdit:GetPrivate() )
         net.Broadcast()
         -- TODO return the full edited faction
-        return EditingFaction
+        return FactionToEdit
     end
 end
 
@@ -309,15 +281,6 @@ local function RequestFactionCreation( len, ply )
     local fIsTemporary = net.ReadBool()
     local fColorSelected = net.ReadColor()
 
-    local PrebuiltFaction = {
-        ["Owner"] = fOwner,
-        ["Name"] = fName,
-        ["Description"] = fDescription,
-        ["Color"] = fColorSelected,
-        ["Invite"] = fIsInviteOnly,
-        ["Temporary"] = fIsTemporary
-    }
-
     if ( not fpm:hasPermission( fOwner, "CanCreateFaction" ) ) and ( not fpm:hasPermission( fOwner, "AccessAll" ) ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["factions-ban"], 1, fOwner )
         return
@@ -328,7 +291,7 @@ local function RequestFactionCreation( len, ply )
         return
     end
 
-    cfcFactions:CreateFaction( PrebuiltFaction )
+    cfcFactions:CreateFaction( fOwner, fName, fColorSelected, fDescription, fIsInviteOnly, fIsTemporary )
 end
 
 net.Receive( "CFC_Fac_RequestFactionSubmit", RequestFactionCreation )
@@ -361,22 +324,22 @@ local function RequestFactionDetails( len, ply )
     -- send that small table all at once saying "Hey, you can't edit the name, color, and invite"
     if not fpm:hasPermission( TmpOwner, "CanEditName" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, TmpOwner )
-        TmpName = EditingFaction.Name
+        TmpName = EditingFaction:GetName()
     end
 
     if not fpm:hasPermission( TmpOwner, "CanEditColor" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, TmpOwner )
-        TmpColor = EditingFaction.Color
+        TmpColor = EditingFaction:GetColor()
     end
 
     if not fpm:hasPermission( TmpOwner, "CanEditInvite" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, TmpOwner )
-        TmpPrivate = EditingFaction.Invite
+        TmpPrivate = EditingFaction:GetPrivate()
     end
 
     if not fpm:hasPermission( TmpOwner, "CanEditDescription" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, TmpOwner )
-        TmpDescription = EditingFaction.Description
+        TmpDescription = EditingFaction:GetDescription()
     end
 
     -- Pass everything into the edit faction
@@ -416,6 +379,7 @@ function cfcFactions:RemoveFaction( ply, id )
     net.Broadcast()
 end
 
+--TODO EDIT TO ADJUST TO NEW FACTIONOBJ PATTERNS
 local function RequestFactionDeletion( len, ply )
     local FactionToDelete = net.ReadInt( 32 )
     if ply and not IsValid( ply ) then return end
