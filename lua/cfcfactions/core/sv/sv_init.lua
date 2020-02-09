@@ -2,6 +2,13 @@ cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
 cfcFactions.Factions = cfcFactions.Factions or {}
 
+cfcFactions.logger = CFCLogger( "CFC Factions 3" )
+local logger = cfcFactions.logger
+
+-- Logger callbacks
+logger:on( "error" ):call( ErrorNoHalt )
+logger:on( "fatal" ):call( error )
+
 -- sh
 include( "cfcfactions/core/sh/sh_init.lua" )
 
@@ -37,7 +44,10 @@ resource.AddFile( "resource/fonts/coolvetica.ttf" )
 
 function cfcFactions:LoadNews()
     -- Future proofing, load from phatso's github
-    if not file.Exists( "cfcfactions/news.txt", "DATA" ) then print( "Unable to load news" ) return end
+    if not file.Exists( "cfcfactions/news.txt", "DATA" ) then
+        logger:error( "Unable to load news!" )
+        return
+    end
     local NewsFile = file.Read( "cfcfactions/news.txt", "DATA" )
     return NewsFile
 end
@@ -46,12 +56,12 @@ end
 -- Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
     if not SERVER then return end
-    MsgN( "Initializing cfcFactions" )
 
+    logger:info( "Initializing cfcFactions" )
 
     -- Make sure tables exsist
     if sql_db == nil then
-        Error( "Unable to initilize mysql data object. Make sure there are no errors in config." )
+        logger:error( "Unable to initilize mysql data object. Make sure there are no errors in config." )
     end
 
     sql_db:initilize()

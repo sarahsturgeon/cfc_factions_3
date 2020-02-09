@@ -10,6 +10,7 @@ cfcFactions.fpm = cfcFactions.fpm or {}
 local fpm = cfcFactions.fpm
 fpm.Permissions = {}
 local factioneers = cfcFactions.Users
+local logger = cfcFactions.logger
 
 fpm.Permissions.CorePermissions = {
         --  NamedKey = table( description )
@@ -142,7 +143,7 @@ end
 -- Auths a user and allows them to use factions properly. If not, things make explode
 -- Or simply just don't want them using it
 function fpm:authUser( authPlayer )
-    print( "Authenticating Factions user " .. authPlayer:SteamID() )
+    logger:info( "Authenticating Factions user " .. authPlayer:SteamID() )
     -- Checks and balances
     if not authPlayer:IsPlayer() then
         return
@@ -183,6 +184,7 @@ end
 function fpm:hasPermission( ply, permission )
     -- Handling normal permissions now
     if not ply:IsPlayer() then
+        logger:error( "Cannot check permission, player is invalid!" )
         return
     end
 
@@ -233,11 +235,12 @@ function fpm:addPermission( ply, permission )
     local isValidPlayer = IsValid( ply ) or not ply:IsPlayer()
 
     if not isValidPlayer then
-        print( "Unable to add permission, invalid ply" )
+        logger:error( "Unable to add permission, invalid ply!" )
         return false
     end
 
     if not fpm:IsValidPermission( permission ) then
+        logger:error( "Unable to add permission. Unknown string." )
         ply:ChatPrint( "Unable to add permission. Unknown string." )
         return false
     end
