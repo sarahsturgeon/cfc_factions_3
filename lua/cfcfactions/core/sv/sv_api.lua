@@ -63,7 +63,7 @@ function cfcFactions.api:CreateFaction( name, color, description, creator )
 end
 
 function cfcFactions.api:DestroyFaction( id, destroyer )
-    if not destroyer:FactionID() == id then
+    if destroyer:FactionID() ~= id then
         return -- TODO: NotOwnerError
     end
 
