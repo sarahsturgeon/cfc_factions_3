@@ -1,3 +1,5 @@
+require( "cfclogger" )
+
 cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
 cfcFactions.Factions = cfcFactions.Factions or {}
@@ -13,6 +15,7 @@ logger:on( "fatal" ):call( error )
 include( "cfcfactions/core/sh/sh_init.lua" )
 
 -- sv
+include( "cfcfactions/constants/constants.lua" )
 include( "cfcfactions/config/sv_config.lua" )
 include( "cfcfactions/core/sv/sv_netvars.lua" )
 include( "cfcfactions/core/sv/sv_users.lua" )

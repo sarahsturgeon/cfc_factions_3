@@ -1,6 +1,7 @@
-include("cfcfactions/constants/constants.lua")
-
 cfcFactions.api = cfcFactions.api or {}
+
+local constants = cfcFactions.constants
+local logger = cfcFactions.logger
 
 local apiRoot = constants.BACKEND_ROOT
 local apiKey = "" -- TODO: Read API Key from file0.
@@ -18,7 +19,7 @@ local function authenticatedRequest( method, endpoint, params )
 
     local struct = HTTPRequest({
         failed = onFailure,
-        success = cfcFactions.logger.debug,
+        success = logger.debug,
         method = method,
         url = url,
         parameters = params,
@@ -41,32 +42,26 @@ local function authenticatedPatch( endpoint, params )
     return authenticatedRequest( "PATCH", endpoint, params )
 end
 
-function cfcFactions.api:CreatePlayer( ply )
+function cfcFactions.api:CreatePlayer( steamId, mostRecentName )
     local endpoint = constants.FACTIONS_ENDPOINT
     local params = {}
-    params["steam_id"] = ply:SteamID()
-    params["most_recent_name"] = ply:Name()
+    params["steam_id"] = steamId
+    params["most_recent_name"] = mostRecentName
 
     return authenticatedPost( endpoint, params )
 end
-function cfcFactions.api:CreateFaction( name, color, description, creator )
+function cfcFactions.api:CreateFaction( name, color, description, creatorSteamId )
     local endpoint = constants.FACTIONS_ENDPOINT
     local params = {}
     params.name = name
     params.color = color
     params.description = description
-
-    local creatorId = creator:SteamID()
-    params["creator_steam_id"] = creatorId
+    params["creator_steam_id"] = creatorSteamId
 
     return authenticatedPost( endpoint, params )
 end
 
-function cfcFactions.api:DestroyFaction( id, destroyer )
-    if destroyer:FactionID() ~= id then
-        return -- TODO: NotOwnerError
-    end
-
+function cfcFactions.api:DestroyFaction( id )
     local endpoint = constants.FACTIONS_ENDPOINT
     local params = {}
     params.id = id
@@ -74,11 +69,17 @@ function cfcFactions.api:DestroyFaction( id, destroyer )
     return authenticatedDelete( endpoint, params )
 end
 
-function cfcFactions.api:UpdateFaction( id, params, updater )
-    local isFactionOwner = updater:Faction():OwnerSteamId() == updater:SteamID()
-    if not isFactionOwner then
-        return -- TODO: NotOwnedError
-    end
+function cfcFactions.api:UpdateFaction( id, params )
+    local endpoint = constants.FACTIONS_ENDPOINT .. "/" .. id
+
+    return authenticatedPatch( endpoint, params )
+end
+
+function cfcFactions.api:GetFactions( page )
+    local endpoint = constants.FACTIONS_ENDPOINT
+    if page then endpoint = endpoint .. "?page=" .. page end
+
+    return authenticatedRequest( endpoint )
 end
 
 function cfcFactions.api:GetFaction( id )
@@ -87,8 +88,15 @@ function cfcFactions.api:GetFaction( id )
     return authenticatedRequest( endpoint )
 end
 
+function cfcFactions.api:GetPlayers( page )
+    local endpoint = constants.PLAYERS_ENDPOINT
+    if page then endpoint = endpoint .. "?page=" .. page end
+
+    return authenticatedRequest( endpoint )
+end
+
 function cfcFactions.api:GetPlayer( id )
-    local endpoint = constants.FACTIONS_ENDPOINT .. "/" .. id
+    local endpoint = constants.PLAYERS_ENDPOINT .. "/" .. id
 
     return authenticatedRequest( endpoint )
 end
