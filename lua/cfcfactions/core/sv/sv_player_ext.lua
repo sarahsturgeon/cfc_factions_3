@@ -1,4 +1,4 @@
-.--[[
+--[[
 File Name: sv_player_ext.lua
 
 Purpose: Player table data that contain generic server-side only functions and not shared.
