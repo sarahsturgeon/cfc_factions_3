@@ -1,4 +1,4 @@
---[[
+.--[[
 File Name: sv_player_ext.lua
 
 Purpose: Player table data that contain generic server-side only functions and not shared.
@@ -48,6 +48,11 @@ function meta:GetFactionRank()
     return fpm[self:SteamID64()].FactionRank
 end
 
+function meta:IsFactionOwner()
+    if not self:IsInFaction() then return false end
+
+    return fpm[self:SteamID64()].Faction
+end
 -- Gets a player's faction as a table. Returns an empty table if not in one
 -- TODO: Make these return values consistent
 function meta:GetFaction()

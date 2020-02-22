@@ -262,6 +262,10 @@ function factioneers:IsInFaction( user, id )
     end
 end
 
+function factioneers:FactionOwner()
+
+end
+
 -- TODO: Delete or fill
 -- local function SendUserRefresh( data )
 -- end
