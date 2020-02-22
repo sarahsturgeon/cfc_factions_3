@@ -42,7 +42,7 @@ local function authenticatedPatch( endpoint, params )
 end
 
 function cfcFactions.api:CreatePlayer( ply )
-    locl endpoint = constants.FACTIONS_ENDPOINT
+    local endpoint = constants.FACTIONS_ENDPOINT
     local params = {}
     params["steam_id"] = ply:SteamID()
     params["most_recent_name"] = ply:Name()
