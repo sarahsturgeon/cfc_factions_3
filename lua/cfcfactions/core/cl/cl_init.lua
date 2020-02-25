@@ -15,6 +15,10 @@ include( "cfcfactions/core/cl/dermas/tabs/cl_creditsderma.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_alertsderma.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_logsderma.lua" )
 include( "cfcfactions/core/cl/dermas/util/d_imagecircle.lua" )
+include( "cfcfactions/core/cl/dermas/util/d_listviewpretty.lua" )
+include( "cfcfactions/core/cl/dermas/util/d_paginationbar.lua" )
+include( "cfcfactions/core/cl/dermas/util/d_buttonpretty.lua" )
+include( "cfcfactions/core/cl/dermas/util/d_cfcfactionbutton.lua" )
 
 --TODO remove for deployment
 concommand.Add("cfc_factions_reload", function()

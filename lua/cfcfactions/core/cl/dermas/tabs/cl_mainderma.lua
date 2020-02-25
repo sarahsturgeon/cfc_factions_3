@@ -4,7 +4,7 @@ vgui.Register( 'D_cfcmainderma', PANEL )
 
 surface.CreateFont( "CFC_Normal",
     {
-        font = "arial",
+        font = "Default",
         size = 18,
         weight = 500
     }
@@ -61,7 +61,7 @@ function PANEL:Init()
     self.MenuBar = vgui.Create( "DPanel", self )
     self.MenuBar:DockMargin( 0, 45, 0, 0 )
     self.MenuBar:Dock( TOP )
-    self.MenuBar:SetSize( self:GetWide() - 0.1, self:GetTall() - 745 )
+    self.MenuBar:SetSize( self:GetWide() - 0.1, 30 )
     self.MenuBar:SetBackgroundColor( cfg.BackgroundPanel )
 
     --Used to manage MenuBar buttons
@@ -84,7 +84,7 @@ function PANEL:Init()
     --
 
     --View Factions  - Where the magic is made to create, edit, and delete
-    self.MenuItemFactions = vgui.Create("DButton", self.MenuBar)
+    self.MenuItemFactions = vgui.Create("DButtonPretty", self.MenuBar)
     self.MenuItemFactions:Dock( LEFT )
     self.MenuItemFactions:SetText( "View Factions" )
     self.MenuItemFactions:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
@@ -95,11 +95,10 @@ function PANEL:Init()
         self:AddToMainView( "D_cfcfactionsderma", "Viewing Factions" )
         self.ButtonState.HandlePressedEvent( self.MenuItemFactions ) 
     end
-    self.MenuItemFactions.Paint = nil
     self.MenuItemFactions:SetColor( cfg.ButtonText  )
 
     --Users Derma
-    self.MenuItemUsers = vgui.Create( "DButton", self.MenuBar )
+    self.MenuItemUsers = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemUsers:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemUsers:Dock( LEFT )
     self.MenuItemUsers:SetText("View Users" )
@@ -109,11 +108,10 @@ function PANEL:Init()
         self:AddToMainView( "D_cfcuserssderma", "Viewing Users" )  
         self.ButtonState.HandlePressedEvent( self.MenuItemUsers )  
     end
-    self.MenuItemUsers.Paint = nil
     self.MenuItemUsers:SetColor( cfg.ButtonText  )
 
     --News Derma
-    self.MenuItemNews = vgui.Create( "DButton", self.MenuBar )
+    self.MenuItemNews = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemNews:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemNews:Dock( LEFT )
     self.MenuItemNews:SetText( "View News" )
@@ -123,11 +121,10 @@ function PANEL:Init()
         self:AddToMainView( "D_cfcnewsderma", "Viewing News" )    
         self.ButtonState.HandlePressedEvent( self.MenuItemNews ) 
     end
-    self.MenuItemNews.Paint = nil
     self.MenuItemNews:SetColor( cfg.ButtonText  )
 
-    --Alerts Derma
-    self.MenuItemAlerts = vgui.Create( "DButton", self.MenuBar )
+    --Logs Derma
+    self.MenuItemAlerts = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemAlerts:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemAlerts:Dock( LEFT )
     self.MenuItemAlerts:SetText( "View Logs" )
@@ -138,22 +135,20 @@ function PANEL:Init()
         self:AddToMainView( "D_cfcalertsderma", "Viewing Alerts" )  
         self.ButtonState.HandlePressedEvent( self.MenuItemAlerts ) 
     end
-    self.MenuItemAlerts.Paint = nil
     self.MenuItemAlerts:SetColor( cfg.ButtonText  )
 
     --Credits Derma
-    self.MenuItemCredits = vgui.Create( "DButton", self.MenuBar )
+    self.MenuItemCredits = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemCredits:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemCredits:Dock( LEFT )
-    self.MenuItemCredits:SetText( "View Logs" )
+    self.MenuItemCredits:SetText( "View Credits" )
     self.MenuItemCredits:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemCredits.DoClick = function()
         --local ItemCredits = vgui.Create("D_cfcnewsderma", self.MainView) 
         self:AddToMainView( "D_cfcnewsderma", "Viewing News" ) 
         self.ButtonState.HandlePressedEvent( self.MenuItemCredits )     
     end
-    self.MenuItemCredits.Paint = nil
-    self.MenuItemCredits:SetColor( cfg.ButtonText  )
+    self.MenuItemCredits:SetColor( cfg.ButtonText )
 
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
@@ -168,7 +163,7 @@ function PANEL:Init()
 
     -- sub_self.Container
     self.MainView = vgui.Create( "DPanel", self.Container )
-    self.MainView:DockMargin( 0, 5, 0, 0 )
+    self.MainView:DockMargin( 0, 0, 0, 0 )
     self.MainView:Dock( FILL )
     self.MainView:SetSize( self.Container:GetWide() - 20, self.Container:GetTall() - 230 )
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )

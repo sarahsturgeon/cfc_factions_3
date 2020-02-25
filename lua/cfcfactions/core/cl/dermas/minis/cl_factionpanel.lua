@@ -5,8 +5,9 @@ vgui.Register( 'D_factionpanel', PANEL )
 
 function PANEL:Init()
     local fPanel = self
-    self:AddMouseEvent(self)
+    self:AddMouseEvent(self, true)
     self.Faction = nil
+    self.selected = false
 
     --Panel Faction Stats
     --Top Panel
@@ -35,9 +36,8 @@ function PANEL:Init()
     self.TopBar:Dock( TOP ) 
     self.TopBar:DockPadding( 0, 0, 0, 0 )
     self.TopBar:SetTall( 26 )
-    self:AddMouseEvent(self.TopBar)
     function self.TopBar:Paint(w, h)
-        surface.SetDrawColor( Color(110, 136, 148) )
+        surface.SetDrawColor( cfg.MiniPanelHeader )
         local lineThickness = 2
 
         surface.DrawRect( 0, 0, w, h )
@@ -114,16 +114,11 @@ function PANEL:Init()
     self.RightInnerPanel:Dock( RIGHT )
     self.RightInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
-    -- self.DescriptionTitleLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
-    -- self.DescriptionTitleLabel:Dock( TOP )
-    -- self.DescriptionTitleLabel:DockMargin( 8, 5, 5, 0 )
-
     self.DescriptionLabel = vgui.Create( "DLabel", self.RightInnerPanel )
     self.DescriptionLabel:Dock( FILL )
-    self.DescriptionLabel:DockMargin( 8, 0, 5, 5 )
+    self.DescriptionLabel:DockMargin( 8, 5, 5, 5 )
     self.DescriptionLabel:SetWrap( true )
     self.DescriptionLabel:SetContentAlignment( 5 )
-    --self.DescriptionLabel:SetTextColor( Color(180, 180, 180, 255) ) -- Faded text colour, should probably be in ColorSchemes?
 
     self.AvatarImage = vgui.Create( "DImageCircle", self.MiddleInnerPanel )
     self.AvatarImage:SetImage( "resource/icons/no_avatar.png" )
@@ -161,11 +156,25 @@ function PANEL:Init()
     -- Mouse event wasn't been captured so I put it on EVERYTHING.
     -- Calls the original, don't worry :)
     for k, v in pairs(self:GetTable()) do
-        if type(v) == "Panel" then
+        if type(v) == "Panel" and k ~= "Panel" then
             self:AddMouseEvent(v)
         end
     end
+end
 
+function PANEL:SetSelected( s )
+    self.selected = s
+end
+
+function PANEL:GetSelected()
+    return self.selected
+end
+
+function PANEL:Paint(w, h)
+    if self.selected then
+        surface.SetDrawColor(Color(83, 227, 251))
+        surface.DrawRect(3,3,w-6,h-6)
+    end
 end
 
 function PANEL:PerformLayout(w, h)
@@ -196,6 +205,9 @@ end
 function PANEL:SetFactionID( id )
     self.FactionID = id
     self.FactionIDLabel:SetText( self.FactionID )
+end
+function PANEL:GetFactionID()
+    return self.FactionID
 end
 function PANEL:SetFactionAvatar( imgpath )
     self.Avatar = imgpath
@@ -244,7 +256,7 @@ function PANEL:GetFactionID()
     return ReturnID 
 end
 
-function PANEL:AddMouseEvent(panel)
+function PANEL:AddMouseEvent(panel, isRoot)
     panel:SetMouseInputEnabled( true )
     local fPanel = self
     local oldMousePressed = panel.OnMousePressed
@@ -259,7 +271,20 @@ function PANEL:AddMouseEvent(panel)
             Menu:Open()
         end
         if oldMousePressed then
-            oldMousePressed(self, keyCode)
+            return oldMousePressed(self, keyCode)
+        end
+    end
+    if not isRoot then
+        local oldMouseReleased = panel.OnMouseReleased
+        function panel:OnMouseReleased( ... )
+            if not fPanel:OnMouseReleased( ... ) then
+                if oldMouseReleased then
+                    return oldMouseReleased(self, ...)
+                else
+                    return
+                end
+            end
+            return true
         end
     end
  end

@@ -16,7 +16,14 @@ ColorSchemes = {
     PressedButton = Color( 244, 244, 244 ),
     DebugPanel = Color( 255, 0, 0, 255 ),
     InlinePanel = Color( 32, 32, 32, 255 ),
-    Transparent = Color( 0, 0, 0, 0 )
+    InlinePanelSeparater = Color( 90, 90, 90, 255 ),
+    InlineHeaderPanel = Color( 40, 40, 40, 255 ),
+    MiniPanelHeader = Color(110, 136, 148),
+    Transparent = Color( 0, 0, 0, 0 ),
+    PaginationSelectedBg = Color( 30, 30, 255 ),
+    PaginationSelectedText = Color( 255, 255, 255 ),
+    PaginationUnselectedBg = Color( 195, 195, 195 ),
+    PaginationUnselectedText = Color( 0, 0, 0 ),
 }
 MsgType = {
     Error = Color( 255, 0, 0 ),
