@@ -12,16 +12,16 @@ local function _authenticatedRequest( method, endpoint, params )
         params = params,
         authToken = apiKey
     }
-    local success, body, statusCode = await( NP.http.request( method, url, overrides ) )
+    local success, body = await( NP.http.request( method, url, overrides ) )
     if success then
         local data = util.JSONToTable( body )
         if data then
             return data
         else
-            cfcFactions.logger.fatal( requestName, "Invalid JSON - What did you do?" )
+            logger.fatal( requestName, "Invalid JSON - What did you do?" )
         end
     else
-        cfcFactions.logger.fatal( requestName, body )
+        logger.fatal( requestName, body )
     end
 end
 local authenticatedRequest = async( _authenticatedRequest )
