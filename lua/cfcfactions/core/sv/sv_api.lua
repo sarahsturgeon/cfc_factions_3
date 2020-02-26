@@ -6,29 +6,25 @@ local logger = cfcFactions.logger
 local apiRoot = constants.BACKEND_ROOT
 local apiKey = "" -- TODO: Read API Key from file0.
 
-local function onFail( requestName )
-    return function( reason )
-        cfcFactions.logger.error( requestName, reason )
+local function _authenticatedRequest( method, endpoint, params )
+    local url = apiRoot .. endpoint
+    local overrides = {
+        params = params,
+        authToken = apiKey
+    }
+    local success, body, statusCode = await( NP.http.request( method, url, overrides ) )
+    if success then
+        local data = util.JSONToTable( body )
+        if data then
+            return data
+        else
+            cfcFactions.logger.fatal( requestName, "Invalid JSON - What did you do?" )
+        end
+    else
+        cfcFactions.logger.fatal( requestName, body )
     end
 end
-
-local function authenticatedRequest( method, endpoint, params )
-    method = method or "GET"
-    local url = apiRoot .. endpoint
-    local onFailure = onFail( method .. "/" .. endpoint .. ":" .. params.id )
-
-    local struct = HTTPRequest({
-        failed = onFailure,
-        success = logger.debug,
-        method = method,
-        url = url,
-        parameters = params,
-        type = "application/json",
-        ["Token"] = apiKey
-    })
-
-    return HTTP( struct )
-end
+local authenticatedRequest = async( _authenticatedRequest )
 
 local function authenticatedPost( endpoint, params )
     return authenticatedRequest( "POST", endpoint, params )
@@ -44,27 +40,30 @@ end
 
 function cfcFactions.api:CreatePlayer( steamId, mostRecentName )
     local endpoint = constants.FACTIONS_ENDPOINT
-    local params = {}
-    params["steam_id"] = steamId
-    params["most_recent_name"] = mostRecentName
+    local params = {
+        steam_id = steamId,
+        most_recent_name = mostRecentName
+    }
 
     return authenticatedPost( endpoint, params )
 end
 function cfcFactions.api:CreateFaction( name, color, description, creatorSteamId )
     local endpoint = constants.FACTIONS_ENDPOINT
-    local params = {}
-    params.name = name
-    params.color = color
-    params.description = description
-    params["creator_steam_id"] = creatorSteamId
+    local params = {
+        name = name,
+        color = color,
+        description = description,
+        creator_steam_id = creatorSteamId
+    }
 
     return authenticatedPost( endpoint, params )
 end
 
 function cfcFactions.api:DestroyFaction( id )
     local endpoint = constants.FACTIONS_ENDPOINT
-    local params = {}
-    params.id = id
+    local params = {
+        id = id
+    }
 
     return authenticatedDelete( endpoint, params )
 end

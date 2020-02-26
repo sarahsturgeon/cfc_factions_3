@@ -18,3 +18,32 @@ Console Commands
 The Wiki
 =========
 You can find the Wiki for more information on the addon [here](https://github.com/brandonsturgeon/cfc_factions_3/wiki).
+
+Api examples
+=============
+Promise method:
+```lua
+function test()
+	cfcFactions.api:CreatePlayer( "STEAM_0:0:1234", "Bob" ):next( function( data ) 
+		PrintTable( data )
+	end, function( err )
+		print( err )
+	end )
+end
+
+test()
+```
+Async method:
+```lua
+function _test()
+	local success, data = await( cfcFactions.api:CreatePlayer( "STEAM_0:0:1234", "Bob" ) )
+	if success then
+		PrintTable( data )
+	else
+		print( data )
+	end
+end
+test = async( _test )
+
+test()
+```
