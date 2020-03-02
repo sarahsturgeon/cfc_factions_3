@@ -150,7 +150,7 @@ function fpm:authUser( authPlayer )
     end
 
     local userExists = factioneers:UserExists( authPlayer )
-    local hasPermissions = factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil
+    local hasPermissions = userExists and factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil
 
     if userExists and hasPermissions then
         -- Error out, ply already has proper permissions for authentication
