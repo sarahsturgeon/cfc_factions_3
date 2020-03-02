@@ -4,7 +4,7 @@ include( "cfcfactions/core/cl/cl_clientstartup.lua" )
 include( "cfcfactions/core/sh/sh_init.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_mainderma.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_factionsderma.lua" )
-include( "cfcfactions/core/cl/dermas/minis/cl_factionpanel.lua")
+include( "cfcfactions/core/cl/dermas/minis/cl_factionpanel.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_factioneersderma.lua" )
 include( "cfcfactions/core/cl/dermas/minis/cl_playerpanel.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_newsderma.lua" )
@@ -20,9 +20,9 @@ include( "cfcfactions/core/cl/dermas/util/d_paginationbar.lua" )
 include( "cfcfactions/core/cl/dermas/util/d_buttonpretty.lua" )
 include( "cfcfactions/core/cl/dermas/util/d_cfcfactionbutton.lua" )
 
---TODO remove for deployment
-concommand.Add("cfc_factions_reload", function()
-	cfcFactions.MainFrame = nil
-	print("RELOAD")
-	include("cfcfactions/core/cl/cl_init.lua")
-end)
+-- TODO remove for deployment
+concommand.Add( "cfc_factions_reload", function()
+    cfcFactions.MainFrame = nil
+    print( "RELOAD" )
+    include( "cfcfactions/core/cl/cl_init.lua" )
+end )

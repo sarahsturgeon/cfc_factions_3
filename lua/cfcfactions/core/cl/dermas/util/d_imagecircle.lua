@@ -1,6 +1,6 @@
 -- Thanks Acecool and HandsomeMatt for your code
- 
-local function GenerateCircle(radius)
+
+local function GenerateCircle( radius )
     local seg = 100
     local cir = {}
 
@@ -16,32 +16,32 @@ local function GenerateCircle(radius)
 end
 
 local _material = Material( "effects/flashlight001" );
- 
+
 local PANEL = {}
- 
+
 function PANEL:Init()
-    self.Image = vgui.Create("DImage", self)
-    self.Image:SetPaintedManually(true)
+    self.Image = vgui.Create( "DImage", self )
+    self.Image:SetPaintedManually( true )
     self.Image:Dock( FILL )
     self:UpdatePoly()
 end
 
 function PANEL:UpdatePoly()
-    self.poly = GenerateCircle(self:GetWide())
+    self.poly = GenerateCircle( self:GetWide() )
 end
 
 function PANEL:OnSizeChanged()
-    self:SetSize(self:GetWide(), self:GetWide())
+    self:SetSize( self:GetWide(), self:GetWide() )
     self:UpdatePoly()
 end
- 
+
 function PANEL:PerformLayout()
-    self.Image:SetSize(self:GetWide(), self:GetTall())
+    self.Image:SetSize( self:GetWide(), self:GetTall() )
 end
- 
-function PANEL:Paint(w, h)
+
+function PANEL:Paint( w, h )
     render.ClearStencil()
-    render.SetStencilEnable(true)
+    render.SetStencilEnable( true )
 
     render.SetStencilWriteMask( 1 )
     render.SetStencilTestMask( 1 )
@@ -63,18 +63,18 @@ function PANEL:Paint(w, h)
     render.SetStencilCompareFunction( STENCIL_EQUAL )
     render.SetStencilReferenceValue( 1 )
 
-    self.Image:SetPaintedManually(false)
+    self.Image:SetPaintedManually( false )
     self.Image:PaintManual()
-    self.Image:SetPaintedManually(true)
+    self.Image:SetPaintedManually( true )
 
-    render.SetStencilEnable(false)
+    render.SetStencilEnable( false )
     render.ClearStencil()
 end
 
-function PANEL:SetImage(img)
-    self.Image:SetImage(img)
+function PANEL:SetImage( img )
+    self.Image:SetImage( img )
 end
- 
-vgui.Register("DImageCircle", PANEL)
- 
- 
+
+vgui.Register( "DImageCircle", PANEL )
+
+

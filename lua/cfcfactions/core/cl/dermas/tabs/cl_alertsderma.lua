@@ -58,4 +58,4 @@ function Panel:CreateAlert( msg, type )
     -- surface.PlaySound( "buttons/button15.wav" )
 end
 
---net.Receive( 'CFC_Fac_SendServerTextAlert', sendServerTextAlert )
+-- net.Receive( 'CFC_Fac_SendServerTextAlert', sendServerTextAlert )

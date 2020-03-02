@@ -2,45 +2,45 @@ local PANEL = {}
 local cfg = ColorSchemes
 vgui.Register( 'D_cfcfactionsderma', PANEL )
 
-function table.filter(tab, f)
+function table.filter( tab, f )
     local out = {}
-    for k, v in pairs(tab) do
-        local doAdd = f(v)
-        if doAdd then table.insert(out, v) end
+    for k, v in pairs( tab ) do
+        local doAdd = f( v )
+        if doAdd then table.insert( out, v ) end
     end
     return out
 end
 
-function table.mapFilter(tab, f)
+function table.mapFilter( tab, f )
     local out = {}
-    for k, v in pairs(tab) do
-        local newV = f(v)
-        if newV then table.insert(out, newV) end
+    for k, v in pairs( tab ) do
+        local newV = f( v )
+        if newV then table.insert( out, newV ) end
     end
     return out
 end
 
--- Little recursive function for repeating args, rep("hi", 3) -> "hi", "hi", "hi" 
-local function rep(x, n)
+-- Little recursive function for repeating args, rep( "hi", 3 ) -> "hi", "hi", "hi"
+local function rep( x, n )
     if n == 0 then return nil end
     if n == 1 then return x end
-    return x, rep(x, n-1)
+    return x, rep( x, n-1 )
 end
 
 -- Force a solid background on panels, rather than rounded darkened edges
-local function solidBgPaint(self, w, h)
+local function solidBgPaint( self, w, h )
     surface.SetDrawColor( self:GetBackgroundColor() )
     surface.DrawRect( 0, 0, w, h )
 end
 
-surface.CreateFont("CFC_Normal_Bold", 
+surface.CreateFont( "CFC_Normal_Bold",
     {
         font = "arial",
         size = 17,
         weight = 800
     }
 )
-surface.CreateFont("CFC_Normal_Bold18", 
+surface.CreateFont( "CFC_Normal_Bold18",
     {
         font = "arial",
         size = 18,
@@ -52,7 +52,7 @@ function PANEL:Init()
     local this = self
     self.Rows = nil
     self.Test = {}
-    --The number of factions to fetch, by default 1-10
+    -- The number of factions to fetch, by default 1-10
     self.CurrentRequestAmountMin = 1
     self.CurrentRequestAmountMax = 10
 
@@ -81,17 +81,17 @@ function PANEL:Init()
     end
     local fderma = self
     function self.ChangeViewPanel:Think()
-        if not self.lastThink then 
+        if not self.lastThink then
             self.lastThink = SysTime()
             return
         end
-        local changeBy = (SysTime() - self.lastThink) * 5
+        local changeBy = ( SysTime() - self.lastThink ) * 5
         self.lastThink = SysTime()
 
         if fderma.IsAllView and self.lineProg < 1 then
-            self.lineProg = math.Clamp(self.lineProg + changeBy, 0, 1)
+            self.lineProg = math.Clamp( self.lineProg + changeBy, 0, 1 )
         elseif not fderma.IsAllView and self.lineProg > 0 then
-            self.lineProg = math.Clamp(self.lineProg - changeBy, 0, 1)
+            self.lineProg = math.Clamp( self.lineProg - changeBy, 0, 1 )
         end
     end
 
@@ -131,14 +131,14 @@ function PANEL:Init()
 
     self.MiddleContainer = vgui.Create( "DPanel", self.MainContainer )
     self.MiddleContainer:Dock( FILL )
-    self.MiddleContainer:SetPaintBorderEnabled( true ) 
+    self.MiddleContainer:SetPaintBorderEnabled( true )
     self.MiddleContainer:SetBackgroundColor( cfg.InlinePanel )
     self.MiddleContainer:InvalidateParent( true )
     self.MiddleContainer.Paint = solidBgPaint
 
     self.ActiveFactionView = vgui.Create( "DScrollPanel", self.MiddleContainer )
     self.ActiveFactionView:Dock( FILL )
-    self.ActiveFactionView:GetVBar():SetWide(0)
+    self.ActiveFactionView:GetVBar():SetWide( 0 )
     self.ActiveFactionView:SetBackgroundColor( cfg.Transparent )
     self.ActiveFactionView:InvalidateParent( true )
     function self.ActiveFactionView:OnMousePressed( key )
@@ -149,7 +149,7 @@ function PANEL:Init()
 
     self.AllFactionView = vgui.Create( "DPanel", self.MiddleContainer )
     self.AllFactionView:Dock( FILL )
-    self.AllFactionView:DockMargin(0, 0, 0, 0)
+    self.AllFactionView:DockMargin( 0, 0, 0, 0 )
     self.AllFactionView:SetBackgroundColor( cfg.Transparent )
     self.AllFactionView:SetVisible( false )
     self.AllFactionView:SetMouseInputEnabled( true )
@@ -161,13 +161,13 @@ function PANEL:Init()
 
     self.AllFactionList = vgui.Create( "DListViewPretty", self.AllFactionView )
     self.AllFactionList:Dock( FILL )
-    self.AllFactionList:DockMargin(100, 10, 100, 0)
+    self.AllFactionList:DockMargin( 100, 10, 100, 0 )
     self.AllFactionList.VBar:SetVisible( false )
     self.AllFactionList:InvalidateParent( true )
     self.AllFactionList:SetMultiSelect( false )
     function self.AllFactionList:OnRowSelected( idx, line )
         if line then
-            this:SetSelectedFaction(line.factionID)
+            this:SetSelectedFaction( line.factionID )
         else
             this:SetSelectedFaction()
         end
@@ -184,14 +184,14 @@ function PANEL:Init()
     self.PaginationBar:DockMargin( 140, 10, 140, 10 )
     self.PaginationBar:SetTall( 30 )
     -- TODO Get page count from api, record count / 50
-    self.PaginationBar:SetPageCount(30)
-    function self.PaginationBar:OnPageChange(oldPage, newPage)
+    self.PaginationBar:SetPageCount( 30 )
+    function self.PaginationBar:OnPageChange( oldPage, newPage )
         this:ClearFactionSelection()
         -- TODO
         -- This should call api to get factions
-        -- Get records 
-        -- (newPage - 1) * 50
-        -- to 
+        -- Get records
+        -- ( newPage - 1 ) * 50
+        -- to
         -- newPage * 50
         -- then call self:SetFactions( factions )
 
@@ -205,12 +205,12 @@ function PANEL:Init()
     self.BottomGrid:SetTall( 40 )
     self.BottomGrid:SetBackgroundColor( cfg.BackgroundPanel )
     local lineHeight = 2
-    function self.BottomGrid:Paint(w, h)
-        surface.SetDrawColor(self:GetBackgroundColor())
-        surface.DrawRect(0,0,w,h)
+    function self.BottomGrid:Paint( w, h )
+        surface.SetDrawColor( self:GetBackgroundColor() )
+        surface.DrawRect( 0, 0, w, h )
 
-        surface.SetDrawColor(cfg.MiniPanelHeader)
-        surface.DrawRect(0,0,w,lineHeight)
+        surface.SetDrawColor( cfg.MiniPanelHeader )
+        surface.DrawRect( 0, 0, w, lineHeight )
     end
 
     -- Create, Edit, Delete, View
@@ -226,7 +226,7 @@ function PANEL:Init()
     self.ViewFaction:SetDisabled( true )
     self.CreateFaction.DoClick = function()
         -- create cl_faccreate.lua, process, submit to server
-        --local CreateFactionMiniPANEL = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
+        -- local CreateFactionMiniPANEL = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
     end
 
     self.EditFaction = cfcFactions.addFactionButton( self, "Edit Faction", lineHeight )
@@ -245,7 +245,7 @@ function PANEL:Init()
         self:SetFactions( factions )
         self:SetOnlineFactions( factions )
     end )
-    
+
 end
 
 function PANEL:Paint( w, h )
@@ -269,7 +269,7 @@ function PANEL:SetIsAllView( state )
             self.AllFactionView:SetAlpha( 0 )
             self.ActiveFactionView:AlphaTo( 0, 0.2 )
             self.AllFactionView:AlphaTo( 255, 0.2 )
-            timer.Simple( 0.2, function() 
+            timer.Simple( 0.2, function()
                 self.ActiveFactionView:Hide()
                 self.AllFactionView:Show()
                 self.AllFactionView:SetAlpha( 255 )
@@ -279,7 +279,7 @@ function PANEL:SetIsAllView( state )
             self.AllFactionView:SetAlpha( 255 )
             self.ActiveFactionView:AlphaTo( 255, 0.2 )
             self.AllFactionView:AlphaTo( 0, 0.2 )
-            timer.Simple( 0.2, function() 
+            timer.Simple( 0.2, function()
                 self.AllFactionView:Hide()
                 self.ActiveFactionView:Show()
                 self.ActiveFactionView:SetAlpha( 255 )
@@ -290,8 +290,8 @@ end
 
 function PANEL:UpdateOnlineFactions()
     local factionIDs = {}
-    for k, ply in pairs(player.GetAll()) do
-        table.insert(factionIDS, ply.factionID)
+    for k, ply in pairs( player.GetAll() ) do
+        table.insert( factionIDS, ply.factionID )
     end
     -- Do some kind of API call with factionIDs to get factions
     local factions
@@ -300,10 +300,10 @@ function PANEL:UpdateOnlineFactions()
 end
 
 function PANEL:GetFactionsPage( pageNo, cb )
-    -- Replace this with the api call to get factions for page, call cb with result (for async) (can we get Promises in glua??)
+    -- Replace this with the api call to get factions for page, call cb with result ( for async ) ( can we get Promises in glua?? )
     local f = {}
     for k = 1, 10 do
-        table.insert(f, {
+        table.insert( f, {
             id = k,
             name = "Faction " .. k,
             description = "This is like a faction and stuff",
@@ -311,11 +311,11 @@ function PANEL:GetFactionsPage( pageNo, cb )
             kills = k * 3,
             deaths = 2,
             owner = "Ur mom",
-            members = { LocalPlayer():SteamID(), rep("xd", k)}
-        })
+            members = { LocalPlayer():SteamID(), rep( "xd", k )}
+        } )
     end
 
-    cb(f)
+    cb( f )
 end
 
 function PANEL:SetOnlineFactions( factions )
@@ -330,7 +330,7 @@ function PANEL:SetOnlineFactions( factions )
 
     local this = self
 
-    for k, v in pairs(factions) do
+    for k, v in pairs( factions ) do
         -- Perhaps show: #v.onlineMembers .. "/" .. #v.members .. " online"
         local activePanel = vgui.Create( "D_factionpanel", self.ActiveFactionView )
         activePanel:SetSize( self.ActiveFactionView:GetWide(), 140 )
@@ -343,7 +343,7 @@ function PANEL:SetOnlineFactions( factions )
         activePanel:SetFactionOwner( v.owner )
         activePanel:SetFactionKD( v.kills, v.deaths )
         activePanel:SetMouseInputEnabled( true )
-        function activePanel:OnMouseReleased() 
+        function activePanel:OnMouseReleased()
             this:SetSelectedFaction( self:GetFactionID() )
             if this.ActiveFactionView.selected then
                 this.ActiveFactionView.selected:SetSelected( false )
@@ -362,8 +362,8 @@ function PANEL:SetFactions( factions )
     self.AllFactionList:Clear()
     for k, v in pairs( factions ) do
         local line = self.AllFactionList:AddLine( v.name, v.owner,
-            v.kills, v.deaths, 
-            #(v.onlineMembers or {}), #v.members,
+            v.kills, v.deaths,
+            #( v.onlineMembers or {} ), #v.members,
             v.private and "✕" or "✓" )
 
         line.factionID = v.id

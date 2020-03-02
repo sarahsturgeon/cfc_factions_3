@@ -11,10 +11,10 @@ function PANEL:Init()
     --     end ):SetIcon( "icon16/page_edit.png" )
 
     --     optionMenu:AddOption( "Copy FactionID", function()
-    --         --SetClipboardText( playerList[id]:GetFactionID() )
+    --         -- SetClipboardText( playerList[id]:GetFactionID() )
     --     end ):SetIcon( "icon16/page_edit.png" )
 
-    --     --[[if LocalPlayer():canKick() then
+    --     --[[ if LocalPlayer():canKick() then
     --         optionMenu:AddOption( "Kick Player", function()
     --             playerList[id]:KickPlayerFromFaction()
     --         end ):SetIcon( "icon16/lock.png" )
@@ -29,11 +29,11 @@ function PANEL:Init()
     --         parent:SetIcon( "icon16/shield.png" )
 
     --         child:AddOption( "Kick From Faction", function()
-    --             --playerList[id]:KickPlayerFromFaction()
+    --             -- playerList[id]:KickPlayerFromFaction()
     --         end ):SetIcon( "icon16/asterisk_yellow.png" )
 
     --         child:AddOption( "Ban From Factions", function()
-    --             --playerList[id]:BanPlayerFromFactions()
+    --             -- playerList[id]:BanPlayerFromFactions()
     --         end ):SetIcon( "icon16/flag_red.png" )
     --     end
 
@@ -42,7 +42,7 @@ function PANEL:Init()
 end
 
 function PANEL:AddPlayerRow( player )
-    --self.Rows[player] = vgui.Create( )
+    -- self.Rows[player] = vgui.Create( )
 end
 
 function PANEL:RemovePlayerRow( player )

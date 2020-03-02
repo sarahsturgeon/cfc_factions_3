@@ -5,7 +5,7 @@ function PANEL:Init()
     self.PlayerGroups = {}
     self.GroupContainers = {}
 
-    self.MainPanelView = vgui.Create( "DPanel" , self )
+    self.MainPanelView = vgui.Create( "DPanel", self )
     self.MainPanelView:Dock( FILL )
     self.MainPanelView:SetBackgroundColor( cfg.InlinePanel )
 
@@ -24,12 +24,12 @@ function PANEL:Init()
 
     self.FactionNameContainer = vgui.Create( "DPanel", self.TopPanelSplitLeft )
     self.EditNameField = vgui.Create( "DLabelEditable", self.FactionNameContainer )
-    self.EditNameIcon = vgui.Create( "DImage", self.FactionNameContainer)
+    self.EditNameIcon = vgui.Create( "DImage", self.FactionNameContainer )
 
     self.FactionDescContainer = vgui.Create( "DPanel", self.TopPanelSplitLeft )
     self.EditDescField = vgui.Create( "DLabelEditable", self.FactionDescContainer )
     self.EditDescField:SetText( "Description:" )
-    self.EditDescIcon = vgui.Create( "DImage", self.FactionDescContainer)
+    self.EditDescIcon = vgui.Create( "DImage", self.FactionDescContainer )
 
 
     self.FactionIDLabel = vgui.Create( "DLabel", self.TopPanelSplitRight )
@@ -46,10 +46,10 @@ function PANEL:Init()
     self.BottomPanel:SetWide( self:GetWide() )
     self.BottomPanel:SetBackgroundColor( cfg.InlinePanel )
 
-    --Todo fill out bottom panel to include member groups / members in each group. see picture of viewfactionderma
+    -- Todo fill out bottom panel to include member groups / members in each group. see picture of viewfactionderma
 end
---Handles drawing the vgui panels for Group and Players
---A single container should contain a Panel, Panel, Group Name Label, Panel, Player panel for each player
+-- Handles drawing the vgui panels for Group and Players
+-- A single container should contain a Panel, Panel, Group Name Label, Panel, Player panel for each player
 --[[
 
     Panel
@@ -75,7 +75,7 @@ end
                     [Player 3] { Panel }
                     [Player 4] { Panel }
                 }
-        }        
+        }
 
     }
 
@@ -102,7 +102,7 @@ function PANEL:AddPlayer( ply, group )
     for Indx, Groups in self.PlayerGroups do
         if table.HasValue( Groups, ply ) then
             if Groups ~= group then
-                --If the user exists already but the group is different than their current group, change their group and remove the old entry
+                -- If the user exists already but the group is different than their current group, change their group and remove the old entry
                 self.PlayerGroups[group].ply = nil
                 table.Insert( self.PlayerGroups[group], ply )
             end

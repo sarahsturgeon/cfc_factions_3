@@ -13,52 +13,52 @@ function PANEL:Init()
     self.FactionsAdmin = false
 end
 
---Whats my avatar again
+-- Whats my avatar again
 function PANEL:SetAvatar( player )
 
 end
 
---Who are you people?!?
+-- Who are you people?!?
 function PANEL:SetPlayer( player )
 
 end
 
---What are they doing?
+-- What are they doing?
 function PANEL:SetPlayerActivity( activity )
 
 end
 
---Online? Offline?
+-- Online? Offline?
 function PANEL:SetPlayerStatus( status )
 
 end
 
---Moot
+-- Moot
 function PANEL:SetPlayerKills( kills )
 
 end
 
---Moot
+-- Moot
 function PANEL:SetPlayerDeaths( deaths )
-    
+
 end
 
---My rank inside the faction, not my ulx rank
+-- My rank inside the faction, not my ulx rank
 function PANEL:SetPlayerRank( faction_rank )
-    
+
 end
 
---Whats my faction's name again
+-- Whats my faction's name again
 function PANEL:SetFactionName( faction_name )
-    
+
 end
 
---Whats my faction's ID
+-- Whats my faction's ID
 function PANEL:SetFactionID( faction_id )
-    
+
 end
 
---Can they ban me if I talk shit
+-- Can they ban me if I talk shit
 function PANEL:SetFactionsAdmin( is_admin )
 
 end

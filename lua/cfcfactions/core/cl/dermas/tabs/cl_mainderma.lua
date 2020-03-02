@@ -35,7 +35,7 @@ surface.CreateFont( "CFC_Alert_Small",
 )
 
 function PANEL:Init()
-    --Magic numbers to subtly adjust the panel's size
+    -- Magic numbers to subtly adjust the panel's size
     local ButtonTextWidthModifier = 7
     local ButtonTextTallModifier = 0.5
     self.SubMainViewPanel = {}
@@ -50,7 +50,7 @@ function PANEL:Init()
     self.CloseButton:SetColor( Color( 255, 255, 255 ) )
     self.CloseButton:SetSize( 32, 32 )
     self.CloseButton:SetPos( self:GetWide() - 45, 5 )
-    function self:PerformLayout(w, h)
+    function self:PerformLayout( w, h )
         self.CloseButton:SetPos( self:GetWide() - 45, 5 )
     end
 
@@ -64,66 +64,66 @@ function PANEL:Init()
     self.MenuBar:SetSize( self:GetWide() - 0.1, 30 )
     self.MenuBar:SetBackgroundColor( cfg.BackgroundPanel )
 
-    --Used to manage MenuBar buttons
+    -- Used to manage MenuBar buttons
     self.ButtonState = {}
     self.LastPressed = nil
 
-   --Handles what happens when a button is clicked
+   -- Handles what happens when a button is clicked
     self.ButtonState.HandlePressedEvent = function( button )
         -- if not self.LastPressed == nil then
-        --     local LastPressedReversedState = not self.LastPressed:GetEnabled() 
+        --     local LastPressedReversedState = not self.LastPressed:GetEnabled()
         --     self.LastPressed:SetEnabled( LastPressedReversedState )
         -- end
-        -- local ReverseState = not button:IsEnabled() 
+        -- local ReverseState = not button:IsEnabled()
         -- button:SetEnabled( ReverseState )
         -- self.LastPressed = button
     end
 
     --
-    --Where new menu buttons are added to
+    -- Where new menu buttons are added to
     --
 
-    --View Factions  - Where the magic is made to create, edit, and delete
-    self.MenuItemFactions = vgui.Create("DButtonPretty", self.MenuBar)
+    -- View Factions  - Where the magic is made to create, edit, and delete
+    self.MenuItemFactions = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemFactions:Dock( LEFT )
     self.MenuItemFactions:SetText( "View Factions" )
     self.MenuItemFactions:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemFactions:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemFactions:DockMargin( 25, 0, 0, 0 )
     self.MenuItemFactions.DoClick = function()
-        --local ItemFactioneers = vgui.Create("D_cfcfactionsderma", self.MainView)  
+        -- local ItemFactioneers = vgui.Create( "D_cfcfactionsderma", self.MainView )
         self:AddToMainView( "D_cfcfactionsderma", "Viewing Factions" )
-        self.ButtonState.HandlePressedEvent( self.MenuItemFactions ) 
+        self.ButtonState.HandlePressedEvent( self.MenuItemFactions )
     end
     self.MenuItemFactions:SetColor( cfg.ButtonText  )
 
-    --Users Derma
+    -- Users Derma
     self.MenuItemUsers = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemUsers:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemUsers:Dock( LEFT )
-    self.MenuItemUsers:SetText("View Users" )
+    self.MenuItemUsers:SetText( "View Users" )
     self.MenuItemUsers:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemUsers.DoClick = function()
-        --local ItemFactioneers = vgui.Create("D_cfcuserssderma", self.MainView)
-        self:AddToMainView( "D_cfcuserssderma", "Viewing Users" )  
-        self.ButtonState.HandlePressedEvent( self.MenuItemUsers )  
+        -- local ItemFactioneers = vgui.Create( "D_cfcuserssderma", self.MainView )
+        self:AddToMainView( "D_cfcuserssderma", "Viewing Users" )
+        self.ButtonState.HandlePressedEvent( self.MenuItemUsers )
     end
     self.MenuItemUsers:SetColor( cfg.ButtonText  )
 
-    --News Derma
+    -- News Derma
     self.MenuItemNews = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemNews:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemNews:Dock( LEFT )
     self.MenuItemNews:SetText( "View News" )
     self.MenuItemNews:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemNews.DoClick = function()
-        --local ItemNews = vgui.Create("D_cfcnewsderma", self.MainView)
-        self:AddToMainView( "D_cfcnewsderma", "Viewing News" )    
-        self.ButtonState.HandlePressedEvent( self.MenuItemNews ) 
+        -- local ItemNews = vgui.Create( "D_cfcnewsderma", self.MainView )
+        self:AddToMainView( "D_cfcnewsderma", "Viewing News" )
+        self.ButtonState.HandlePressedEvent( self.MenuItemNews )
     end
     self.MenuItemNews:SetColor( cfg.ButtonText  )
 
-    --Logs Derma
+    -- Logs Derma
     self.MenuItemAlerts = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemAlerts:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemAlerts:Dock( LEFT )
@@ -131,22 +131,22 @@ function PANEL:Init()
     self.MenuItemAlerts:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemAlerts.DoClick = function()
     self.MenuItemAlerts:SetEnabled( false )
-        --local ItemAlerts = vgui.Create("D_cfcalertsderma", self.MainView)   
-        self:AddToMainView( "D_cfcalertsderma", "Viewing Alerts" )  
-        self.ButtonState.HandlePressedEvent( self.MenuItemAlerts ) 
+        -- local ItemAlerts = vgui.Create( "D_cfcalertsderma", self.MainView )
+        self:AddToMainView( "D_cfcalertsderma", "Viewing Alerts" )
+        self.ButtonState.HandlePressedEvent( self.MenuItemAlerts )
     end
     self.MenuItemAlerts:SetColor( cfg.ButtonText  )
 
-    --Credits Derma
+    -- Credits Derma
     self.MenuItemCredits = vgui.Create( "DButtonPretty", self.MenuBar )
     self.MenuItemCredits:SetTall( self.MenuBar:GetTall() + ButtonTextTallModifier )
     self.MenuItemCredits:Dock( LEFT )
     self.MenuItemCredits:SetText( "View Credits" )
     self.MenuItemCredits:SetWide( #self.MenuItemFactions:GetText() * ButtonTextWidthModifier )
     self.MenuItemCredits.DoClick = function()
-        --local ItemCredits = vgui.Create("D_cfcnewsderma", self.MainView) 
-        self:AddToMainView( "D_cfcnewsderma", "Viewing News" ) 
-        self.ButtonState.HandlePressedEvent( self.MenuItemCredits )     
+        -- local ItemCredits = vgui.Create( "D_cfcnewsderma", self.MainView )
+        self:AddToMainView( "D_cfcnewsderma", "Viewing News" )
+        self.ButtonState.HandlePressedEvent( self.MenuItemCredits )
     end
     self.MenuItemCredits:SetColor( cfg.ButtonText )
 
@@ -158,7 +158,7 @@ function PANEL:Init()
     self.Container:DockMargin( 0, 0, 0, 0 )
     self.Container:Dock( FILL )
     self.Container:SetSize( self:GetWide() - 20, self:GetTall() - 150 )
-    --self.Container:SetPos( ( self:GetWide() / 2 ) - ( self.Container:GetWide() / 2 ), 120 )
+    -- self.Container:SetPos( ( self:GetWide() / 2 ) - ( self.Container:GetWide() / 2 ), 120 )
     self.Container:SetBackgroundColor( cfg.BackgroundDerma )
 
     -- sub_self.Container
@@ -169,17 +169,17 @@ function PANEL:Init()
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
     self.MainView:SetBackgroundColor( cfg.BackgroundPanel )
 
-    --Set our default viewing experience to view factions.
+    -- Set our default viewing experience to view factions.
     self:AddToMainView( "D_cfcfactionsderma", "Viewing Factions" )
 end
 
---Which PANEL to display in the main view, along with the state to report back.
---IE: D_cfcnewsderma, "Viewing News"
+-- Which PANEL to display in the main view, along with the state to report back.
+-- IE: D_cfcnewsderma, "Viewing News"
 function PANEL:AddToMainView( panel, state )
     if self.MainView:IsValid() then
-        --Clear any PANELs currently in the main view
+        -- Clear any PANELs currently in the main view
         self.MainView:Clear()
-        self.SubMainViewPanel = vgui.Create( panel, self.MainView )  
+        self.SubMainViewPanel = vgui.Create( panel, self.MainView )
         self.SubMainViewPanel:SetSize( self.MainView:GetWide(), self.MainView:GetTall() )
         self.SubMainViewPanel:Dock( FILL )
     end

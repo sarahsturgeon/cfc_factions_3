@@ -5,17 +5,17 @@ vgui.Register( 'D_factionpanel', PANEL )
 
 function PANEL:Init()
     local fPanel = self
-    self:AddMouseEvent(self, true)
+    self:AddMouseEvent( self, true )
     self.Faction = nil
     self.selected = false
 
-    --Panel Faction Stats
-    --Top Panel
+    -- Panel Faction Stats
+    -- Top Panel
     self.FactionLocked = false
     self.FactionName = ""
     self.FactionID = 0
 
-    --Middle Panel
+    -- Middle Panel
     self.Description = ""
     self.Avatar = ""
     self.Owner = "<no owner>"
@@ -23,20 +23,20 @@ function PANEL:Init()
     self.MaxMembers = 1
     self.Kills = 0
     self.Deaths = 0
-    self.MainColor = ColorRand( false ) 
-    --Bottom Panel
+    self.MainColor = ColorRand( false )
+    -- Bottom Panel
 
     self.MainPanel = vgui.Create( "DPanel", self )
     self.MainPanel:Dock( FILL )
     self.MainPanel:DockMargin( 4, 4, 4, 4 )
     self.MainPanel:SetBackgroundColor( cfg.BackgroundDerma )
 
-    --Locked icon       Faction Name        Faction ID
-    self.TopBar = vgui.Create( "DPanel" , self.MainPanel )
-    self.TopBar:Dock( TOP ) 
+    -- Locked icon       Faction Name        Faction ID
+    self.TopBar = vgui.Create( "DPanel", self.MainPanel )
+    self.TopBar:Dock( TOP )
     self.TopBar:DockPadding( 0, 0, 0, 0 )
     self.TopBar:SetTall( 26 )
-    function self.TopBar:Paint(w, h)
+    function self.TopBar:Paint( w, h )
         surface.SetDrawColor( cfg.MiniPanelHeader )
         local lineThickness = 2
 
@@ -47,7 +47,7 @@ function PANEL:Init()
         -- bottom line
         surface.DrawRect( 0, 0, w, lineThickness )
 
-        surface.SetDrawColor( Color(0,0,0) )
+        surface.SetDrawColor( Color( 0, 0, 0 ) )
         -- left bar
         surface.DrawRect( 100, h * 0.2, lineThickness - 1, h * 0.7 )
         -- right bar
@@ -55,27 +55,27 @@ function PANEL:Init()
 
     end
 
-    self.TopBarLeft = vgui.Create( "DPanel" , self.TopBar )
+    self.TopBarLeft = vgui.Create( "DPanel", self.TopBar )
     self.TopBarLeft:SetWide( 100 )
-    self.TopBarLeft:Dock( LEFT ) 
+    self.TopBarLeft:Dock( LEFT )
     self.TopBarLeft:DockPadding( 5, 0, 0, 0 )
     self.TopBarLeft.Paint = nil
 
     -- Right before middle so that Dock Top positions itself correctly
-    self.TopBarRight = vgui.Create( "DPanel" , self.TopBar )
+    self.TopBarRight = vgui.Create( "DPanel", self.TopBar )
     self.TopBarRight:SetWide( 100 )
-    self.TopBarRight:Dock( RIGHT ) 
+    self.TopBarRight:Dock( RIGHT )
     self.TopBarRight:DockPadding( 0, 0, 5, 0 )
-    self.TopBarRight:SetBackgroundColor( Color(64, 82, 100) )
+    self.TopBarRight:SetBackgroundColor( Color( 64, 82, 100 ) )
     self.TopBarRight.Paint = nil
 
-    self.TopBarMiddle = vgui.Create( "DPanel" , self.TopBar )
-    self.TopBarMiddle:Dock( TOP ) 
+    self.TopBarMiddle = vgui.Create( "DPanel", self.TopBar )
+    self.TopBarMiddle:Dock( TOP )
     self.TopBarMiddle:DockPadding( 0, 0, 0, 0 )
     self.TopBarMiddle:SetBackgroundColor( self.MainColor )
     self.TopBarMiddle.Paint = nil
 
-    self.MiddlePanel = vgui.Create( "DPanel" , self.MainPanel )
+    self.MiddlePanel = vgui.Create( "DPanel", self.MainPanel )
     self.MiddlePanel:Dock( FILL )
     self.MiddlePanel:SetBackgroundColor( cfg.BackgroundPanel )
 
@@ -101,16 +101,16 @@ function PANEL:Init()
     self.FactionIDLabel:DockPadding( 0, 0, 0, 0 )
     self.FactionIDLabel:SetContentAlignment( 6 )
 
-    self.LeftInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
+    self.LeftInnerPanel = vgui.Create ( "DPanel", self.MiddlePanel )
     self.LeftInnerPanel:Dock( LEFT )
     self.LeftInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
-    self.MiddleInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
+    self.MiddleInnerPanel = vgui.Create ( "DPanel", self.MiddlePanel )
     self.MiddleInnerPanel:Dock( FILL )
     self.MiddleInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
     self.MiddleInnerPanel:InvalidateLayout( true )
 
-    self.RightInnerPanel = vgui.Create ( "DPanel" , self.MiddlePanel )
+    self.RightInnerPanel = vgui.Create ( "DPanel", self.MiddlePanel )
     self.RightInnerPanel:Dock( RIGHT )
     self.RightInnerPanel:SetBackgroundColor( cfg.BackgroundPanel )
 
@@ -126,38 +126,38 @@ function PANEL:Init()
     function self.AvatarImage:PerformLayout()
         local p = self:GetParent()
         local w, h = p:GetSize()
-        local size = math.min(w, h) - 15
-        self:SetSize(size, size)
-        self:SetPos( (w-size) / 2, (h-size) / 2 )
+        local size = math.min( w, h ) - 15
+        self:SetSize( size, size )
+        self:SetPos( ( w-size ) / 2, ( h-size ) / 2 )
     end
 
-    self.OwnerLabel = vgui.Create( "DLabel" , self.LeftInnerPanel )
+    self.OwnerLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
     self.OwnerLabel:SetText( "Owner: " .. self.Owner )
     self.OwnerLabel:SetContentAlignment( 5 )
     self.OwnerLabel:Dock( TOP )
     self.OwnerLabel:DockMargin( 5, 20, 5, 0 )
 
-    self.MembersLabel = vgui.Create( "DLabel" , self.LeftInnerPanel )
+    self.MembersLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
     self.MembersLabel:SetText( "Members: " .. ( self.Members .. "/" .. self.MaxMembers ) )
     self.MembersLabel:SetContentAlignment( 5 )
     self.MembersLabel:Dock( FILL )
     self.MembersLabel:DockMargin( 5, 0, 5, 0 )
 
-    self.KillsDeathsLabel = vgui.Create( "DLabel" , self.LeftInnerPanel )
-    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths ) )
+    self.KillsDeathsLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
+    self.KillsDeathsLabel:SetText( ( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths ) )
     self.KillsDeathsLabel:SetContentAlignment( 5 )
     self.KillsDeathsLabel:Dock( BOTTOM )
     self.KillsDeathsLabel:DockMargin( 5, 0, 5, 20 )
 
     self:SetFactionName( "Uninitialized Faction" )
-    self:SetFactionDescription(nil)
+    self:SetFactionDescription( nil )
     self:SetFactionPrivate( false )
 
     -- Mouse event wasn't been captured so I put it on EVERYTHING.
-    -- Calls the original, don't worry :)
-    for k, v in pairs(self:GetTable()) do
-        if type(v) == "Panel" and k ~= "Panel" then
-            self:AddMouseEvent(v)
+    -- Calls the original, don't worry : )
+    for k, v in pairs( self:GetTable() ) do
+        if type( v ) == "Panel" and k ~= "Panel" then
+            self:AddMouseEvent( v )
         end
     end
 end
@@ -170,19 +170,19 @@ function PANEL:GetSelected()
     return self.selected
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint( w, h )
     if self.selected then
-        surface.SetDrawColor(Color(83, 227, 251))
-        surface.DrawRect(3,3,w-6,h-6)
+        surface.SetDrawColor( Color( 83, 227, 251 ) )
+        surface.DrawRect( 3, 3, w-6, h-6 )
     end
 end
 
-function PANEL:PerformLayout(w, h)
-    self.LeftInnerPanel:SetWide(w * 0.35)
-    self.RightInnerPanel:SetWide(w * 0.35)
+function PANEL:PerformLayout( w, h )
+    self.LeftInnerPanel:SetWide( w * 0.35 )
+    self.RightInnerPanel:SetWide( w * 0.35 )
 end
 
---faction functions to set this panel up
+-- faction functions to set this panel up
 function PANEL:SetFactionName( name )
     if name == nil or #name == 0 then
         name = "Uninitialized Faction"
@@ -194,13 +194,13 @@ function PANEL:SetFactionName( name )
     end
     self.FactionName = name
     if #name > 30 then
-        name = string.sub(name, 1, 28) .. "..."
+        name = string.sub( name, 1, 28 ) .. "..."
     end
     self.FactionNameLabel:SetText( name )
 end
 function PANEL:SetFactionPrivate( isprivate )
     self.FactionLocked = isprivate
-    self.FactionPrivateIcon:SetVisible(self.FactionLocked)
+    self.FactionPrivateIcon:SetVisible( self.FactionLocked )
 end
 function PANEL:SetFactionID( id )
     self.FactionID = id
@@ -238,25 +238,25 @@ function PANEL:SetFactionKD( kills, deaths )
     self:SetFactionDeaths( deaths )
 end
 function PANEL:UpdateKDLabel()
-    self.KillsDeathsLabel:SetText( ("Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths .. "   KD: " .. (math.Round(self.Kills/self.Deaths, 2)) ) )
+    self.KillsDeathsLabel:SetText( ( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths .. "   KD: " .. ( math.Round( self.Kills/self.Deaths, 2 ) ) ) )
 end
 function PANEL:SetFactionDescription( description )
     if description == nil then
-        --self.DescriptionTitleLabel:SetText("No description provided.")
+        -- self.DescriptionTitleLabel:SetText( "No description provided." )
         self.Description = ""
     else
-        --self.DescriptionTitleLabel:SetText("Description:")
+        -- self.DescriptionTitleLabel:SetText( "Description:" )
         self.Description = string.Trim( description )
     end
     self.DescriptionLabel:SetText( self.Description )
 end
 
 function PANEL:GetFactionID()
-    local ReturnID = self.FactionID > 0 and self.FactionID or nil 
-    return ReturnID 
+    local ReturnID = self.FactionID > 0 and self.FactionID or nil
+    return ReturnID
 end
 
-function PANEL:AddMouseEvent(panel, isRoot)
+function PANEL:AddMouseEvent( panel, isRoot )
     panel:SetMouseInputEnabled( true )
     local fPanel = self
     local oldMousePressed = panel.OnMousePressed
@@ -264,14 +264,14 @@ function PANEL:AddMouseEvent(panel, isRoot)
         if keyCode == MOUSE_RIGHT then
             local Menu = DermaMenu()
             Menu:AddOption( "Copy ID", function()
-                SetClipboardText(tostring(fPanel:GetFactionID()))
-            end)
+                SetClipboardText( tostring( fPanel:GetFactionID() ) )
+            end )
             -- I imagine this will have to work out local player access rights, and a bunch of other shit, so lets out-source it
-            hook.Run("CFC_FactionPanel_PopulateMenu", fPanel, Menu) -- Passes in menu to populate
+            hook.Run( "CFC_FactionPanel_PopulateMenu", fPanel, Menu ) -- Passes in menu to populate
             Menu:Open()
         end
         if oldMousePressed then
-            return oldMousePressed(self, keyCode)
+            return oldMousePressed( self, keyCode )
         end
     end
     if not isRoot then
@@ -279,7 +279,7 @@ function PANEL:AddMouseEvent(panel, isRoot)
         function panel:OnMouseReleased( ... )
             if not fPanel:OnMouseReleased( ... ) then
                 if oldMouseReleased then
-                    return oldMouseReleased(self, ...)
+                    return oldMouseReleased( self, ... )
                 else
                     return
                 end
@@ -289,10 +289,10 @@ function PANEL:AddMouseEvent(panel, isRoot)
     end
  end
 
-hook.Add("CFC_FactionPanel_PopulateMenu", "Example", function(panel, Menu)
-    
+hook.Add( "CFC_FactionPanel_PopulateMenu", "Example", function( panel, Menu )
+
     Menu:AddSpacer()
     Menu:AddOption( "Rename" )
     Menu:AddOption( "Delete" )
     -- etc.
-end)
+end )
