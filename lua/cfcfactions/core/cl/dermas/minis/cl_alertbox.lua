@@ -40,4 +40,4 @@ function PANEL:Paint()
 end
 
 -- ui/chat_display_text.wav
-vgui.Register( 'D_cfcalertboxPANEL', PANEL )
+vgui.Register( 'D_cfcalertboxpanel', PANEL )
