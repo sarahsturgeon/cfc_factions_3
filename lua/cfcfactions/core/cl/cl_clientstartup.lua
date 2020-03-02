@@ -24,7 +24,7 @@ function cfcFactions:DisplayMenu()
     end
 end
 
-net.Receive( 'CFC_Fac_ToggleDerma', function( length )
+net.Receive( "CFC_Fac_ToggleDerma", function( length )
     cfcFactions:DisplayMenu()
 end )
 

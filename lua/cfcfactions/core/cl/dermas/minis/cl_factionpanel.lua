@@ -1,7 +1,7 @@
 local PANEL = {}
 local cfg = ColorSchemes
 
-vgui.Register( 'D_factionpanel', PANEL )
+vgui.Register( "D_factionpanel", PANEL )
 
 function PANEL:Init()
     local fPanel = self
@@ -144,7 +144,7 @@ function PANEL:Init()
     self.MembersLabel:DockMargin( 5, 0, 5, 0 )
 
     self.KillsDeathsLabel = vgui.Create( "DLabel", self.LeftInnerPanel )
-    self.KillsDeathsLabel:SetText( ( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths ) )
+    self.KillsDeathsLabel:SetText( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths )
     self.KillsDeathsLabel:SetContentAlignment( 5 )
     self.KillsDeathsLabel:Dock( BOTTOM )
     self.KillsDeathsLabel:DockMargin( 5, 0, 5, 20 )
@@ -219,11 +219,11 @@ function PANEL:SetFactionOwner( owner )
 end
 function PANEL:SetFactionCurrentMembers( number )
     self.Members = number
-    self.MembersLabel:SetText( ( self.Members .. "/" .. self.MaxMembers ) )
+    self.MembersLabel:SetText( self.Members .. "/" .. self.MaxMembers )
 end
 function PANEL:SetFactionMaxMembers( number )
     self.MaxMembers = number
-    self.MembersLabel:SetText( ( self.Members .. "/" .. self.MaxMembers ) )
+    self.MembersLabel:SetText( self.Members .. "/" .. self.MaxMembers )
 end
 function PANEL:SetFactionKills( kills )
     self.Kills = kills
@@ -238,7 +238,7 @@ function PANEL:SetFactionKD( kills, deaths )
     self:SetFactionDeaths( deaths )
 end
 function PANEL:UpdateKDLabel()
-    self.KillsDeathsLabel:SetText( ( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths .. "   KD: " .. ( math.Round( self.Kills/self.Deaths, 2 ) ) ) )
+    self.KillsDeathsLabel:SetText( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths .. "   KD: " .. math.Round( self.Kills / self.Deaths, 2 ) )
 end
 function PANEL:SetFactionDescription( description )
     if description == nil then

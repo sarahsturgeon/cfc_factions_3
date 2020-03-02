@@ -17,7 +17,7 @@ function PANEL:Init()
     net.Start( "CFC_Fac_RequestNews" )
 end
 
-vgui.Register( 'D_cfcnewsderma', PANEL )
+vgui.Register( "D_cfcnewsderma", PANEL )
 
 local function sendFactionNews( len, ply )
     local netIN = net.ReadString()

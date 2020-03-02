@@ -7,11 +7,11 @@ local function GenerateCircle( radius )
     table.insert( cir, { x = 0, y = 0, u = 0.5, v = 0.5 } )
     for i = 0, seg do
         local a = math.rad( ( i / seg ) * -360 )
-        table.insert( cir, { x = radius/2 + math.sin( a ) * radius * 0.5, y = radius/2 + math.cos( a ) * radius * 0.5, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
+        table.insert( cir, { x = radius / 2 + math.sin( a ) * radius * 0.5, y = radius / 2 + math.cos( a ) * radius * 0.5, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
     end
 
     local a = math.rad( 0 ) -- This is needed for non absolute segment counts
-    table.insert( cir, { x = radius/2 + math.sin( a ) * radius * 0.5, y = radius/2 + math.cos( a ) * radius * 0.5, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
+    table.insert( cir, { x = radius / 2 + math.sin( a ) * radius * 0.5, y = radius / 2 + math.cos( a ) * radius * 0.5, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
     return cir
 end
 

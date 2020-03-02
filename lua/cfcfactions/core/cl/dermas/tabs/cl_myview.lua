@@ -1,6 +1,6 @@
 local PANEL = {}
 local cfg = ColorSchemes
-vgui.Register( 'D_myview', PANEL )
+vgui.Register( "D_myview", PANEL )
 function PANEL:Init()
     self.PlayerGroups = {}
     self.GroupContainers = {}
@@ -100,12 +100,10 @@ function PANEL:AddPlayer( ply, group )
 
     ]]--
     for Indx, Groups in self.PlayerGroups do
-        if table.HasValue( Groups, ply ) then
-            if Groups ~= group then
-                -- If the user exists already but the group is different than their current group, change their group and remove the old entry
-                self.PlayerGroups[group].ply = nil
-                table.Insert( self.PlayerGroups[group], ply )
-            end
+        if table.HasValue( Groups, ply ) and Groups ~= group then
+            -- If the user exists already but the group is different than their current group, change their group and remove the old entry
+            self.PlayerGroups[group].ply = nil
+            table.Insert( self.PlayerGroups[group], ply )
         end
     end
 end

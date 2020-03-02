@@ -87,5 +87,5 @@ end
 
 net.Receive( "CFC_Fac_UserDeleted", factionUserDeleted )
 
-vgui.Register( 'D_cfcusersderma', PANEL )
+vgui.Register( "D_cfcusersderma", PANEL )
 

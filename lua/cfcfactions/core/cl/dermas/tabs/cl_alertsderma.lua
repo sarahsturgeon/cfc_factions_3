@@ -29,13 +29,13 @@ function cfcFactions:AddAlert( msg, mtype )
     hook.Call( "CFC_FAC_AlertAdded", _, msg, mtype )
 end
 
-vgui.Register( 'D_cfcalertsderma', Panel )
+vgui.Register( "D_cfcalertsderma", Panel )
 
 local function sendFactionMessage( len, ply )
 
 end
 
-net.Receive( 'CFC_Fac_SendMessage', sendFactionMessage )
+net.Receive( "CFC_Fac_SendMessage", sendFactionMessage )
 
 function Panel:CreateAlert( msg, type )
     -- if self.AlertPanel == nil then return end

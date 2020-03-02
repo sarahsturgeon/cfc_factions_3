@@ -1,6 +1,6 @@
 local PANEL = {}
 local cfg = ColorSchemes
-vgui.Register( 'D_cfcfactionsderma', PANEL )
+vgui.Register( "D_cfcfactionsderma", PANEL )
 
 function table.filter( tab, f )
     local out = {}
@@ -232,10 +232,10 @@ function PANEL:Init()
     self.EditFaction = cfcFactions.addFactionButton( self, "Edit Faction", lineHeight )
     self.EditFaction:SetDisabled( true )
     self.EditFaction.OnMouseReleased = function( keyCode )
-        if keyCode == MOUSE_LEFT then
-            if self.CurrentlySelectedFaction ~= nil then
-                local EditingFactionPanel
-            end
+        if keyCode == MOUSE_LEFT and self.CurrentlySelectedFaction ~= nil then
+            --local EditingFactionPanel
+            print("Edit " .. tostring(self.CurrentlySelectedFaction))
+            -- change to edit factions panel, do data stuff
         end
     end
     self.DeleteFaction = cfcFactions.addFactionButton( self, "Delete Faction", lineHeight )
@@ -293,6 +293,8 @@ function PANEL:UpdateOnlineFactions()
     for k, ply in pairs( player.GetAll() ) do
         table.insert( factionIDS, ply.factionID )
     end
+    -- Temporary to please jenkins
+    print(factionIDs)
     -- Do some kind of API call with factionIDs to get factions
     local factions
 

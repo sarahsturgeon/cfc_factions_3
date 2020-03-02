@@ -1,6 +1,6 @@
 local PANEL = {}
 local cfg = ColorSchemes
-vgui.Register( 'D_cfcmainderma', PANEL )
+vgui.Register( "D_cfcmainderma", PANEL )
 
 surface.CreateFont( "CFC_Normal",
     {
@@ -43,9 +43,9 @@ function PANEL:Init()
     self:Dock( FILL )
 
     -- window buttons
-    self.CloseButton = vgui.Create( 'DButton', self )
-    self.CloseButton:SetFont( 'CFC_Normal' )
-    self.CloseButton:SetText( '[X]' )
+    self.CloseButton = vgui.Create( "DButton", self )
+    self.CloseButton:SetFont( "CFC_Normal" )
+    self.CloseButton:SetText( "[X]" )
     self.CloseButton.Paint = function() end
     self.CloseButton:SetColor( Color( 255, 255, 255 ) )
     self.CloseButton:SetSize( 32, 32 )
@@ -151,7 +151,7 @@ function PANEL:Init()
     self.MenuItemCredits:SetColor( cfg.ButtonText )
 
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:SetPos( ( ScrW() / 2 ) - ( self:GetWide() / 2 ), ( ScrH() / 2 ) - ( self:GetTall() / 2 ) )
 
     -- Main self.Container
     self.Container = vgui.Create( "DPanel", self )

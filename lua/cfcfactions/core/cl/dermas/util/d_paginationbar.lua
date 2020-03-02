@@ -92,9 +92,9 @@ function PANEL:PerformLayout()
 
     btns.nums = {}
     for k = 1, numBtnCount do
-        btns.nums[k] = addBtn( "", function( self )
-            if not self.num then return end
-            this:SetPage( self.num )
+        btns.nums[k] = addBtn( "", function( button )
+            if not button.num then return end
+            this:SetPage( button.num )
         end )
     end
 

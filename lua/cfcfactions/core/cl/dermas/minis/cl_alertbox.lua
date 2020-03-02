@@ -1,15 +1,15 @@
 -- Alert box to display realtime alerts/messages to users apart of cfcfactions
+
+-- Someone should take a look at this file, doesn't seem correct
 local cfg = cfcFactions.Config.Client
 
 local PANEL = {}
 
-local ErrMsg = nil
-local ErrType = nil
 local AlertInc = 0
 
 function PANEL:Init()
     self:SetSize( 250, 50 )
-    if not type( msgtype ) == "table" then msgtype = cfg.MsgType.Msg end
+    if type( msgtype ) ~= "table" then msgtype = cfg.MsgType.Msg end
 
     self.MiniPANEL = vgui.Create( "DPanel", self )
     self.MiniPANEL:SetSize( self:GetWide(), self:GetTall() )
@@ -36,8 +36,8 @@ function PANEL:Paint()
     self.CreationTime = CurTime()
     self:Remove()
 
-    AlertInc = AlertInc +1
+    AlertInc = AlertInc + 1
 end
 
 -- ui/chat_display_text.wav
-vgui.Register( 'D_cfcalertboxpanel', PANEL )
+vgui.Register( "D_cfcalertboxpanel", PANEL )
