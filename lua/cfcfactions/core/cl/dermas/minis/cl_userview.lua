@@ -1,15 +1,15 @@
 local PANEL = {}
 
+--[[
 local function addUserInfo( listView, data )
-    --[[
     local plyName = data.name
     local plyRank = data.rank
     local plyKD = data.kd
     local plyFacJoin = data.join
-    
+
     listView:AddLine( plyName, plyRank, plyKD, plyFacJoin )
-    ]]
 end
+]]
 
 function PANEL:Init()
     local lview = vgui.Create( "DListView", f )
@@ -19,7 +19,7 @@ function PANEL:Init()
     lview:AddColumn( "Rank" ):SetFixedWidth( 70 )
     lview:AddColumn( "K/D" ):SetFixedWidth( 50 )
     lview:AddColumn( "Member Since" ):SetMinWidth( 50 )
-    
+
     --[[
     for _, member in pairs( faction.users ) do
         addUserInfo( lview, ... )

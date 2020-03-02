@@ -3,7 +3,7 @@ local PANEL = {}
 function PANEL:Init()
 
     self:SetSize( 500, 510 )
-    self:SetPos( ( ( ScrW() / 2 ) - ( self:GetWide() / 2 ) ), ( ( ScrH() / 2 ) - ( self:GetTall() / 2 ) ) )
+    self:SetPos( ( ScrW() / 2 ) - ( self:GetWide() / 2 ), ( ScrH() / 2 ) - ( self:GetTall() / 2 ) )
     self:Center()
 
     self.MainFrame = vgui.Create( "DFrame", self )
@@ -22,7 +22,7 @@ function PANEL:Init()
     self.NameLabel:DockMargin( 15, 5, 15, 0 )
 
     self.NameEntry = vgui.Create( "DTextEntry", self.MiniPanel )
-    self.NameEntry:SetText( LocalPlayer():Nick() .. '\'s Faction' )
+    self.NameEntry:SetText( LocalPlayer():Nick() .. "'s Faction" )
     self.NameEntry:Dock( TOP )
     self.NameEntry:DockMargin( 15, 5, 15, 0 )
     self.NameEntry:SetPlaceholderText( "Enter a faction name within 3-255 characters..." )

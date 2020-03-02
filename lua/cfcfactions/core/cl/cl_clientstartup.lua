@@ -24,29 +24,17 @@ function cfcFactions:DisplayMenu()
     end
 end
 
-function cfcFactions:Think()
-
-end
-
-hook.Add("Think", "CFC_Factionhook_Think", function()
-    cfcFactions:Think()
-end )
-
 net.Receive('CFC_Fac_ToggleDerma', function(length)
     cfcFactions:DisplayMenu()
 end )
 
--- TEMP
--- Seems PlayerButtonDown is being called twice for every key press (on my client at least), causes menu to often not open
--- Simple shitty temporary fix:
-
-local lastHit = 0
-
+local lastCall = 0
 hook.Add( "PlayerButtonDown", "CFC_Fac_MenukeyDown", function( player, button )
     local cTime = CurTime()
-    if MENU_KEY == button and cTime - lastHit > 0.1 then
+    if button == MENU_KEY and cTime - lastCall > 0.1 then
         net.Start("CFC_Fac_RequestDerma")
         net.SendToServer()
     end
-    lastHit = cTime
+    lastCall = cTime
 end )
+

@@ -12,12 +12,11 @@ meta = FindMetaTable( "Player" )
 local fpm = cfcFactions.fpm
 function meta:CFCToggleMenu()
     if not fpm:hasPermission( self, "AccessAll" ) then
-        cfcFactions:SendNotifcation( "factions-ban", mtype, player )
-        return
-    else
-        net.Start( 'CFC_Fac_ToggleDerma' )
-        net.Send( self )
+        return cfcFactions:SendNotifcation( "factions-ban", mtype, player )
     end
+
+    net.Start( "CFC_Fac_ToggleDerma" )
+    net.Send( self )
 end
 
 --[[
@@ -28,54 +27,50 @@ end
 function meta:IsInFaction()
     if self:IsMerc() == true then return true end
 
-    local userHasFaction = nil
-    if ( not ( self:GetFactionID() == nil ) ) then
-        userHasFaction = true
-    else
-        userHasFaction = false
-    end
+    local userHasFaction = self:GetFactionID() ~= nil
+
     return userHasFaction
 end
 
 -- Obtains the player's faction id, or 0 if not. Bots always return 'b0t'
 function meta:GetFactionID()
     if self:IsBot() then return "b0t" end
-    if self:IsPlayer() then
-        return fpm[self:SteamID64()]
-    end
+
+    if not self:IsPlayer() then return end
+
+    return fpm[self:SteamID64()]
 end
 
 -- Obtains the player's rank if in a faction. Returns empty string if not
 function meta:GetFactionRank()
-    if self:IsInFaction() then
-        return fpm[self:SteamID64()].FactionRank
-    else
-        return ""
-    end
+    if not self:IsInFaction() then return "" end
+
+    return fpm[self:SteamID64()].FactionRank
 end
 
 -- Gets a player's faction as a table. Returns an empty table if not in one
+-- TODO: Make these return values consistent
 function meta:GetFaction()
     if not self:IsPlayer() then return false end
+
     if not self:IsInFaction() then
         return false
     end
 
+    local faction = cfcFactions.Factions[self:GetFactionID()]
 
-    if cfcFactions.Factions[self:GetFactionID()] ~= 0 then
-        return cfcFactions.Factions[self:GetFactionID()]
-    end
+    if faction == 0 then return end
+
+    return faction
 end
 
 -- Sets a player's faction based on given id. ply being who is doing the setting
 function meta:SetFactionID( id )
     fpm.Users[self:SteamID64()].FactionID = id
-
 end
 
 function meta:SetFactionRank( rank )
     fpm.Users[self:SteamID64()].FactionRank = rank
-
 end
 
 function meta:IsMerc()

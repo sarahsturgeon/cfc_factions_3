@@ -60,7 +60,7 @@ function Panel:Init()
         else
             draw.RoundedBox( 4, 0, 0, w, h, Color( 205, 0, 0 ) )
         end
-        
+
         draw.SimpleText( "Delete", "CenterPrintText", w / 2, h / 2, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
     end
 

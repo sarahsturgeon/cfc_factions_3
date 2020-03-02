@@ -33,8 +33,8 @@ local NamedNetworkVars = {
     -- PlayerInfo/State
     "CFC_Fac_RequestPlayerInfo",
     "CFC_Fac_SendPlayerInfo",
-    --Faction Deletion
-    "CFC_Fac_RequestDelete", 
+    -- Faction Deletion
+    "CFC_Fac_RequestDelete",
     -- Menu
     "CFC_Fac_ToggleDerma",
     "CFC_Fac_RequestDerma",

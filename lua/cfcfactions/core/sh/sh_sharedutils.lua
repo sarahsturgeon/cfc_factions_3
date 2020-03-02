@@ -8,8 +8,6 @@ Global Tables: cfcFactions.Dermas, cfcFactions.Alerts, cfcFactions.ErrorMessages
 ]]--
 
 local net = net
-local string = string
-local table = table
 cfcFactions.Credits = cfcFactions.Credits or {}
 -- Sends a notifaction msg:string, mtype:number, player:entity
 
@@ -30,10 +28,10 @@ cfcFactions.Credits.Developers = {
 function cfcFactions.Credits:GenerateDeveloperNames()
     for KEY, ID in pairs( cfcFactions.Credits.Developers ) do
 
-        for KEY2, PLAYER in pairs( player.GetHumans() ) do
-            if KEY == PLAYER:SteamID() then
-                print( "Changing " .. PLAYER:Nick() .. "'s name." )
-                cfcFactions.Credits.Developers[KEY] = PLAYER:Nick()
+        for KEY2, ply in pairs( player.GetHumans() ) do
+            if KEY == ply:SteamID() then
+                print( "Changing " .. ply:Nick() .. "'s name." )
+                cfcFactions.Credits.Developers[KEY] = ply:Nick()
             end
         end
     end
@@ -47,7 +45,7 @@ cfcFactions.ErrorMessages = {
     ["invalid-string-type"]   = "Not a valid StringType",
     ["invalid-table-type"]    = "Not a valid TableType",
     ["invalid-int-type"]      = "Not a valid IntType",
-    ["invalid-bool-type"]     = "Not a valid BoolType", 
+    ["invalid-bool-type"]     = "Not a valid BoolType",
     ["is-in-faction"]         = "Already in a faction",
     ["factions-unavailable"]  = "Unable to create a faction right now",
     ["database-connect-fail"] = "Unable to connect to database.",
@@ -99,13 +97,13 @@ end
 -- msg = string or predifined key hard coded above ( cfcFactions.ErrorMessages )
 -- mtype = Number, Error being 1, Msg being 2, Alert being 3, Warning being 4
 -- player to send the notifcation to. Optional
-function cfcFactions:SendNotifcation( msg, mtype, player )
+function cfcFactions:SendNotifcation( msg, mtype, ply )
 
     if type( msg ) == "number" then
         msg = cfcFactions.ErrorMessages[msg] and cfcFactions.ErrorMessages[msg] or ""
     end
 
-    if not IsValid( player ) then
+    if not IsValid( ply ) then
         return
     end
 
@@ -116,43 +114,49 @@ function cfcFactions:SendNotifcation( msg, mtype, player )
 
     if CLIENT then
         if #msg <= 256 then
-            if not player:IsPlayer() then
+            if not ply:IsPlayer() then
                 MsgN( msg, mtype )
                 return
             end
             net.Start( "CFC_Fac_SendTextAlert" )
             net.WriteString( msg )
             net.WriteInt( mtype, 4 )
-            if player:IsPlayer() then
-                net.WriteEntity( player )
+            if ply:IsPlayer() then
+                net.WriteEntity( ply )
             else
                 net.WriteEntity( nil )
             end
             net.SendToServer()
+        else
+            -- TODO: Log an event here
+            print( "" )
         end
     end
 
     if SERVER then
         if #msg <= 256 then
-            if IsValid( player ) and player:IsPlayer() then
+            if IsValid( ply ) and ply:IsPlayer() then
                 net.Start( "CFC_Fac_SendServerTextAlert" )
                     net.WriteString( msg )
                     net.WriteInt( mtype, 4 )
-                    net.WriteEntity( player )
-                net.Send( player )
+                    net.WriteEntity( ply )
+                net.Send( ply )
             else
                 MsgN( msg )
             end
+        else
+            -- TODO: Log an event here
+            print( "" )
         end
     end
 end
 
 
-function cfcFactions.colorToInt( c ) 
+function cfcFactions.colorToInt( c )
     return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
 end
 
-function cfcFactions.intToColor(n)
+function cfcFactions.intToColor( n )
     return Color(
         bit.band( bit.rshift( n, 16 ), 0xFF ),
         bit.band( bit.rshift( n, 8 ), 0xFF ),
