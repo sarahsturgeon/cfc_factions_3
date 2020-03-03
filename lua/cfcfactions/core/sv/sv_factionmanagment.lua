@@ -33,7 +33,7 @@ local function allowFactionPermission( ply, cmd, args )
             logger:info( string.format( "%s has been granted access to %s", ply:GetName(), args[1] ) )
         else
             -- TODO:
-            Error("TODO: What happens here?")
+            Error( "TODO: What happens here?" )
         end
     else
         ply:ChatPrint( "You require developer level permissions for this command." )
@@ -55,7 +55,7 @@ local function removeFactionPermission( ply, cmd, args )
             logger:info( string.format( "%s has been denied access to %s", ply:GetName(), args[1] ) )
         else
             -- TODO:
-            Error("TODO: What happens here?")
+            Error( "TODO: What happens here?" )
         end
     else
         ply:ChatPrint( "You require developer level permissions for this command." )
@@ -134,3 +134,9 @@ concommand.Add( "fpvp_factionmenu", factionMenu )
 --     cfcFactions.fpm:authUser( player )
 -- end
 
+
+local function UserRequestDerma( len, ply )
+    ply:CFCToggleMenu()
+end
+
+net.Receive( "CFC_Fac_RequestDerma", UserRequestDerma )

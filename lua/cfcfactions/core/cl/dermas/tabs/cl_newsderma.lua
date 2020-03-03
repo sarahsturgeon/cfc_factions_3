@@ -1,9 +1,8 @@
 if not CLIENT then return end
 
-local Panel = {}
-cfcFactions:RegisterDermaMenu( "View News", Panel, 10 )
+local PANEL = {}
 
-function Panel:Init()
+function PANEL:Init()
     self:SetSize( math.Clamp( 1024, 0, ScrW() ), math.Clamp( 800, 0, ScrH() ) )
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
@@ -18,7 +17,7 @@ function Panel:Init()
     net.Start( "CFC_Fac_RequestNews" )
 end
 
-vgui.Register( "D_cfcnewsderma", Panel )
+vgui.Register( "D_cfcnewsderma", PANEL )
 
 local function sendFactionNews( len, ply )
     local netIN = net.ReadString()

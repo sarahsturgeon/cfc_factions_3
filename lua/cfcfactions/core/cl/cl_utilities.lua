@@ -1,18 +1,3 @@
-local cfcFactions = cfcFactions or {}
-if not CLIENT then return end
-
--- Used to clean a string in order to properly use it as a
--- dynamic variable name
-function cfcFactions:SanitizeLuaVariableName( inputstring )
-    if inputstring == nil then return "" end
-    local tmp = ""
-
-    for k = 1, #inputstring do
-        tmp = string.Replace( inputstring, " ", "_" )
-    end
-    return string.lower( tmp )
-end
-
 -- Resizes all buttons inside a parent equally ( Highest text length is what is used to determine all button's size )
 -- Modifier adds onto size for a fixed amount
 function cfcFactions:ResizeChildrenEqually( parent, modifer )

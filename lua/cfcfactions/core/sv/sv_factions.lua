@@ -213,7 +213,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     local EditColor = color
     local EditPrivate = private
     local EditTemporary = temporary
-    -- TODO: Add a local variable to handle 'aborting' , if a ErrorsToReturn is critical enough to not
+    -- TODO: Add a local variable to handle 'aborting', if a ErrorsToReturn is critical enough to not
     -- Lengthy explanation here
 
     -- EditFaction can receieve nil. description, can be nil. Because in my head, whats happening here is a client will try to edit
@@ -224,13 +224,13 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
     -- like a completely missing faction. That seems like something to be upset about.
 
     if not cfcFactions:IsValidFaction( EditingFaction ) or table.IsEmpty( EditingFaction ) then
-        table.insert( ErrorsToReturn, "404-faction")
+        table.insert( ErrorsToReturn, "404-faction" )
         -- Todo, set the flag for aborting to true. Read the lengthy comment above to understand
     end
 
     if type( EditName ) ~= "string" then
         -- Fine to NOT flag true for aborting.
-        table.insert( ErrorsToReturn, "invalid-string-type")
+        table.insert( ErrorsToReturn, "invalid-string-type" )
     end
 
     if type( EditColor ) ~= "Color" then
@@ -243,7 +243,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
     if type( EditDescription ) ~= "string" then
         -- Fine to NOT flag true for aborting.
-        table.insert( ErrorsToReturn, "invalid-string-type")
+        table.insert( ErrorsToReturn, "invalid-string-type" )
     end
 
     if type( EditTemporary ) ~= "string" then
@@ -271,7 +271,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 
         -- TODO! be sure to call save to database as well
 
-        net.Start("CFC_Fac_FactionChanged")
+        net.Start( "CFC_Fac_FactionChanged" )
             net.WriteInt( id, 32 )
             net.WriteString( EditingFaction.EditName )
             net.WriteString( EditingFaction.EditDescription )
@@ -296,7 +296,7 @@ end
 
 net.Receive( "CFC_Fac_RequestNews", requestFactionNews )
 
--- When client submits a faction to create, we receive it here. This is a net side, we'll check perms here but not valid types (We probably should)
+-- When client submits a faction to create, we receive it here. This is a net side, we'll check perms here but not valid types ( We probably should )
 local function RequestFactionCreation( len, ply )
 
     if ply and not IsValid( ply ) then return end
