@@ -1,4 +1,4 @@
-local Panel = {}
+local PANEL = {}
 
 --[[
 local function addUserInfo( listView, data )
@@ -11,7 +11,7 @@ local function addUserInfo( listView, data )
 end
 ]]
 
-function Panel:Init()
+function PANEL:Init()
     local lview = vgui.Create( "DListView", f )
     lview:Dock( FILL )
     lview:SetSortable( false )
@@ -27,4 +27,4 @@ function Panel:Init()
     ]]
 end
 
-vgui.Register( "D_cfcfactionusers", Panel )
+vgui.Register( "D_cfcfactionusers", PANEL )

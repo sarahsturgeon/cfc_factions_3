@@ -1,6 +1,6 @@
-local Panel = {}
+local PANEL = {}
 
-function Panel:Init()
+function PANEL:Init()
 
     self:SetSize( 500, 510 )
     self:SetPos( ( ScrW() / 2 ) - ( self:GetWide() / 2 ), ( ScrH() / 2 ) - ( self:GetTall() / 2 ) )
@@ -100,4 +100,4 @@ function Panel:Init()
     end
 end
 
-vgui.Register( "D_cfcfactioncreate", Panel )
+vgui.Register( "D_cfcfactioncreate", PANEL )

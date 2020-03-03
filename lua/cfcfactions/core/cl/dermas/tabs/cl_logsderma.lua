@@ -1,6 +1,4 @@
 local Panel = {}
--- Commenting out till later completion. Useless menu clutter
--- cfcFactions:RegisterDermaMenu( "View Logs", Panel, 1 )
 
 function Panel:Init()
     -- Switch between 2 views
