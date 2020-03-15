@@ -36,11 +36,11 @@ local function _authenticatedRequest( method, endpoint, params )
         if success then
             return data
         else
+            -- TODO: Redo this part based on status
             logger:fatal( status .. " => " .. table.concat( table.map( data.errors, errorAsString ), ", " ) )
         end
     else
-        print(status)
-        logger:fatal( "Invalid JSON - What did you do?" )
+        logger:fatal( "Invalid JSON:\n" .. body )
     end
 end
 local authenticatedRequest = async( _authenticatedRequest )
@@ -120,8 +120,11 @@ function cfcFactions.api:GetPlayer( id )
     return authenticatedRequest( endpoint )
 end
 
-function cfcFactions.api:GetPlayerBySteamID( steamID )
+function cfcFactions.api:GetPlayerBySteamID64( steamID )
     local endpoint = constants.PLAYERS_FIND_ENDPOINT .. "/" .. steamID
+    local params = {
+        steam_id = steamID
+    }
 
-    return authenticatedRequest( endpoint )
+    return authenticatedPost( endpoint )
 end

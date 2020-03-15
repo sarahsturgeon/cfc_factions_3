@@ -47,7 +47,7 @@ local function _registerUser( _, user )
     end
 
     logger:info( "Registering new user #P = " .. user:SteamID64() )
-    local sID = user:SteamID()
+    local sID = user:SteamID64()
     local name = user:Nick()
     
     local success, data = await( cfcFactions.api:CreatePlayer( sID, name ) )
@@ -56,7 +56,7 @@ local function _registerUser( _, user )
         local factioneer = GetDefaultTable( {
             SteamID = sID,
             DisplayName = name,
-            backendID = data.player.id -- idk what this should be
+            backendID = data.id
         } )
         factioneers[user:SteamID64()] = factioneer
     else
@@ -87,14 +87,14 @@ function _UserExistsBackend( self, user )
         return true
     end
 
-    local steamID = user:SteamID()
-    local success, data = await( cfcFactions.api:GetPlayerBySteamID( steamID ) )
+    local steamID = user:SteamID64()
+    local success, data = await( cfcFactions.api:GetPlayerBySteamID64( steamID ) )
     if success then
-        if data.found then -- idk what this should be
+        if #data > 0 then
             local factioneer = GetDefaultTable( {
                 SteamID = steamID,
                 DisplayName = user:Nick(),
-                backendID = data.player.id -- idk what this should be
+                backendID = data[1].id
             } )
             factioneers[user:SteamID64()] = factioneer
             return true
@@ -102,7 +102,7 @@ function _UserExistsBackend( self, user )
             return false
         end
     else
-        error( "Something went wrong" )
+        logger:fatal( "Player find failed: " .. data )
     end
 end
 factioneers.UserExistsBackend = async( _UserExistsBackend )
