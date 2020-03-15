@@ -1,4 +1,5 @@
-require( "cfclogger" )
+require( "cfc_loglib" )
+require( "cfc_promises" )
 
 cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
@@ -17,6 +18,7 @@ include( "cfcfactions/core/sh/sh_init.lua" )
 -- sv
 include( "cfcfactions/constants/constants.lua" )
 include( "cfcfactions/config/sv_config.lua" )
+include( "cfcfactions/core/sv/sv_api.lua" )
 include( "cfcfactions/core/sv/sv_netvars.lua" )
 include( "cfcfactions/core/sv/sv_users.lua" )
 include( "cfcfactions/core/sv/sv_permsys.lua" )

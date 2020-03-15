@@ -142,7 +142,7 @@ end
 
 -- Auths a user and allows them to use factions properly. If not, things make explode
 -- Or simply just don't want them using it
-function fpm:authUser( authPlayer )
+local function _authUser( self, authPlayer )
     logger:info( "Authenticating Factions user " .. authPlayer:SteamID() )
     -- Checks and balances
     if not authPlayer:IsPlayer() then
@@ -150,35 +150,44 @@ function fpm:authUser( authPlayer )
     end
 
     local userExists = factioneers:UserExists( authPlayer )
-    local hasPermissions = userExists and factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil
+    local success
 
-    if userExists and hasPermissions then
-        -- Error out, ply already has proper permissions for authentication
-        return
-    end
-
-    factioneers:registerUser( authPlayer )
-
-    -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
-    local AuthUserPerms = {
-        "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
-    }
-
-    if IsValid( authPlayer ) and authPlayer:IsAdmin() then
-        table.insert( AuthUserPerms, "IsFactionsAdmin" )
-        -- Testing dev access, SteamID is 'Voodoo'
-        -- Remove code when final branch is published
-        if ( cfcFactions.Credits.Developers[authPlayer:SteamID()] ~= nil ) then
-            table.insert( AuthUserPerms, "IsDeveloper" )
-            table.insert( AuthUserPerms, "IsTester" )
+    if not userExists then
+        success, userExists = await( factioneers:UserExistsBackend( authPlayer ) )
+        if not success then
+            return -- Something went wrong
         end
     end
 
-    -- fpm.Users[ply:SteamID64()] = { ["Permissions"] = AuthUserPerms }
-    for _, AuthPermission in pairs( AuthUserPerms ) do
-        self:addPermission( authPlayer, AuthPermission )
+    local hasPermissions = userExists and factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil
+
+    if not userExists then
+        await( factioneers:registerUser( authPlayer ) )
+    end
+
+    if not hasPermissions then
+        -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
+        local AuthUserPerms = {
+            "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
+        }
+
+        if IsValid( authPlayer ) and authPlayer:IsAdmin() then
+            table.insert( AuthUserPerms, "IsFactionsAdmin" )
+            -- Testing dev access, SteamID is 'Voodoo'
+            -- Remove code when final branch is published
+            if ( cfcFactions.Credits.Developers[authPlayer:SteamID()] ~= nil ) then
+                table.insert( AuthUserPerms, "IsDeveloper" )
+                table.insert( AuthUserPerms, "IsTester" )
+            end
+        end
+
+        -- fpm.Users[ply:SteamID64()] = { ["Permissions"] = AuthUserPerms }
+        for _, AuthPermission in pairs( AuthUserPerms ) do
+            self:addPermission( authPlayer, AuthPermission )
+        end
     end
 end
+fpm.authUser = async( _authUser )
 
 -- Checks to see if a ply has a  specific permission( s )
 function fpm:hasPermission( ply, permission )
@@ -246,6 +255,7 @@ function fpm:addPermission( ply, permission )
     end
 
     local usr = factioneers:User( ply )
+    if not usr then return false end
 
     if fpm:IsSpecialPermission( permission ) == false then
         table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )

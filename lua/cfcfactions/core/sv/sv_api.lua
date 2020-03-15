@@ -6,22 +6,41 @@ local logger = cfcFactions.logger
 local apiRoot = constants.BACKEND_ROOT
 local apiKey = "" -- TODO: Read API Key from file0.
 
+function table.mapSelf( tab, f )
+    for k, v in pairs( tab ) do
+        tab[k] = f( v )
+    end
+end
+
+function table.map( tab, f )
+    local out = table.Copy( tab )
+    table.mapSelf( out, f )
+    return out
+end
+
+local function errorAsString( obj )
+    for k, v in pairs( obj ) do
+        return k .. ": " .. v
+    end
+end
+
 local function _authenticatedRequest( method, endpoint, params )
     local url = apiRoot .. endpoint
     local overrides = {
         params = params,
         authToken = apiKey
     }
-    local success, body = await( NP.http.request( method, url, overrides ) )
-    if success then
-        local data = util.JSONToTable( body )
-        if data then
+    local success, body, status = await( NP.http.request( method, url, overrides ) )
+    local data = util.JSONToTable( body )
+    if data then
+        if success then
             return data
         else
-            logger.fatal( requestName, "Invalid JSON - What did you do?" )
+            logger:fatal( status .. " => " .. table.concat( table.map( data.errors, errorAsString ), ", " ) )
         end
     else
-        logger.fatal( requestName, body )
+        print(status)
+        logger:fatal( "Invalid JSON - What did you do?" )
     end
 end
 local authenticatedRequest = async( _authenticatedRequest )
@@ -39,12 +58,13 @@ local function authenticatedPatch( endpoint, params )
 end
 
 function cfcFactions.api:CreatePlayer( steamId, mostRecentName )
-    local endpoint = constants.FACTIONS_ENDPOINT
+    local endpoint = constants.PLAYERS_ENDPOINT
     local params = {
-        steam_id = steamId,
-        most_recent_name = mostRecentName
+        player = {
+            steam_id = steamId,
+            most_recent_name = mostRecentName,
+        }
     }
-
     return authenticatedPost( endpoint, params )
 end
 function cfcFactions.api:CreateFaction( name, color, description, creatorSteamId )
@@ -96,6 +116,12 @@ end
 
 function cfcFactions.api:GetPlayer( id )
     local endpoint = constants.PLAYERS_ENDPOINT .. "/" .. id
+
+    return authenticatedRequest( endpoint )
+end
+
+function cfcFactions.api:GetPlayerBySteamID( steamID )
+    local endpoint = constants.PLAYERS_FIND_ENDPOINT .. "/" .. steamID
 
     return authenticatedRequest( endpoint )
 end

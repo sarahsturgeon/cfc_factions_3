@@ -226,7 +226,7 @@ function PANEL:Init()
     self.ViewFaction:SetDisabled( true )
     self.CreateFaction.DoClick = function()
         -- create cl_faccreate.lua, process, submit to server
-        -- local CreateFactionMiniPANEL = vgui.Create( "D_cfcfactioncreate", self.MainContainer )
+        local createFactionPanel = vgui.Create( "D_cfcfactioncreate" )
     end
 
     self.EditFaction = cfcFactions.addFactionButton( self, "Edit Faction", lineHeight )

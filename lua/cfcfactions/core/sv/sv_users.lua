@@ -10,29 +10,30 @@ local factioneers = cfcFactions.Users
 local logger = cfcFactions.logger
 
 -- What a user should have when first logging into the server
-local function ReturnDefaultTable()
+local function GetDefaultTable( tab )
     local PreUserTable = {
-        ["SteamID"] = "",
-        ["CFCPermissions"] = {},
-        ["DisplayName"] = "",
+        SteamID = "",
+        CFCPermissions = {},
+        DisplayName = "",
         -- data only pretaining to a user inside a faction
-        ["FactionMetadata"] = {
-            ["DateAdded"] = cfcFactions:TimeStamp(),
-            ["FactionID"] = "",
-            ["Kills"] = 0,
-            ["Deaths"] = 0,
-            ["FactionRank"] = "",
-            ["InternalFactionPermissions"] = {}
+        FactionMetadata = {
+            DateAdded = cfcFactions:TimeStamp(),
+            FactionID = "",
+            Kills = 0,
+            Deaths = 0,
+            FactionRank = "",
+            InternalFactionPermissions = {}
         },
-        ["LastOnline"] = cfcFactions:TimeStamp(),
-        ["PendingInvites"] = {}
+        LastOnline = cfcFactions:TimeStamp(),
+        PendingInvites = {}
     }
+    logger:debug( "Overriding in default table:\n" .. table.ToString( tab, "", true ) )
+    table.Merge( PreUserTable, tab )
     return PreUserTable
 end
 
 -- Registers a new user to be accessible by factions
-function factioneers:registerUser( user )
-
+local function _registerUser( _, user )
     if not user:IsPlayer() then
         -- Error out, not a player
         logger:error( "Cannot register user, player is invalid!" )
@@ -46,12 +47,24 @@ function factioneers:registerUser( user )
     end
 
     logger:info( "Registering new user #P = " .. user:SteamID64() )
-    factioneers[user:SteamID64()]  = ReturnDefaultTable()
-    factioneers[user:SteamID64()].DisplayName = user:Nick()
-    factioneers[user:SteamID64()].SteamID = user:SteamID()
+    local sID = user:SteamID()
+    local name = user:Nick()
+    
+    local success, data = await( cfcFactions.api:CreatePlayer( sID, name ) )
 
-    --[TODO] Save to DB!
+    if success then
+        local factioneer = GetDefaultTable( {
+            SteamID = sID,
+            DisplayName = name,
+            backendID = data.player.id -- idk what this should be
+        } )
+        factioneers[user:SteamID64()] = factioneer
+    else
+        logger:error( "It didn't work" );
+    end
+
 end
+factioneers.registerUser = async( _registerUser )
 
 -- Checks if a user is already registered
 function factioneers:UserExists( user )
@@ -67,6 +80,32 @@ function factioneers:UserExists( user )
         return false
     end
 end
+
+-- Checks if a user is already registered on the backend, and adds them to factions if so
+function _UserExistsBackend( self, user )
+    if factioneers:UserExists( user ) then
+        return true
+    end
+
+    local steamID = user:SteamID()
+    local success, data = await( cfcFactions.api:GetPlayerBySteamID( steamID ) )
+    if success then
+        if data.found then -- idk what this should be
+            local factioneer = GetDefaultTable( {
+                SteamID = steamID,
+                DisplayName = user:Nick(),
+                backendID = data.player.id -- idk what this should be
+            } )
+            factioneers[user:SteamID64()] = factioneer
+            return true
+        else
+            return false
+        end
+    else
+        error( "Something went wrong" )
+    end
+end
+factioneers.UserExistsBackend = async( _UserExistsBackend )
 
 local function IsValidAndOfType( item, gtype )
     return ( item ~= nil ) and ( type( item ) == gtype )
@@ -105,6 +144,7 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
     if playerIsInvalid and plyEntIsString then
         plyEnt = player.GetBySteamID64( user )
         factioneers:UpdateUser( plyEnt, lastonline, factionid, kills, deaths, factionrank )
+        return
     end
 
     if not factioneers:UserExists( user ) then
