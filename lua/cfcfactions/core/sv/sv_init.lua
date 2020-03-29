@@ -22,7 +22,6 @@ include( "cfcfactions/core/sv/sv_api.lua" )
 include( "cfcfactions/core/sv/sv_netvars.lua" )
 include( "cfcfactions/core/sv/sv_users.lua" )
 include( "cfcfactions/core/sv/sv_permsys.lua" )
-include( "cfcfactions/core/sv/sv_mysql.lua" )
 
 include( "cfcfactions/core/sv/sv_factions.lua" )
 include( "cfcfactions/core/sv/sv_factionmanagment.lua" )
@@ -77,12 +76,3 @@ local function cfcPlayerSay( ply, msg )
     end
 end
 hook.Add( "PlayerSay", "cfcPlayerSay", cfcPlayerSay )
-
--- InitialSpawn hook, fetches the data and properly sets it serverside
-local function cfcOnPlayerInitialSpawn( ply )
-
-    -- Always load a user as if never exsisted. Afterwards, load their proper data from source
-    -- TODO: Instead of RegisteringUser, we load them from sql, if they're not found, THEN, we register them
-    cfcFactions.Users:registerUser( ply )
-end
-hook.Add( "PlayerInitialSpawn", "cfcPlayerInitialSpawn", cfcOnPlayerInitialSpawn )

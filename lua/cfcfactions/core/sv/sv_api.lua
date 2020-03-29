@@ -27,7 +27,7 @@ end
 local function _authenticatedRequest( method, endpoint, params )
     local url = apiRoot .. endpoint
     local overrides = {
-        params = params,
+        body = util.TableToJSON( params ),
         authToken = apiKey
     }
     local success, body, status = await( NP.http.request( method, url, overrides ) )
@@ -60,7 +60,7 @@ end
 function cfcFactions.api:CreatePlayer( steamId, mostRecentName )
     local endpoint = constants.PLAYERS_ENDPOINT
     local params = {
-        player = {
+        players = {
             steam_id = steamId,
             most_recent_name = mostRecentName,
         }
@@ -121,10 +121,12 @@ function cfcFactions.api:GetPlayer( id )
 end
 
 function cfcFactions.api:GetPlayerBySteamID64( steamID )
-    local endpoint = constants.PLAYERS_FIND_ENDPOINT .. "/" .. steamID
+    local endpoint = constants.PLAYERS_FIND_ENDPOINT .. "/"
     local params = {
-        steam_id = steamID
+        players = {
+            steam_id = steamID
+        }
     }
 
-    return authenticatedPost( endpoint )
+    return authenticatedPost( endpoint, params )
 end

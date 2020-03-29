@@ -82,13 +82,14 @@ function factioneers:UserExists( user )
 end
 
 -- Checks if a user is already registered on the backend, and adds them to factions if so
-function _UserExistsBackend( self, user )
-    if factioneers:UserExists( user ) then
+function _UserExistsBackend( self, user, force )
+    if factioneers:UserExists( user ) and not force then
         return true
     end
 
     local steamID = user:SteamID64()
     local success, data = await( cfcFactions.api:GetPlayerBySteamID64( steamID ) )
+
     if success then
         if #data > 0 then
             local factioneer = GetDefaultTable( {
