@@ -129,12 +129,6 @@ concommand.Add( "fpvp_factionmenu", factionMenu )
 -- HOOKS
 --------------------------------------------------------------------------------------------------------------
 
--- TODO: delete or use
--- local function factionsPlayerInitialSpawn( player )
---     cfcFactions.fpm:authUser( player )
--- end
-
-
 local function UserRequestDerma( len, ply )
     ply:CFCToggleMenu()
 end

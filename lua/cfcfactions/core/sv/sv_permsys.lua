@@ -107,13 +107,6 @@ fpm.defaultRanks = {
         "CanSendFactionMessage",
         "CanReceiveFactionMessage",
         "CanSendInvite"
-    },
-
-    -- a user
-    ["user"] = {
-        "CanSendAllMessage",
-        "CanSendFactionMessage",
-        "CanReceiveFactionMessage"
     }
 }
 
@@ -133,64 +126,9 @@ function fpm:revokeUser( ply )
     return true
 end
 
--- forces init for all current humans connected
-function fpm:authAllUsers()
-    for _, players in pairs ( player.GetHumans() ) do
-        fpm:authUser( players )
-    end
-end
-
--- Auths a user and allows them to use factions properly. If not, things make explode
--- Or simply just don't want them using it
-local function _authUser( self, authPlayer )
-    logger:info( "Authenticating Factions user " .. authPlayer:SteamID() )
-    -- Checks and balances
-    if not authPlayer:IsPlayer() then
-        return
-    end
-
-    local userExists = factioneers:UserExists( authPlayer )
-    local success
-
-    if not userExists then
-        success, userExists = await( factioneers:UserExistsBackend( authPlayer ) )
-        if not success then
-            return -- Something went wrong
-        end
-    end
-
-    local hasPermissions = userExists and factioneers[authPlayer:SteamID64()].CFCPermissions ~= nil
-
-    if not userExists then
-        await( factioneers:registerUser( authPlayer ) )
-    end
-
-    if not hasPermissions then
-        -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
-        local AuthUserPerms = {
-            "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
-        }
-
-        if IsValid( authPlayer ) and authPlayer:IsAdmin() then
-            table.insert( AuthUserPerms, "IsFactionsAdmin" )
-            -- Testing dev access, SteamID is 'Voodoo'
-            -- Remove code when final branch is published
-            if ( cfcFactions.Credits.Developers[authPlayer:SteamID()] ~= nil ) then
-                table.insert( AuthUserPerms, "IsDeveloper" )
-                table.insert( AuthUserPerms, "IsTester" )
-            end
-        end
-
-        -- fpm.Users[ply:SteamID64()] = { ["Permissions"] = AuthUserPerms }
-        for _, AuthPermission in pairs( AuthUserPerms ) do
-            self:addPermission( authPlayer, AuthPermission )
-        end
-    end
-end
-fpm.authUser = async( _authUser )
-
 -- Checks to see if a ply has a  specific permission( s )
 function fpm:hasPermission( ply, permission )
+    do return true end
     -- Handling normal permissions now
     if not ply:IsPlayer() then
         logger:error( "Cannot check permission, player is invalid!" )
@@ -202,7 +140,7 @@ function fpm:hasPermission( ply, permission )
     end
 
     local PlayerTable = factioneers[ply:SteamID64()].CFCPermissions
-    local PlayerFactionTable = factioneers[ply:SteamID64()].FactionMetadata.InternalFactionPermissions
+    local PlayerFactionTable = factioneers[ply:SteamID64()].FactionData.InternalFactionPermissions
 
     if PlayerTable == nil then
         return false
@@ -258,7 +196,7 @@ function fpm:addPermission( ply, permission )
     if not usr then return false end
 
     if fpm:IsSpecialPermission( permission ) == false then
-        table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )
+        table.insert( usr.FactionData.InternalFactionPermissions, permission )
     else
         table.insert( usr.CFCPermissions, permission )
     end
@@ -320,5 +258,3 @@ end
 function fpm:IsFactionAdmin( ply )
     return self:hasPermission( ply, "IsFactionsAdmin" )
 end
-
-hook.Add( "Initialize", "cfcInitializeUsers", fpm:authAllUsers() )

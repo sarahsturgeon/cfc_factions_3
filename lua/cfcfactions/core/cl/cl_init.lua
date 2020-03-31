@@ -1,3 +1,5 @@
+require( "cfc_promises" )
+
 cfcFactions = cfcFactions or {}
 include( "cfcFactions/config/cl_config.lua" )
 include( "cfcfactions/core/cl/cl_clientstartup.lua" )

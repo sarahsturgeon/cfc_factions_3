@@ -9,28 +9,10 @@ cfcFactions.Users = cfcFactions.Users or {}
 local factioneers = cfcFactions.Users
 local logger = cfcFactions.logger
 
--- What a user should have when first logging into the server
-local function GetDefaultTable( tab )
-    local PreUserTable = {
-        SteamID = "",
-        CFCPermissions = {},
-        DisplayName = "",
-        -- data only pretaining to a user inside a faction
-        FactionMetadata = {
-            DateAdded = cfcFactions:TimeStamp(),
-            FactionID = "",
-            Kills = 0,
-            Deaths = 0,
-            FactionRank = "",
-            InternalFactionPermissions = {}
-        },
-        LastOnline = cfcFactions:TimeStamp(),
-        PendingInvites = {}
-    }
-    logger:debug( "Overriding in default table:\n" .. table.ToString( tab, "", true ) )
-    table.Merge( PreUserTable, tab )
-    return PreUserTable
-end
+-- why are we storing some different structure on the server, just copy database?
+-- ^ for factions
+-- how are we doing invites?
+
 
 -- Registers a new user to be accessible by factions
 local function _registerUser( _, user )
@@ -52,17 +34,12 @@ local function _registerUser( _, user )
     
     local success, data = await( cfcFactions.api:CreatePlayer( sID, name ) )
 
-    if success then
-        local factioneer = GetDefaultTable( {
-            SteamID = sID,
-            DisplayName = name,
-            backendID = data.id
-        } )
-        factioneers[user:SteamID64()] = factioneer
-    else
-        logger:error( "It didn't work" );
+    if not success then
+        return logger:fatal( "Register user failed: " .. data );
     end
-
+    
+    factioneers[sID] = data
+    return data
 end
 factioneers.registerUser = async( _registerUser )
 
@@ -74,39 +51,50 @@ function factioneers:UserExists( user )
         return false
     end
 
-    if factioneers[user:SteamID64()] ~= nil then
-        return true
-    else
-        return false
-    end
+    return factioneers[user:SteamID64()] ~= nil
 end
 
--- Checks if a user is already registered on the backend, and adds them to factions if so
-function _UserExistsBackend( self, user, force )
-    if factioneers:UserExists( user ) and not force then
-        return true
-    end
+local function _AuthUser( _, user )
+    if user:IsBot() then return end
 
-    local steamID = user:SteamID64()
-    local success, data = await( cfcFactions.api:GetPlayerBySteamID64( steamID ) )
+    if not factioneers:UserExists( user ) then
+        local steamID = user:SteamID64()
 
-    if success then
-        if #data > 0 then
-            local factioneer = GetDefaultTable( {
-                SteamID = steamID,
-                DisplayName = user:Nick(),
-                backendID = data[1].id
-            } )
-            factioneers[user:SteamID64()] = factioneer
-            return true
-        else
-            return false
+        local success, data = await( cfcFactions.api:GetPlayerBySteamID64( steamID ) )
+        
+        if not success then
+            return logger:fatal( "Player auth failed: " .. data )
         end
-    else
-        logger:fatal( "Player find failed: " .. data )
+
+        if #data == 0 then
+            local success, userData = await( factioneers:registerUser( user ) )
+
+            if not success then
+                return logger:fatal( "Player auth failed: " .. userData )
+            end
+        else
+            local userData = data[1]
+
+            user:SetNWInt( "CFC_FactionID", userData.faction_id )
+            userData.most_recent_name = user:Nick()
+            userData.last_online = os.time()
+
+            local success, userData = await( cfcFactions.api:UpdatePlayer( userData.id, userData ) )
+
+            factioneers[user:SteamID64()] = userData
+        end
     end
+
+    local factioneer = factioneers:User( user )
+
+    print( logger:info( "Authenticated user " .. factioneer.id .. "(" .. user:Nick() .. ")" ) )
+
+    if factioneer.faction_id then
+        cfcFactions:cacheFaction( factioneer.faction_id )
+    end
+
 end
-factioneers.UserExistsBackend = async( _UserExistsBackend )
+factioneers.AuthUser = async( _AuthUser )
 
 local function IsValidAndOfType( item, gtype )
     return ( item ~= nil ) and ( type( item ) == gtype )
@@ -134,85 +122,33 @@ function factioneers:User( ply )
 end
 
 -- Used to update a player's table of associated variables
-function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, factionrank )
-    local plyEnt = user
+local function _UpdateUser( _, user, data )
+    
+    local success, userData = await( cfcFactions.api:UpdateFaction( id, data ) )
 
-    local playerIsInvalid = not ( IsValid( plyEnt ) and plyEnt:IsPlayer() )
+    cfcFactions.Factions[factionData.id] = factionData
 
-    -- TODO: name this to describe what it is
-    local plyEntIsString = type( plyEnt ) == "string"
+    hook.Call( "CFC_Factionhook_UserEdited" )
 
-    if playerIsInvalid and plyEntIsString then
-        plyEnt = player.GetBySteamID64( user )
-        factioneers:UpdateUser( plyEnt, lastonline, factionid, kills, deaths, factionrank )
-        return
-    end
+    -- TODO: Tell clients to pull from database again 
 
-    if not factioneers:UserExists( user ) then
-        factioneers:registerUser( user )
-    end
-
-    local userTable = factioneers[user:SteamID64()]
-    local userFactionTable = userTable.FactionMetadata
-
-    if not IsValidString( lastonline ) then
-        LastOnline = cfcFactions:TimeStamp()
-    else
-        userTable["LastOnline"] = lastonline
-    end
-
-    if IsValidNumber( factionid ) then
-        if cfcFactions:IsValidFaction( cfcFactions.Factions[factionid] ) then
-            userFactionTable["FactionID"] = factionid
-            if IsValidNumber( kills ) then
-                userFactionTable["Kills"] = kills
-            end
-
-            if IsValidNumber( deaths ) then
-                userFactionTable["Deaths"] = deaths
-            end
-
-            if IsValidString( factionrank ) then
-                userFactionTable["FactionRank"] = factionrank
-            end
-        else
-          -- Conditional Statement for if a faction is NOT valid.
-          -- We can likely send error to client stateing that.
-          logger:error( "Cannot update user, user's faction is not valid!" )
-          return
-        end
-        -- alert user not a proper number
-        -- Conditional Statement for if a faction id is not a number
-        return
-    else
-        logger:error( "Faction ID is not a proper number!" )
-    end
-
+    return userData
 end
+factioneers.UpdateUser = async( _UpdateUser )
 
--- TODO: Uses mysql.lua to save to database
-function factioneers:SaveUser( user )
-
-end
-
-function factioneers:Kills( user )
-    return factioneers[user:SteamID64()].FactionMetadata.Kills
-end
-
-function factioneers:Deaths( user )
-    return factioneers[user:SteamID64()].FactionMetadata.Deaths
-end
 
 function factioneers:FactionID( user )
-    return factioneers[user:SteamID64()].FactionMetadata.FactionID
+    return factioneers[user:SteamID64()].faction_id
 end
 
+-- TODO: check correct
 function factioneers:LastOnline( user )
-    return factioneers[user:SteamID64()].FactionMetadata.LastOnline
+    return factioneers[user:SteamID64()].last_online
 end
 
+-- TODO: check this is correct
 function factioneers:FactionRank( user )
-    return factioneers[user:SteamID64()].FactionMetadata.FactionRank
+    return factioneers[user:SteamID64()].faction_rank
 end
 
 -- Used to update values that may change quickly
@@ -220,10 +156,10 @@ function factioneers:UpdateStats( user, lastonline, kills, deaths )
     if not factioneers:UserExists( user ) then return end
 
     local userTable = factioneers[user:SteamID64()]
-    local userFactionTable = userTable["FactionMetadata"]
+    local userFactionTable = userTable["FactionData"]
     if IsValidString( lastonline ) then userTable["LastOnline"] = lastonline end
-    if IsValidNumber( kills ) then userFactionTable.FactionMetadata["Kills"] = kills end
-    if IsValidNumber( deaths ) then userFactionTable.FactionMetadata["Deaths"] = deaths end
+    if IsValidNumber( kills ) then userFactionTable.FactionData["Kills"] = kills end
+    if IsValidNumber( deaths ) then userFactionTable.FactionData["Deaths"] = deaths end
 end
 
 function factioneers:SetUserFaction( user, id, rank )
@@ -231,62 +167,11 @@ function factioneers:SetUserFaction( user, id, rank )
 end
 
 -- This completely removes a user's data. Ill advised if they have important stuff and use factions
-function factioneers:RemoveUser( user )
-    factioneers[user:SteamID64()].FactionMetadata = nil
-    factioneers[user:SteamID64()].FactionMetadata = ReturnDefaultTable().FactionMetadata
-    -- TODO: Save to DB!
-end
-
-function factioneers:HasExistingInvite( user, id )
-    local playerIsValid = IsValid( user ) and user:IsPlayer()
-
-    if not playerIsValid then return end
-
-    if table.hasValue( factioneers[user:SteamID64()].PendingInvites.FactionID, id ) then
-        return true
-    end
-
-    return false
-end
-
-function factioneers:AddUserInvite( user, id, inviter )
-    local playerIsValid = IsValid( user ) and user:IsPlayer()
-    local hasInvitesPending = factioneers:HasExistingInvite( user, id )
-
-    if playerIsValid and not hasInvitesPending then
-        table.insert( factioneers[user:SteamID64()].PendingInvites, {
-            ["FactionID"] = id,
-            ["InviterSteamID"] = inviter:SteamID64()
-        } )
-    end
-end
-
-function factioneers:RemoveUserInvite( user, id )
-    local playerIsValid = IsValid( user ) and user:IsPlayer()
-
-    if not playerIsValid then return end
-
-    factioneers[user:SteamID64()].PendingInvites[id] = nil
-end
-
-function factioneers:IsInFaction( user )
-
-    -- TODO, rework to use sql checking instead of internal server tables
-    if type( user == "string" ) then
-        user = player.GetBySteamID( user )
-    end
-    if ( user == nil ) or ( not user:IsPlayer() ) then
-        return false
-    end
-
-    local GetFactionUser = factioneers[user:SteamID64()]
-    if GetFactionUser == nil then return false end
-
-    if ( GetFactionUser.FactionMetadata.FactionID == nil ) or ( #GetFactionUser.FactionMetadata.FactionID == 0 ) then
-        return false
-    else
-        return true
-    end
+function factioneers:ClearFaction( user )
+    local userData = factioneers:User( user )
+    if not userData then return end
+    userData.faction_id = nil
+    -- TODO: Set other things to nil, like rank, etc.
 end
 
 function factioneers:IsInFaction( user, id )
@@ -296,10 +181,10 @@ function factioneers:IsInFaction( user, id )
 
     local GetFactionUser = factioneers[user:SteamID64()]
     if GetFactionUser == nil then return false end
-    if GetFactionUser.FactionMetadata.FactionID == id then
-        return true
+    if id then
+        return GetFactionUser.faction_id == id
     else
-        return false
+        return GetFactionUser.faction_id ~= nil
     end
 end
 
@@ -307,11 +192,8 @@ function factioneers:FactionOwner()
 
 end
 
--- TODO: Delete or fill
--- local function SendUserRefresh( data )
--- end
-
 local function factionsPlayerInitialSpawn( ply )
-    cfcFactions.fpm:authUser( ply )
+    factioneers:AuthUser( ply )
 end
+
 hook.Add( "PlayerInitialSpawn", "CFC_Fac_PlayerInitialSpawn", factionsPlayerInitialSpawn )

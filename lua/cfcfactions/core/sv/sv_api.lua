@@ -24,11 +24,11 @@ local function errorAsString( obj )
     end
 end
 
-local function _authenticatedRequest( method, endpoint, params )
+local function _authenticatedRequest( method, endpoint, params, headers )
     local url = apiRoot .. endpoint
     local overrides = {
         body = util.TableToJSON( params ),
-        authToken = apiKey
+        authToken = apiKey,
     }
     local success, body, status = await( NP.http.request( method, url, overrides ) )
     local data = util.JSONToTable( body )
@@ -60,12 +60,11 @@ end
 function cfcFactions.api:CreatePlayer( steamId, mostRecentName )
     local endpoint = constants.PLAYERS_ENDPOINT
     local params = {
-        players = {
-            steam_id = steamId,
-            most_recent_name = mostRecentName,
-        }
+        steam_id = steamId,
+        most_recent_name = mostRecentName,
+        last_online = os.time()
     }
-    return authenticatedPost( endpoint, params )
+    return authenticatedPost( endpoint, { players = params } )
 end
 function cfcFactions.api:CreateFaction( name, color, description, creatorSteamId )
     local endpoint = constants.FACTIONS_ENDPOINT
@@ -76,7 +75,7 @@ function cfcFactions.api:CreateFaction( name, color, description, creatorSteamId
         creator_steam_id = creatorSteamId
     }
 
-    return authenticatedPost( endpoint, params )
+    return authenticatedPost( endpoint, { faction = params } )
 end
 
 function cfcFactions.api:DestroyFaction( id )
@@ -85,13 +84,13 @@ function cfcFactions.api:DestroyFaction( id )
         id = id
     }
 
-    return authenticatedDelete( endpoint, params )
+    return authenticatedDelete( endpoint, { faction = params } )
 end
 
 function cfcFactions.api:UpdateFaction( id, params )
     local endpoint = constants.FACTIONS_ENDPOINT .. "/" .. id
 
-    return authenticatedPatch( endpoint, params )
+    return authenticatedPatch( endpoint, { faction = params } )
 end
 
 function cfcFactions.api:GetFactions( page )
@@ -123,10 +122,14 @@ end
 function cfcFactions.api:GetPlayerBySteamID64( steamID )
     local endpoint = constants.PLAYERS_FIND_ENDPOINT .. "/"
     local params = {
-        players = {
-            steam_id = steamID
-        }
+        steam_id = steamID
     }
 
-    return authenticatedPost( endpoint, params )
+    return authenticatedPost( endpoint, { players = params } )
+end
+
+function cfcFactions.api:UpdatePlayer( id, params )
+    local endpoint = constants.PLAYERS_ENDPOINT .. "/" .. id
+
+    return authenticatedPatch( endpoint, { players = params } )
 end
