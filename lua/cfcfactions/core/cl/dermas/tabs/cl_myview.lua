@@ -1,5 +1,5 @@
 local PANEL = {}
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
 vgui.Register( "D_myview", PANEL )
 function PANEL:Init()
     self.PlayerGroups = {}

@@ -1,5 +1,6 @@
 local PANEL = {}
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
+local constants = cfcFactions.constants
 vgui.Register( "D_cfcfactionsderma", PANEL )
 
 function table.filter( tab, f )
@@ -18,6 +19,13 @@ function table.mapFilter( tab, f )
         if newV then table.insert( out, newV ) end
     end
     return out
+end
+
+function table.map( tab, f )
+    for k, v in pairs( tab ) do
+        tab[k] = f( v )
+    end
+    return tab
 end
 
 -- Little recursive function for repeating args, rep( "hi", 3 ) -> "hi", "hi", "hi"
@@ -183,21 +191,10 @@ function PANEL:Init()
     self.PaginationBar:Dock( BOTTOM )
     self.PaginationBar:DockMargin( 140, 10, 140, 10 )
     self.PaginationBar:SetTall( 30 )
-    -- TODO Get page count from api, record count / 50
-    self.PaginationBar:SetPageCount( 30 )
+    self.PaginationBar:SetPageCount( 1 )
     function self.PaginationBar:OnPageChange( oldPage, newPage )
         this:ClearFactionSelection()
-        -- TODO
-        -- This should call api to get factions
-        -- Get records
-        -- ( newPage - 1 ) * 50
-        -- to
-        -- newPage * 50
-        -- then call self:SetFactions( factions )
-
-        this:GetFactionsPage( newPage, function( factions )
-            this:SetFactions( factions )
-        end )
+        this:SetAllFactionsPage( newPage )
     end
 
     self.BottomGrid = vgui.Create( "DPanel", self.MainContainer )
@@ -240,21 +237,77 @@ function PANEL:Init()
     end
     self.DeleteFaction = cfcFactions.addFactionButton( self, "Delete Faction", lineHeight )
     self.DeleteFaction:SetDisabled( true )
-
-    self:GetFactionsPage( 1, function( factions )
-        self:SetFactions( factions )
-        self:SetOnlineFactions( factions )
-    end )
-
 end
 
-function PANEL:Paint( w, h )
-
+function PANEL:Setup()
+    if self.IsAllView then
+        self:AllFactionsSetup()
+    else
+        self:OnlineFactionsSetup()
+    end
 end
 
-function PANEL:Think()
-
+function PANEL:OnShow()
+    self:Setup()
 end
+
+function PANEL:Paint( w, h ) end
+
+function PANEL:Think() end
+
+local function _SetAllFactionsPage( self, page )
+    local url = constants.BACKEND_ROOT .. constants.FACTIONS_ENDPOINT
+    -- TODO: Page stuff
+    local success, dataStr = await( NP.http.fetch( url ) )
+
+    if not success then
+        return
+    end
+
+    local data = util.JSONToTable( dataStr )
+
+    self:SetFactions( data.data )
+end
+PANEL.SetAllFactionsPage = async( _SetAllFactionsPage )
+
+local function _OnlineFactionsSetup( self )
+    local playerIDs = table.map( player.GetAll(), function( ply ) return ply:GetNWInt( "CFC_DatabaseID" ) end )
+    
+    local url = constants.BACKEND_ROOT .. constants.PLAYERS_ENDPOINT .. "/" .. table.concat( playerIDs, "," )
+    local success, dataStr = await( NP.http.request( "GET", url ) )
+    if not success then return end
+
+    local data = util.JSONToTable( dataStr )
+
+    local factionIDmap = {}
+
+    for k, plyData in pairs( data ) do
+        if plyData.faction.id then
+            factionIDmap[plyData.faction.id] = true
+        end
+    end
+    local factionIDs = table.GetKeys( factionIDmap )
+
+    local url = constants.BACKEND_ROOT .. constants.FACTIONS_ENDPOINT .. "/" .. table.concat( factionIDs, "," )
+    local success, dataStr = await( NP.http.fetch( url ) )
+    if not success then return end
+
+    local data = util.JSONToTable( dataStr )
+
+    for k, faction in pairs( data ) do
+        faction.color = string.ToColor( string.Replace( faction.color, ",", " " ) .. " 255" )
+    end
+
+    self:SetOnlineFactions( data )
+end
+PANEL.OnlineFactionsSetup = async( _OnlineFactionsSetup )
+
+local function _AllFactionsSetup( self )
+    -- TODO: Work out how many pages we need
+    self.PaginationBar:SetPageCount( 1 )
+    self:SetAllFactionsPage( 1 )
+end
+PANEL.AllFactionsSetup = async( _AllFactionsSetup )
 
 function PANEL:SetIsAllView( state )
     if state ~= self.IsAllView then
@@ -274,6 +327,7 @@ function PANEL:SetIsAllView( state )
                 self.AllFactionView:Show()
                 self.AllFactionView:SetAlpha( 255 )
             end )
+            self:AllFactionsSetup()
         else
             self.ActiveFactionView:SetAlpha( 0 )
             self.AllFactionView:SetAlpha( 255 )
@@ -284,40 +338,9 @@ function PANEL:SetIsAllView( state )
                 self.ActiveFactionView:Show()
                 self.ActiveFactionView:SetAlpha( 255 )
             end )
+            self:OnlineFactionsSetup()
         end
     end
-end
-
-function PANEL:UpdateOnlineFactions()
-    local factionIDs = {}
-    for k, ply in pairs( player.GetAll() ) do
-        table.insert( factionIDS, ply.factionID )
-    end
-    -- Temporary to please jenkins
-    print(factionIDs)
-    -- Do some kind of API call with factionIDs to get factions
-    local factions
-
-    self:SetOnlineFactions( factions )
-end
-
-function PANEL:GetFactionsPage( pageNo, cb )
-    -- Replace this with the api call to get factions for page, call cb with result ( for async ) ( can we get Promises in glua?? )
-    local f = {}
-    for k = 1, 10 do
-        table.insert( f, {
-            id = k,
-            name = "Faction " .. k,
-            description = "This is like a faction and stuff",
-            private = k > 2,
-            kills = k * 3,
-            deaths = 2,
-            owner = "Ur mom",
-            members = { LocalPlayer():SteamID(), rep( "xd", k )}
-        } )
-    end
-
-    cb( f )
 end
 
 function PANEL:SetOnlineFactions( factions )
@@ -342,12 +365,13 @@ function PANEL:SetOnlineFactions( factions )
         activePanel:Dock( TOP )
         activePanel:DockMargin( 100, 10, 100, 10 )
         activePanel:SetFactionPrivate( v.private )
-        activePanel:SetFactionOwner( v.owner )
-        activePanel:SetFactionKD( v.kills, v.deaths )
+        activePanel:SetFactionOwner( "someone" )
+        activePanel:SetFactionKD( v.kills or 1, v.deaths or 1 )
         activePanel:SetMouseInputEnabled( true )
+        activePanel:SetFactionColor( v.color or Color( 255, 255, 255 ) )
         function activePanel:OnMouseReleased()
             this:SetSelectedFaction( self:GetFactionID() )
-            if this.ActiveFactionView.selected then
+            if IsValid( this.ActiveFactionView.selected ) then
                 this.ActiveFactionView.selected:SetSelected( false )
             end
             self:SetSelected( true )
@@ -363,9 +387,9 @@ function PANEL:SetFactions( factions )
     self.factions = factions
     self.AllFactionList:Clear()
     for k, v in pairs( factions ) do
-        local line = self.AllFactionList:AddLine( v.name, v.owner,
+        local line = self.AllFactionList:AddLine( v.name, "no",
             v.kills, v.deaths,
-            #( v.onlineMembers or {} ), #v.members,
+            0, 0,
             v.private and "✕" or "✓" )
 
         line.factionID = v.id
@@ -374,7 +398,7 @@ end
 
 function PANEL:ClearFactionSelection()
     self:SetSelectedFaction()
-    if self.ActiveFactionView.selected then
+    if IsValid( self.ActiveFactionView.selected ) then
         self.ActiveFactionView.selected:SetSelected( false )
     end
     self.AllFactionList:ClearSelection()

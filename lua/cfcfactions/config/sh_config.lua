@@ -1,7 +1,6 @@
 local cfcFactions = cfcFactions or {}
 
-cfcFactions.Config = cfcFactions.Config or {
+cfcFactions.Config = table.Merge( cfcFactions.Config or {}, {
     -- Defacto settings
-    IDENTIFIER = "cfcFactions",
-    NICE_NAME = "cfcFactions",
-}
+    ChatCommand = "!fpvp"
+} )

@@ -1,5 +1,5 @@
 local PANEL = {}
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
 vgui.Register( "D_cfcmainderma", PANEL )
 
 surface.CreateFont( "CFC_Normal",
@@ -55,7 +55,7 @@ function PANEL:Init()
     end
 
     self.CloseButton.DoClick = function()
-        cfcFactions:DisplayMenu()
+        cfcFactions:HideMenu()
     end
 
     self.MenuBar = vgui.Create( "DPanel", self )
@@ -191,7 +191,7 @@ function PANEL:Paint( w, h )
         draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
         surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
         surface.DrawOutlinedRect( 0, 0, w, h )
-        draw.SimpleText( string.format( DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 10, ColorSchemes.HeaderText )
+        draw.SimpleText( string.format( cfcFactions.Config.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 10, cfg.HeaderText )
 end
 
 function PANEL:Think()

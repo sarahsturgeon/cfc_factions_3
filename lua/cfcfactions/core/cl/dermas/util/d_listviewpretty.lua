@@ -1,5 +1,5 @@
 local PANEL = {}
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
 
 -- Simple table mapping function, apply f to every element in tab
 function table.map( tab, f )

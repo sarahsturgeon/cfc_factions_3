@@ -1,5 +1,5 @@
 local PANEL = {}
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
 
 vgui.Register( "D_factionpanel", PANEL )
 
@@ -198,48 +198,64 @@ function PANEL:SetFactionName( name )
     end
     self.FactionNameLabel:SetText( name )
 end
+
 function PANEL:SetFactionPrivate( isprivate )
     self.FactionLocked = isprivate
     self.FactionPrivateIcon:SetVisible( self.FactionLocked )
 end
+
 function PANEL:SetFactionID( id )
     self.FactionID = id
     self.FactionIDLabel:SetText( self.FactionID )
 end
+
 function PANEL:GetFactionID()
     return self.FactionID
 end
+
 function PANEL:SetFactionAvatar( imgpath )
     self.Avatar = imgpath
     self.AvatarImage:SetImage( self.Avatar )
 end
+
 function PANEL:SetFactionOwner( owner )
     self.Owner = owner
     self.OwnerLabel = "Owner: " .. self.Owner
 end
+
 function PANEL:SetFactionCurrentMembers( number )
     self.Members = number
     self.MembersLabel:SetText( self.Members .. "/" .. self.MaxMembers )
 end
+
 function PANEL:SetFactionMaxMembers( number )
     self.MaxMembers = number
     self.MembersLabel:SetText( self.Members .. "/" .. self.MaxMembers )
 end
+
 function PANEL:SetFactionKills( kills )
     self.Kills = kills
     self:UpdateKDLabel()
 end
+
 function PANEL:SetFactionDeaths( deaths )
     self.Deaths = deaths
     self:UpdateKDLabel()
 end
+
 function PANEL:SetFactionKD( kills, deaths )
     self:SetFactionKills( kills )
     self:SetFactionDeaths( deaths )
 end
+
 function PANEL:UpdateKDLabel()
     self.KillsDeathsLabel:SetText( "Kills: " .. self.Kills .. "   Deaths: " .. self.Deaths .. "   KD: " .. math.Round( self.Kills / self.Deaths, 2 ) )
 end
+
+function PANEL:SetFactionColor( color )
+    self.MainColor = color
+end
+
 function PANEL:SetFactionDescription( description )
     if description == nil then
         -- self.DescriptionTitleLabel:SetText( "No description provided." )

@@ -21,7 +21,8 @@ cfcFactions.Credits.Developers = {
     ["STEAM_0:1:13693373"] = "Lego1042",
     ["STEAM_0:1:115301653"] = "Periapsis",
     ["STEAM_0:0:21170873"] = "Phatso",
-    ["STEAM_0:1:28607710"] = "Voodoo"
+    ["STEAM_0:1:28607710"] = "Voodoo",
+    ["STEAM_0:1:46658202"] = "Sam"
 }
 
 -- If someone who helped code factions is on, change the hardcoded name to match their current display name ( steamid )
@@ -163,4 +164,30 @@ function cfcFactions.intToColor( n )
         bit.band( n, 0xFF ),
         255
     )
+end
+
+function table.mapSelf( tab, f )
+    for k, v in pairs( tab ) do
+        tab[k] = f( v )
+    end
+end
+
+function table.map( tab, f )
+    local out = table.Copy( tab )
+    table.mapSelf( out, f )
+    return out
+end
+
+function table.all( tab )
+    for k, v in pairs( tab ) do
+        if not v then return false end
+    end
+    return true
+end
+
+function table.any( tab )
+    for k, v in pairs( tab ) do
+        if v then return true end
+    end
+    return false
 end
