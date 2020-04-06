@@ -1,32 +1,7 @@
 local PANEL = {}
 local cfg = cfcFactions.Config.ColorSchemes
 local constants = cfcFactions.constants
-vgui.Register( "D_cfcfactionsderma", PANEL )
-
-function table.filter( tab, f )
-    local out = {}
-    for k, v in pairs( tab ) do
-        local doAdd = f( v )
-        if doAdd then table.insert( out, v ) end
-    end
-    return out
-end
-
-function table.mapFilter( tab, f )
-    local out = {}
-    for k, v in pairs( tab ) do
-        local newV = f( v )
-        if newV then table.insert( out, newV ) end
-    end
-    return out
-end
-
-function table.map( tab, f )
-    for k, v in pairs( tab ) do
-        tab[k] = f( v )
-    end
-    return tab
-end
+vgui.Register( "D_cfc_tab_factionslist", PANEL )
 
 -- Little recursive function for repeating args, rep( "hi", 3 ) -> "hi", "hi", "hi"
 local function rep( x, n )
@@ -34,27 +9,6 @@ local function rep( x, n )
     if n == 1 then return x end
     return x, rep( x, n-1 )
 end
-
--- Force a solid background on panels, rather than rounded darkened edges
-local function solidBgPaint( self, w, h )
-    surface.SetDrawColor( self:GetBackgroundColor() )
-    surface.DrawRect( 0, 0, w, h )
-end
-
-surface.CreateFont( "CFC_Normal_Bold",
-    {
-        font = "arial",
-        size = 17,
-        weight = 800
-    }
-)
-surface.CreateFont( "CFC_Normal_Bold18",
-    {
-        font = "arial",
-        size = 18,
-        weight = 800
-    }
-)
 
 function PANEL:Init()
     local this = self
@@ -65,7 +19,6 @@ function PANEL:Init()
     self.CurrentRequestAmountMax = 10
 
     self.IsAllView = false
-    self.CurrentlySelectedFaction = nil
 
     self.ChangeViewPanel = vgui.Create( "DPanel", self )
     self.ChangeViewPanel:Dock( TOP )
@@ -142,18 +95,13 @@ function PANEL:Init()
     self.MiddleContainer:SetPaintBorderEnabled( true )
     self.MiddleContainer:SetBackgroundColor( cfg.InlinePanel )
     self.MiddleContainer:InvalidateParent( true )
-    self.MiddleContainer.Paint = solidBgPaint
+    self.MiddleContainer.Paint = cfcFactions.solidBgPaint
 
     self.ActiveFactionView = vgui.Create( "DScrollPanel", self.MiddleContainer )
     self.ActiveFactionView:Dock( FILL )
     self.ActiveFactionView:GetVBar():SetWide( 0 )
     self.ActiveFactionView:SetBackgroundColor( cfg.Transparent )
     self.ActiveFactionView:InvalidateParent( true )
-    function self.ActiveFactionView:OnMousePressed( key )
-        if key == MOUSE_LEFT then
-            this:ClearFactionSelection()
-        end
-    end
 
     self.AllFactionView = vgui.Create( "DPanel", self.MiddleContainer )
     self.AllFactionView:Dock( FILL )
@@ -161,11 +109,6 @@ function PANEL:Init()
     self.AllFactionView:SetBackgroundColor( cfg.Transparent )
     self.AllFactionView:SetVisible( false )
     self.AllFactionView:SetMouseInputEnabled( true )
-    function self.AllFactionView:OnMousePressed( key )
-        if key == MOUSE_LEFT then
-            this.AllFactionList:ClearSelection()
-        end
-    end
 
     self.AllFactionList = vgui.Create( "DListViewPretty", self.AllFactionView )
     self.AllFactionList:Dock( FILL )
@@ -174,11 +117,7 @@ function PANEL:Init()
     self.AllFactionList:InvalidateParent( true )
     self.AllFactionList:SetMultiSelect( false )
     function self.AllFactionList:OnRowSelected( idx, line )
-        if line then
-            this:SetSelectedFaction( line.factionID )
-        else
-            this:SetSelectedFaction()
-        end
+        -- TODO: go to faction
     end
 
     -- Columns:
@@ -193,7 +132,6 @@ function PANEL:Init()
     self.PaginationBar:SetTall( 30 )
     self.PaginationBar:SetPageCount( 1 )
     function self.PaginationBar:OnPageChange( oldPage, newPage )
-        this:ClearFactionSelection()
         this:SetAllFactionsPage( newPage )
     end
 
@@ -210,33 +148,7 @@ function PANEL:Init()
         surface.DrawRect( 0, 0, w, lineHeight )
     end
 
-    -- Create, Edit, Delete, View
-    if LocalPlayer().isInFaction then
-        self.ViewFaction = cfcFactions.addFactionButton( self, "View Faction", lineHeight )
-        self.CreateFaction = cfcFactions.addFactionButton( self, "Create Faction", lineHeight )
-        self.CreateFaction:SetDisabled( true )
-    else
-        self.CreateFaction = cfcFactions.addFactionButton( self, "Create Faction", lineHeight )
-        self.ViewFaction = cfcFactions.addFactionButton( self, "View Faction", lineHeight )
-    end
-
-    self.ViewFaction:SetDisabled( true )
-    self.CreateFaction.DoClick = function()
-        -- create cl_faccreate.lua, process, submit to server
-        local createFactionPanel = vgui.Create( "D_cfcfactioncreate" )
-    end
-
-    self.EditFaction = cfcFactions.addFactionButton( self, "Edit Faction", lineHeight )
-    self.EditFaction:SetDisabled( true )
-    self.EditFaction.OnMouseReleased = function( keyCode )
-        if keyCode == MOUSE_LEFT and self.CurrentlySelectedFaction ~= nil then
-            --local EditingFactionPanel
-            print("Edit " .. tostring(self.CurrentlySelectedFaction))
-            -- change to edit factions panel, do data stuff
-        end
-    end
-    self.DeleteFaction = cfcFactions.addFactionButton( self, "Delete Faction", lineHeight )
-    self.DeleteFaction:SetDisabled( true )
+    self.CreateFaction = cfcFactions.addFactionButton( self, "Create Faction", lineHeight )
 end
 
 function PANEL:Setup()
@@ -282,7 +194,7 @@ local function _OnlineFactionsSetup( self )
     local factionIDmap = {}
 
     for k, plyData in pairs( data ) do
-        if plyData.faction.id then
+        if plyData.faction and plyData.faction.id then
             factionIDmap[plyData.faction.id] = true
         end
     end
@@ -311,8 +223,6 @@ PANEL.AllFactionsSetup = async( _AllFactionsSetup )
 
 function PANEL:SetIsAllView( state )
     if state ~= self.IsAllView then
-
-        self:ClearFactionSelection()
 
         self.IsAllView = state
         self.ActiveFactionView:Show()
@@ -369,15 +279,6 @@ function PANEL:SetOnlineFactions( factions )
         activePanel:SetFactionKD( v.kills or 1, v.deaths or 1 )
         activePanel:SetMouseInputEnabled( true )
         activePanel:SetFactionColor( v.color or Color( 255, 255, 255 ) )
-        function activePanel:OnMouseReleased()
-            this:SetSelectedFaction( self:GetFactionID() )
-            if IsValid( this.ActiveFactionView.selected ) then
-                this.ActiveFactionView.selected:SetSelected( false )
-            end
-            self:SetSelected( true )
-            this.ActiveFactionView.selected = self
-            -- show the panel is selected somehow
-        end
         table.insert( self.ActiveFactionPanels, activePanel )
     end
 
@@ -396,22 +297,6 @@ function PANEL:SetFactions( factions )
     end
 end
 
-function PANEL:ClearFactionSelection()
-    self:SetSelectedFaction()
-    if IsValid( self.ActiveFactionView.selected ) then
-        self.ActiveFactionView.selected:SetSelected( false )
-    end
-    self.AllFactionList:ClearSelection()
-end
-
-function PANEL:SetSelectedFaction( id )
-    -- Doesn't really do anything yet, not sure how to indicate a selected faction
-    local somethingSelected = not not id
-
-    self.EditFaction:SetDisabled( not somethingSelected )
-    self.DeleteFaction:SetDisabled( not somethingSelected )
-    self.ViewFaction:SetDisabled( not somethingSelected )
-
-    self.CurrentlySelectedFaction = id
-end
-
+hook.Add( "cfc_Fac_AddMenuTabs", "cfc_Fac_AddFactionsList", function( panel )
+    panel:AddMenuTab( "View Factions", vgui.Create( "D_cfc_tab_factionslist" ) )
+end )

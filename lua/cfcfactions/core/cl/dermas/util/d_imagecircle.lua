@@ -20,6 +20,7 @@ local _material = Material( "effects/flashlight001" );
 local PANEL = {}
 
 function PANEL:Init()
+    self.outlineColor = Color( 255, 255, 255 )
     self.Image = vgui.Create( "DImage", self )
     self.Image:SetPaintedManually( true )
     self.Image:Dock( FILL )
@@ -69,6 +70,19 @@ function PANEL:Paint( w, h )
 
     render.SetStencilEnable( false )
     render.ClearStencil()
+
+    if self.doDrawOutline then
+        render.DrawDrawColor( self.outlineColor )
+        render.DrawPolyOutline( self.poly )
+    end
+end
+
+function PANEL:SetDrawOutline( drawOutline )
+    self.doDrawOutline = drawOutline
+end
+
+function PANEL:SetOutlineColor( col )
+    self.outlineColor = col
 end
 
 function PANEL:SetImage( img )

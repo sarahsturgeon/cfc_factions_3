@@ -69,10 +69,17 @@ function PANEL:GetBackgroundColor()
     return self.bgCol
 end
 
+function PANEL:SetForceHovered( fh, skipAnim )
+    self.forceHovered = fh
+    if skipAnim then
+        self.animState = fh and 1 or 0
+    end
+end
+
 function PANEL:IsHovered()
     local w, h = self:GetSize()
     local x, y = self:LocalCursorPos()
-    return x >= 0 and x <= w and y >= 0 and y <= h
+    return self.forceHovered or ( x >= 0 and x <= w and y >= 0 and y <= h )
 end
 
 vgui.Register( "DButtonPretty", PANEL, "DButton" )

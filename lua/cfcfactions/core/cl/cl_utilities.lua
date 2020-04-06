@@ -1,31 +1,16 @@
--- Resizes all buttons inside a parent equally ( Highest text length is what is used to determine all button's size )
--- Modifier adds onto size for a fixed amount
-function cfcFactions:ResizeChildrenEqually( parent, modifer )
-    local mulmod = modifer and modifer or 0
-    local MaxSize = 0
-    if parent ~= nil and parent:HasChildren() then
-        for k, babypanel in pairs( parent:GetChildren() ) do
-
-            if babypanel:GetClassName() == "Label" then
-                -- print( string.format( "Looping on: %s with size of %s", babypanel:GetText(), #babypanel:GetText() ) )
-                if #babypanel:GetText() > MaxSize then
-                    MaxSize = ( ( #babypanel:GetText() ) * mulmod )
-                end
-                -- print( MaxSize )
-                babypanel:SetWide( MaxSize )
-            end
-        end
+function render.DrawPolyOutline( poly )
+    for i = 1, #poly - 1 do
+        local p1 = poly[i]
+        local p2 = poly[i + 1]
+        render.drawLine( p1.x, p1.y, p2.x, p2.y )
     end
+    local p1 = poly[1]
+    local plast = poly[#poly]
+    render.drawLine( p1.x, p1.y, plast.x, plast.y )
 end
 
--- Resizes a parent based on total size of children
-function cfcFactions:ResizeParentFromChildren( parent )
-    local MaxSize = 0
-    if parent ~= nil and parent:HasChildren() then
-        for k, babypanel in pairs( parent:GetChildren() ) do
-            MaxSize = MaxSize + ( babypanel:GetWide() )
-        end
-    end
-
-    parent:SetWide( MaxSize )
+-- Force a solid background on panels, rather than rounded darkened edges
+function cfcFactions.solidBgPaint( self, w, h )
+    surface.SetDrawColor( self:GetBackgroundColor() )
+    surface.DrawRect( 0, 0, w, h )
 end

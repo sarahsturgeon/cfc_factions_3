@@ -7,10 +7,9 @@ factions.CreateFaction = async ( owner, name, color, description, inviteonly, te
 	ownerSteamID = owner\SteamID64!
 	ownerName = owner\Nick!
 
-	print inviteonly, temporary
-
-	factionPromise = cfcFactions.api.CreateFaction name, color, description, ownerSteamID, inviteonly, temporary
-	factionData = await factionPromise, AwaitTypes.PROPAGATE
+	success, factionData = await cfcFactions.api.CreateFaction name, color, description, ownerSteamID, inviteonly, temporary
+	unless success
+		reject createFactionError: factionData
 
 	logger\info "#{ownerName} created a faction: #{name}"
 
@@ -42,3 +41,24 @@ cfcFactions.net.RegisterResponse "CreateFaction", {
 		name: "temporary"
 	}
 }, {}, factions.CreateFaction
+
+factions.DeleteFaction = async ( ply, id ) ->
+	plyName = ply\Nick!
+
+	success, data = await cfcFactions.api.DeleteFaction id
+
+	unless success
+		reject deleteFactionError: data
+
+	logger\info "#{plyName} deleted a faction: #{id}"
+
+	return true
+
+cfcFactions.net.RegisterResponse "DeleteFaction", {
+	{ 
+		type: "string" 
+		name: "id"
+	}
+}, {
+	"CanDelete"
+}, factions.DeleteFaction

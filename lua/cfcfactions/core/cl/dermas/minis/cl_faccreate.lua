@@ -43,7 +43,7 @@ function PANEL:Init()
     self.NameError = vgui.Create( "DLabel", self.MiniPanel )
     self.NameError:SetText( "" )
     self.NameError:SetWide( 300 )
-    self.NameError:SetTextColor( Color( 140, 18, 0 ) )
+    self.NameError:SetTextColor( Color( 255, 0, 0 ) )
     self.NameError.PerformLayout = function( this, w, h )
         local x, y = self.NameLabel:GetPos()
         local nw, ny = self.NameLabel:GetTextSize()
@@ -79,7 +79,7 @@ function PANEL:Init()
     self.DescEntry:SetPlaceholderText( "Enter a faction description... ( Optional )" )
 
     self.DescError = vgui.Create( "DLabel", self.MiniPanel )
-    self.DescError:SetTextColor( Color( 140, 18, 0 ) )
+    self.DescError:SetTextColor( Color( 255, 0, 0 ) )
     self.DescError:SetText( "" )
     self.DescError:SetWide( 300 )
     self.DescError.PerformLayout = function( this, w, h )
@@ -115,7 +115,7 @@ function PANEL:Init()
     self.MainError = vgui.Create( "DLabel", self.MiniPanel )
     self.MainError:SetText( "" )
     self.MainError:SetWide( 300 )
-    self.MainError:SetTextColor( Color( 140, 18, 0 ) )
+    self.MainError:SetTextColor( Color( 255, 0, 0 ) )
     self.MainError:Dock( TOP )
     self.MainError:DockMargin( 20, 2, 15, 0 )
 
@@ -134,33 +134,45 @@ function PANEL:Init()
         local col = self.ColSelection:GetColor()
         col = col.r .. "," .. col.g .. "," .. col.b
 
-        local success, data = await( NP.net.send( "cfc_Fac_CreateFaction",
-            self.NameEntry:GetText(), col, self.DescEntry:GetText(), self.InviteBool:GetChecked(), self.TempBool:GetChecked() ) )
+        local success, data = await( NP.net.send(
+            "cfc_Fac_CreateFaction",
+            self.NameEntry:GetText(),
+            col,
+            self.DescEntry:GetText(),
+            self.InviteBool:GetChecked(),
+            self.TempBool:GetChecked()
+        ) )
 
         if success then
             self:Remove()
         else
             self.Submit:SetEnabled( true )
-            data.argumentError = data.argumentError or {}
-            for k, v in pairs( data.argumentError ) do
-                if errorMap[k] then
-                    local entry = errorMap[k].entry
-                    entry:SetTextColor( Color( 255, 0, 0 ) )
-                    local prevOnChange = entry.OnChange
-                    function entry:OnChange( ... )
-                        self:SetTextColor( Color( 0, 0, 0 ) )
-                        self.OnChange = prevOnChange
-                        prevOnChange( self, ... )
+
+            for errorType, typeData in pairs( data ) do
+                if errorType == "argumentError" or errorType == "createFactionError" then
+                    for errorOrigin, errorData in pairs( typeData ) do
+                        if errorMap[errorOrigin] then
+                            local entry = errorMap[errorOrigin].entry
+                            entry:SetTextColor( Color( 255, 0, 0 ) )
+                            local prevOnChange = entry.OnChange
+                            function entry:OnChange( ... )
+                                self:SetTextColor( Color( 0, 0, 0 ) )
+                                self.OnChange = prevOnChange
+                                prevOnChange( self, ... )
+                            end
+                            if type( errorData ) == "table" then
+                                _, errorData = next( errorData )
+                            end
+                            errorMap[errorOrigin].error:SetText( tostring( errorData ) )
+                        else
+                            self.MainError:SetText( "Uh oh, something went wrong" )
+                        end
                     end
-                    errorMap[k].error:SetText( tostring( v ) )
                 else
                     self.MainError:SetText( "Uh oh, something went wrong" )
                 end
             end
-            if table.Count( data ) > 1 then
-                self.MainError:SetText( "Uh oh, something went wrong" )
-            end
-            PrintTable( data )
+            
         end
     end )
 

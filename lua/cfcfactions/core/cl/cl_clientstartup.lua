@@ -20,8 +20,8 @@ function cfcFactions:ShowMenu()
     self.MainFrame:SetDraggable( true )
     gui.EnableScreenClicker( true )
 
-    if self.MainPanel.SubMainViewPanel.OnShow then
-        self.MainPanel.SubMainViewPanel:OnShow()
+    if self.MainPanel:GetSelectedPanel().OnShow then
+        self.MainPanel:GetSelectedPanel():OnShow()
     end
 end
 

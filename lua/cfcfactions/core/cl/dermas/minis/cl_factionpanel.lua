@@ -5,7 +5,7 @@ vgui.Register( "D_factionpanel", PANEL )
 
 function PANEL:Init()
     local fPanel = self
-    self:AddMouseEvent( self, true )
+    self:AddMouseEvent( self )
     self.Faction = nil
     self.selected = false
 
@@ -272,7 +272,7 @@ function PANEL:GetFactionID()
     return ReturnID
 end
 
-function PANEL:AddMouseEvent( panel, isRoot )
+function PANEL:AddMouseEvent( panel )
     panel:SetMouseInputEnabled( true )
     local fPanel = self
     local oldMousePressed = panel.OnMousePressed
@@ -288,19 +288,6 @@ function PANEL:AddMouseEvent( panel, isRoot )
         end
         if oldMousePressed then
             return oldMousePressed( self, keyCode )
-        end
-    end
-    if not isRoot then
-        local oldMouseReleased = panel.OnMouseReleased
-        function panel:OnMouseReleased( ... )
-            if not fPanel:OnMouseReleased( ... ) then
-                if oldMouseReleased then
-                    return oldMouseReleased( self, ... )
-                else
-                    return
-                end
-            end
-            return true
         end
     end
  end

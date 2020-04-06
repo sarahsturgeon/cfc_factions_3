@@ -1,5 +1,5 @@
 --[[
-File Name: sh_sharedutils.lua
+File Name: sh_utilities.lua
 
 Purpose: Shared functions that contain various useful tables and functions used across cfcFactions
 
@@ -175,6 +175,24 @@ end
 function table.map( tab, f )
     local out = table.Copy( tab )
     table.mapSelf( out, f )
+    return out
+end
+
+function table.filter( tab, f )
+    local out = {}
+    for k, v in pairs( tab ) do
+        local doAdd = f( v )
+        if doAdd then table.insert( out, v ) end
+    end
+    return out
+end
+
+function table.mapFilter( tab, f )
+    local out = {}
+    for k, v in pairs( tab ) do
+        local newV = f( v )
+        if newV then table.insert( out, newV ) end
+    end
     return out
 end
 
