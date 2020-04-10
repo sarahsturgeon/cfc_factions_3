@@ -42,7 +42,4 @@ authUser = async ( ply ) ->
 
     ply\SetNWInt "CFC_DatabaseID", userData.id
 
-with FindMetaTable "Player"
-	.GetFactionsID = => @GetNWInt "CFC_DatabaseID"
-
 hook.Add "PlayerInitialSpawn", "cfc_AuthUser", authUser

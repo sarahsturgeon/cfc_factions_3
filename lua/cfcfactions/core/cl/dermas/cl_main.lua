@@ -61,19 +61,22 @@ function PANEL:Init()
     hook.Run( "cfc_Fac_AddMenuTabs", self )
 end
 
-function PANEL:AddMenuTab( tabName, panel )
+function PANEL:AddMenuTab( tabName, panel, noButton )
     local this = self
 
     panel:SetParent( self.MainView )
     panel:Dock( FILL )
     panel:Hide()
 
-    local btn = vgui.Create( "DButtonPretty", self.MenuBar )
-    btn:SetText( tabName )
-    btn:Dock( LEFT )
-    btn:SetWide( self:GetWide() * 0.1 )
-    function btn:DoClick()
-        this:SelectTab( tabName )
+    local btn
+    if not noButton then
+        btn = vgui.Create( "DButtonPretty", self.MenuBar )
+        btn:SetText( tabName )
+        btn:Dock( LEFT )
+        btn:SetWide( self:GetWide() * 0.1 )
+        function btn:DoClick()
+            this:SelectTab( tabName )
+        end
     end
 
     table.insert( self.tabs, { panel = panel, name = tabName, button = btn } )
@@ -83,13 +86,19 @@ function PANEL:AddMenuTab( tabName, panel )
     end
 end
 
-function PANEL:SelectTab( tabName, skipButtonAnim )
+function PANEL:SelectTab( tabName, skipButtonAnim, ... )
     local found = false
     for k, data in pairs( self.tabs ) do
         data.panel:SetVisible( data.name == tabName )
-        data.button:SetForceHovered( data.name == tabName, skipButtonAnim )
+        if data.button then
+            data.button:SetForceHovered( data.name == tabName, skipButtonAnim )
+        end
+
         if data.name == tabName then
             found = true
+            if data.panel.OnShow then
+                data.panel:OnShow( ... )
+            end
         end
     end
     if not found then error( "Unknown tab " .. tabName ) end
@@ -105,11 +114,11 @@ function PANEL:GetSelectedPanel()
 end
 
 function PANEL:Paint( w, h )
-        Derma_DrawBackgroundBlur( self )
-        draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
-        surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
-        surface.DrawOutlinedRect( 0, 0, w, h )
-        draw.SimpleText( string.format( cfcFactions.Config.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 10, cfg.HeaderText )
+    Derma_DrawBackgroundBlur( self )
+    draw.RoundedBox( 0, 0, 0, w, h, Color( 55, 55, 55, 220 ) )
+    surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
+    surface.DrawOutlinedRect( 0, 0, w, h )
+    draw.SimpleText( string.format( cfcFactions.Config.DermaHeaderTitle, LocalPlayer():Nick() ), "CFC_Special", 5, 10, cfg.HeaderText )
 end
 
 function PANEL:Think()

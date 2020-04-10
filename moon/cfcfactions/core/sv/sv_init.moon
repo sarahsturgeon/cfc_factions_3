@@ -14,9 +14,6 @@ logger = cfcFactions.logger
 -- Make fatal trigger a cfc webhook
 -- logger\on( "fatal" )
 
--- constants
-include "cfcFactions/constants/constants.lua"
-
 -- sv
 include "cfcFactions/core/sv/sv_api.lua"
 include "cfcFactions/core/sv/sv_net.lua"
@@ -28,6 +25,7 @@ include "cfcFactions/core/sv/sv_permissions.lua"
 include "cfcfactions/core/sh/sh_init.lua"
 
 -- add files
+-- lua
 isLuaFile = ( fileName ) -> match fileName, "^.+%.lua$"
 
 addFiles = ( dir ) ->
@@ -46,8 +44,8 @@ addFiles "cfcfactions/core/cl"
 addFiles "cfcfactions/core/sh"
 
 AddCSLuaFile "cfcfactions/config/cl_config.lua"
-AddCSLuaFile "cfcfactions/config/sh_config.lua"
-AddCSLuaFile "cfcfactions/constants/constants.lua"
+
+-- resources
 resource.AddFile "resource/fonts/coolvetica.ttf"
 resource.AddFile "resource/icons/lock.png"
 resource.AddFile "resource/icons/no_avatar.png"

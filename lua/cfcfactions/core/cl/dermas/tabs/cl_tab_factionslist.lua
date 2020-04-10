@@ -1,114 +1,38 @@
 local PANEL = {}
 local cfg = cfcFactions.Config.ColorSchemes
-local constants = cfcFactions.constants
 vgui.Register( "D_cfc_tab_factionslist", PANEL )
 
--- Little recursive function for repeating args, rep( "hi", 3 ) -> "hi", "hi", "hi"
-local function rep( x, n )
-    if n == 0 then return nil end
-    if n == 1 then return x end
-    return x, rep( x, n-1 )
-end
+include( "cfcfactions/core/cl/dermas/minis/factionslist/cl_factionpanel.lua" )
+include( "cfcfactions/core/cl/dermas/minis/factionslist/cl_faccreate.lua" )
 
 function PANEL:Init()
     local this = self
-    self.Rows = nil
-    self.Test = {}
-    -- The number of factions to fetch, by default 1-10
-    self.CurrentRequestAmountMin = 1
-    self.CurrentRequestAmountMax = 10
-
-    self.IsAllView = false
-
-    self.ChangeViewPanel = vgui.Create( "DPanel", self )
-    self.ChangeViewPanel:Dock( TOP )
-    self.ChangeViewPanel:SetWide( self:GetWide() )
-    self.ChangeViewPanel:SetTall( 30 )
-    self.ChangeViewPanel:SetBackgroundColor( cfg.InlineHeaderPanel )
-    self.ChangeViewPanel.lineProg = 0
-    function self.ChangeViewPanel:Paint( w, h )
-        surface.SetDrawColor( self:GetBackgroundColor() )
-        surface.DrawRect( 0, 0, w, h )
-        surface.SetDrawColor( cfg.InlinePanelSeparater )
-        surface.DrawRect( w / 2, 5, 1, h - 9 )
-
-        surface.SetDrawColor( cfg.MiniPanelHeader )
-        local offset = 6 + self.lineProg * ( w / 2 )
-        surface.DrawRect( offset, h - 5, ( w / 2 ) - 12, 2 )
-
-        -- Hide the middle part of the line
-        surface.SetDrawColor( self:GetBackgroundColor() )
-        surface.DrawRect( ( w / 2 ) - 6, h - 5, 12, 2 )
-    end
-    local fderma = self
-    function self.ChangeViewPanel:Think()
-        if not self.lastThink then
-            self.lastThink = SysTime()
-            return
-        end
-        local changeBy = ( SysTime() - self.lastThink ) * 5
-        self.lastThink = SysTime()
-
-        if fderma.IsAllView and self.lineProg < 1 then
-            self.lineProg = math.Clamp( self.lineProg + changeBy, 0, 1 )
-        elseif not fderma.IsAllView and self.lineProg > 0 then
-            self.lineProg = math.Clamp( self.lineProg - changeBy, 0, 1 )
-        end
-    end
-
-    self.ActiveFactionsButton = vgui.Create( "DButton", self.ChangeViewPanel )
-    self.ActiveFactionsButton:Dock( LEFT )
-    self.ActiveFactionsButton:SetWide( self.ChangeViewPanel:GetWide() / 2 )
-    self.ActiveFactionsButton:SetText( "Active Factions" )
-    self.ActiveFactionsButton:SetTextColor( cfg.NormalText )
-    self.ActiveFactionsButton:SetFont( "CFC_Normal_Bold18" )
-    self.ActiveFactionsButton.Paint = nil
-    function self.ActiveFactionsButton:PerformLayout( w, h )
-        self:SetWide( self:GetParent():GetWide() / 2 )
-    end
-    function self.ActiveFactionsButton:DoClick()
-        fderma:SetIsAllView( false )
-    end
-
-    self.AllFactionsButton = vgui.Create( "DButton", self.ChangeViewPanel )
-    self.AllFactionsButton:Dock( RIGHT )
-    self.AllFactionsButton:SetWide( self.ChangeViewPanel:GetWide() / 2 )
-    self.AllFactionsButton:SetText( "All Factions" )
-    self.AllFactionsButton:SetTextColor( cfg.NormalText )
-    self.AllFactionsButton:SetFont( "CFC_Normal_Bold18" )
-    self.AllFactionsButton.Paint = nil
-    function self.AllFactionsButton:PerformLayout( w, h )
-        self:SetWide( self:GetParent():GetWide() / 2 )
-    end
-    function self.AllFactionsButton:DoClick()
-        fderma:SetIsAllView( true )
-    end
-
 
     self.MainContainer = vgui.Create( "DPanel", self )
     self.MainContainer:Dock( FILL )
     self.MainContainer:InvalidateParent( true )
     self.MainContainer:SetBackgroundColor( cfg.Transparent )
 
-    self.MiddleContainer = vgui.Create( "DPanel", self.MainContainer )
-    self.MiddleContainer:Dock( FILL )
-    self.MiddleContainer:SetPaintBorderEnabled( true )
-    self.MiddleContainer:SetBackgroundColor( cfg.InlinePanel )
-    self.MiddleContainer:InvalidateParent( true )
-    self.MiddleContainer.Paint = cfcFactions.solidBgPaint
+    self.PropertySheet = vgui.Create( "DPropertySheetPretty", self.MainContainer )
+    self.PropertySheet:Dock( FILL )
 
-    self.ActiveFactionView = vgui.Create( "DScrollPanel", self.MiddleContainer )
-    self.ActiveFactionView:Dock( FILL )
+    self.ActiveFactionView = vgui.Create( "DScrollPanel" )
     self.ActiveFactionView:GetVBar():SetWide( 0 )
     self.ActiveFactionView:SetBackgroundColor( cfg.Transparent )
     self.ActiveFactionView:InvalidateParent( true )
+    function self.ActiveFactionView:OnSelect()
+        this:OnlineFactionsSetup()
+    end
+    self.PropertySheet:AddSheet( "Active Factions", self.ActiveFactionView )
 
-    self.AllFactionView = vgui.Create( "DPanel", self.MiddleContainer )
-    self.AllFactionView:Dock( FILL )
-    self.AllFactionView:DockMargin( 0, 0, 0, 0 )
+    self.AllFactionView = vgui.Create( "DPanel" )
     self.AllFactionView:SetBackgroundColor( cfg.Transparent )
     self.AllFactionView:SetVisible( false )
     self.AllFactionView:SetMouseInputEnabled( true )
+    function self.ActiveFactionView:OnSelect()
+        this:AllFactionsSetup()
+    end
+    self.PropertySheet:AddSheet( "All Factions", self.AllFactionView )
 
     self.AllFactionList = vgui.Create( "DListViewPretty", self.AllFactionView )
     self.AllFactionList:Dock( FILL )
@@ -151,16 +75,11 @@ function PANEL:Init()
     self.CreateFaction = cfcFactions.addFactionButton( self, "Create Faction", lineHeight )
 end
 
-function PANEL:Setup()
-    if self.IsAllView then
-        self:AllFactionsSetup()
-    else
-        self:OnlineFactionsSetup()
-    end
-end
-
 function PANEL:OnShow()
-    self:Setup()
+    local panel = self.PropertySheet:GetSelectedPanel()
+    if panel and panel.OnSelect then
+        panel:OnSelect() 
+    end
 end
 
 function PANEL:Paint( w, h ) end
@@ -168,43 +87,29 @@ function PANEL:Paint( w, h ) end
 function PANEL:Think() end
 
 local function _SetAllFactionsPage( self, page )
-    local url = constants.BACKEND_ROOT .. constants.FACTIONS_ENDPOINT
-    -- TODO: Page stuff
-    local success, dataStr = await( NP.http.fetch( url ) )
+    local success, data = await( cfcFactions.api.GetFactions( page ) )
+    if not success then return end
 
-    if not success then
-        return
-    end
-
-    local data = util.JSONToTable( dataStr )
-
-    self:SetFactions( data.data )
+    self:SetFactions( data )
 end
 PANEL.SetAllFactionsPage = async( _SetAllFactionsPage )
 
 local function _OnlineFactionsSetup( self )
-    local playerIDs = table.map( player.GetAll(), function( ply ) return ply:GetNWInt( "CFC_DatabaseID" ) end )
+    local playerIDs = table.map( player.GetAll(), function( ply ) return ply:GetFactionsID() end )
     
-    local url = constants.BACKEND_ROOT .. constants.PLAYERS_ENDPOINT .. "/" .. table.concat( playerIDs, "," )
-    local success, dataStr = await( NP.http.request( "GET", url ) )
+    local success, data = await( cfcFactions.api.GetPlayer( playerIDs ) )
     if not success then return end
 
-    local data = util.JSONToTable( dataStr )
-
-    local factionIDmap = {}
+    local onlineFactionIDs = {}
 
     for k, plyData in pairs( data ) do
         if plyData.faction and plyData.faction.id then
-            factionIDmap[plyData.faction.id] = true
+            table.insert( onlineFactionIDs, plyData.faction.id )
         end
     end
-    local factionIDs = table.GetKeys( factionIDmap )
 
-    local url = constants.BACKEND_ROOT .. constants.FACTIONS_ENDPOINT .. "/" .. table.concat( factionIDs, "," )
-    local success, dataStr = await( NP.http.fetch( url ) )
+    local success, data = await( cfcFactions.api.GetFaction( onlineFactionIDs ) )
     if not success then return end
-
-    local data = util.JSONToTable( dataStr )
 
     for k, faction in pairs( data ) do
         faction.color = string.ToColor( string.Replace( faction.color, ",", " " ) .. " 255" )
@@ -220,38 +125,6 @@ local function _AllFactionsSetup( self )
     self:SetAllFactionsPage( 1 )
 end
 PANEL.AllFactionsSetup = async( _AllFactionsSetup )
-
-function PANEL:SetIsAllView( state )
-    if state ~= self.IsAllView then
-
-        self.IsAllView = state
-        self.ActiveFactionView:Show()
-        self.AllFactionView:Show()
-        if state then
-            self.ActiveFactionView:SetAlpha( 255 )
-            self.AllFactionView:SetAlpha( 0 )
-            self.ActiveFactionView:AlphaTo( 0, 0.2 )
-            self.AllFactionView:AlphaTo( 255, 0.2 )
-            timer.Simple( 0.2, function()
-                self.ActiveFactionView:Hide()
-                self.AllFactionView:Show()
-                self.AllFactionView:SetAlpha( 255 )
-            end )
-            self:AllFactionsSetup()
-        else
-            self.ActiveFactionView:SetAlpha( 0 )
-            self.AllFactionView:SetAlpha( 255 )
-            self.ActiveFactionView:AlphaTo( 255, 0.2 )
-            self.AllFactionView:AlphaTo( 0, 0.2 )
-            timer.Simple( 0.2, function()
-                self.AllFactionView:Hide()
-                self.ActiveFactionView:Show()
-                self.ActiveFactionView:SetAlpha( 255 )
-            end )
-            self:OnlineFactionsSetup()
-        end
-    end
-end
 
 function PANEL:SetOnlineFactions( factions )
     if self.ActiveFactionPanels then
