@@ -34,15 +34,23 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
 
     statusType = math.floor status/100
 
-    if statusType == 5
-        paramStr = table.ToString params, "Parameters", true
-        logger\fatal "Database exception for #{method} - #{endPoint}.\n#{paramStr}\nBody: #{\n#{body}" if logger
-        reject { databaseError: body }
-
     unless data
-        paramStr = table.ToString params, "Parameters", true
-        logger\fatal "Invalid JSON for #{method} - #{endPoint}.\n#{paramStr}\nBody: #{\n#{body}" if logger
+        if logger
+            paramStr = table.ToString params, "Parameters", true
+            logger\fatal "Invalid JSON for #{method} - #{url}.\n#{paramStr}\nBody: #{\n#{body}"
         reject { databaseError: "Invalid JSON:\n#{body}" }
+
+    if statusType == 5
+        if logger
+            dataCopy = table.Copy data
+
+            paramStr = table.ToString params, "Parameters", true
+            exception = dataCopy.exception
+            dataCopy.traces = table.map dataCopy.traces, table.head
+            dataCopy.exception = nil
+            bodyStr = table.ToString dataCopy, "Body", true
+            logger\fatal "Database exception for #{method} - #{url}.\n#{exception}\n#{paramStr}\n#{bodyStr}"
+        reject { databaseError: data }
 
     unless success
         k, v = next data.errors

@@ -14,7 +14,7 @@ authUser = async ( ply ) ->
     success, data = await cfcFactions.api.GetPlayerBySteamID64 steamID
 
     unless success
-        logger\fatal "Player auth failed - Couldn't get player: #{table.ToString data, nil, true}"
+        logger\fatal "Player auth failed - Couldn't get player: #{table.ToString data, nil, true}" unless data.databaseError
         return
 
 
@@ -27,7 +27,7 @@ authUser = async ( ply ) ->
         success, userData = await cfcFactions.api.UpdatePlayer userData.id, userData
 
         unless success
-            logger\fatal "Player auth failed - Couldn't update player: #{table.ToString userData, nil, true}"
+            logger\fatal "Player auth failed - Couldn't update player: #{table.ToString userData, nil, true}" unless userData.databaseError
             return
 
         logger\info "Authenticated existing player: #{name} (#{userData.id})"
@@ -35,7 +35,7 @@ authUser = async ( ply ) ->
         success, userData = await cfcFactions.api.CreatePlayer steamID, name
 
         unless success
-            logger\fatal "Player auth failed - Couldn't create player: #{table.ToString userData, nil, true}"
+            logger\fatal "Player auth failed - Couldn't create player: #{table.ToString userData, nil, true}" unless userData.databaseError
             return
 
         logger\info "Authenticated new player: #{name} (#{userData.id})"

@@ -54,3 +54,11 @@ table.reduce = ( tab, f, start ) ->
     table.map tab, ( x ) ->
         total = f total, x
     total
+
+table.head = ( tab ) ->
+    return tab[1]
+
+table.tail = ( tab ) ->
+    tabCopy = table.Copy tab
+    table.remove tabCopy, 1
+    tabCopy
