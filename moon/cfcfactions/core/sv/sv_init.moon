@@ -15,6 +15,7 @@ logger = cfcFactions.logger
 -- logger\on( "fatal" )
 
 -- sv
+include "cfcFactions/config/sv_config.lua"
 include "cfcFactions/core/sv/sv_api.lua"
 include "cfcFactions/core/sv/sv_net.lua"
 include "cfcFactions/core/sv/sv_users.lua"

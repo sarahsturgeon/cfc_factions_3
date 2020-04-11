@@ -1,2 +1,2 @@
 with FindMetaTable "Player"
-	.GetFactionsID = => @GetNWInt "CFC_DatabaseID"
+    .GetFactionsID = => @GetNWInt "CFC_DatabaseID"

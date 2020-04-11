@@ -43,6 +43,6 @@ cfcFactions.api.UpdateFaction = ( id, params ) ->
     cfcFactions.api.patch endpoint, { faction: params }
 
 cfcFactions.api.UpdatePlayer = ( id, params ) ->
-    endpoint = "#{paths.PLAYERS_ENDPOINT}/#{cfcFactions.api.handleIds id}" 
+    endpoint = "#{paths.PLAYERS_ENDPOINT}/#{cfcFactions.api.handleIds id}"
 
     cfcFactions.api.patch endpoint, { players: params }
