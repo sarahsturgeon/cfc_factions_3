@@ -29,7 +29,7 @@ function PANEL:Init()
     self.AllFactionView:SetBackgroundColor( cfg.Transparent )
     self.AllFactionView:SetVisible( false )
     self.AllFactionView:SetMouseInputEnabled( true )
-    function self.ActiveFactionView:OnSelect()
+    function self.AllFactionView:OnSelect()
         this:AllFactionsSetup()
     end
     self.PropertySheet:AddSheet( "All Factions", self.AllFactionView )
@@ -73,12 +73,15 @@ function PANEL:Init()
     end
 
     self.CreateFaction = cfcFactions.addFactionButton( self, "Create Faction", lineHeight )
+    function self.CreateFaction:DoClick()
+        vgui.Create( "D_cfcfactioncreate" )
+    end
 end
 
 function PANEL:OnShow()
     local panel = self.PropertySheet:GetSelectedPanel()
     if panel and panel.OnSelect then
-        panel:OnSelect() 
+        panel:OnSelect()
     end
 end
 
@@ -87,18 +90,23 @@ function PANEL:Paint( w, h ) end
 function PANEL:Think() end
 
 local function _SetAllFactionsPage( self, page )
-    local success, data = await( cfcFactions.api.GetFactions( page ) )
+    self.AllFactionList:Clear()
+
+    local success, data = awaitSpinner( self, cfcFactions.api.GetFactions( page, 30 ) )
     if not success then return end
+
+    p(headers["total-pages"])
+
+    self.PaginationBar:SetPageCount( headers["total-pages"] or 1 )
 
     self:SetFactions( data )
 end
 PANEL.SetAllFactionsPage = async( _SetAllFactionsPage )
 
-local function _OnlineFactionsSetup( self )
+local function _getOnlineFactions()
     local playerIDs = table.map( player.GetAll(), function( ply ) return ply:GetFactionsID() end )
-    
-    local success, data = await( cfcFactions.api.GetPlayer( playerIDs ) )
-    if not success then return end
+
+    local data = await( cfcFactions.api.GetPlayer( playerIDs ), AwaitTypes.PROPAGATE )
 
     local onlineFactionIDs = {}
 
@@ -108,12 +116,21 @@ local function _OnlineFactionsSetup( self )
         end
     end
 
-    local success, data = await( cfcFactions.api.GetFaction( onlineFactionIDs ) )
-    if not success then return end
+    local data = await( cfcFactions.api.GetFaction( onlineFactionIDs ), AwaitTypes.PROPAGATE )
 
     for k, faction in pairs( data ) do
         faction.color = string.ToColor( string.Replace( faction.color, ",", " " ) .. " 255" )
     end
+
+    return data
+end
+local getOnlineFactions = async( _getOnlineFactions )
+
+local function _OnlineFactionsSetup( self )
+    self.ActiveFactionView:Clear()
+
+    local success, data = awaitSpinner( self, getOnlineFactions() )
+    if not success then return end
 
     self:SetOnlineFactions( data )
 end

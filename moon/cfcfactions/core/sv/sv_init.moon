@@ -48,8 +48,9 @@ AddCSLuaFile "cfcfactions/config/cl_config.lua"
 
 -- resources
 resource.AddFile "resource/fonts/coolvetica.ttf"
-resource.AddFile "resource/icons/lock.png"
-resource.AddFile "resource/icons/no_avatar.png"
+resource.AddFile "materials/icons/lock.png"
+resource.AddFile "materials/icons/no_avatar.png"
+resource.AddFile "materials/icons/spinner.png"
 
 -- Core function to initializeFactions
 initializeFactions = ->

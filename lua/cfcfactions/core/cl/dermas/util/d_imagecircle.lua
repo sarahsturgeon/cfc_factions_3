@@ -1,21 +1,20 @@
 -- Thanks Acecool and HandsomeMatt for your code
 
 local function GenerateCircle( radius )
-    local seg = 100
+    local seg = 50
     local cir = {}
 
-    table.insert( cir, { x = 0, y = 0, u = 0.5, v = 0.5 } )
-    for i = 0, seg do
+    for i = 1, seg do
         local a = math.rad( ( i / seg ) * -360 )
         table.insert( cir, { x = radius / 2 + math.sin( a ) * radius * 0.5, y = radius / 2 + math.cos( a ) * radius * 0.5, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
     end
 
-    local a = math.rad( 0 ) -- This is needed for non absolute segment counts
-    table.insert( cir, { x = radius / 2 + math.sin( a ) * radius * 0.5, y = radius / 2 + math.cos( a ) * radius * 0.5, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
     return cir
 end
 
 local _material = Material( "effects/flashlight001" );
+
+local borderWidth = 3
 
 local PANEL = {}
 
@@ -29,6 +28,7 @@ end
 
 function PANEL:UpdatePoly()
     self.poly = GenerateCircle( self:GetWide() )
+    self.innerPoly = GenerateCircle( self:GetWide() - borderWidth * 2 )
 end
 
 function PANEL:OnSizeChanged()
@@ -41,6 +41,14 @@ function PANEL:PerformLayout()
 end
 
 function PANEL:Paint( w, h )
+    local imagePoly = self.poly
+    if self.doDrawOutline then
+        draw.NoTexture()
+        surface.SetDrawColor( self.outlineColor )
+        surface.DrawPoly( self.poly )
+        imagePoly = self.innerPoly
+    end
+
     render.ClearStencil()
     render.SetStencilEnable( true )
 
@@ -54,9 +62,17 @@ function PANEL:Paint( w, h )
     render.SetStencilReferenceValue( 1 )
 
     draw.NoTexture( );
-    surface.SetMaterial( _material );
+    surface.SetMaterial( _material )
     surface.SetDrawColor( color_black )
-    surface.DrawPoly( self.poly )
+
+    local mat = Matrix()
+    if self.doDrawOutline then
+        mat:Translate( Vector( 3, 3 ) )
+    end
+    cam.PushModelMatrix( mat )
+    surface.DrawPoly( imagePoly )
+    cam.PopModelMatrix()
+
 
     render.SetStencilFailOperation( STENCIL_ZERO )
     render.SetStencilPassOperation( STENCIL_REPLACE )
@@ -70,11 +86,6 @@ function PANEL:Paint( w, h )
 
     render.SetStencilEnable( false )
     render.ClearStencil()
-
-    if self.doDrawOutline then
-        render.DrawDrawColor( self.outlineColor )
-        render.DrawPolyOutline( self.poly )
-    end
 end
 
 function PANEL:SetDrawOutline( drawOutline )

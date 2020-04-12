@@ -12,11 +12,13 @@ end
 local function _Initialize( self )
     self.pSheet:Clear()
 
-    local success, factionData = await( cfcFactions.api.GetFaction( self.factionID ) )
+    local success, factionData = awaitSpinner( self, cfcFactions.api.GetFaction( self.factionID ) )
     if not success then return end
+    factionData = factionData[1]
+    factionData.color = string.ToColor( string.Replace( factionData.color, ",", " " ) .. " 255" )
 
     self.general = vgui.Create( "D_cfc_faction_general" )
-    self.general:SetFactionData( factionData[1] )
+    self.general:SetFactionData( factionData )
     self.pSheet:AddSheet( "General", self.general )
 
 end

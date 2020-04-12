@@ -42,7 +42,7 @@ function PANEL:Init()
     --
     -- Where new menu buttons are added to
     --
-    
+
     -- Main self.Container
     self.Container = vgui.Create( "DPanel", self )
     self.Container:DockMargin( 0, 0, 0, 0 )
