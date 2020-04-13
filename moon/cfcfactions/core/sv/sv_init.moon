@@ -1,5 +1,9 @@
 require "cfclogger"
 require "cfc_promises"
+require "chttp"
+
+-- Set up CHTTP
+HTTP = CHTTP
 
 import match, StartWith from string
 
