@@ -17,10 +17,10 @@ Version 3 for Corn Flake Crew Build/Kill server.
 | fpvp_leavefaction | {} | No | Leave the faction you are currently in. |
 
 
-##The Wiki
+## The Wiki
 You can find the Wiki for more information on the addon [here](https://github.com/brandonsturgeon/cfc_factions_3/wiki).
 
-##Api examples
+## Api examples
 Promise method:
 ```lua
 function test()
