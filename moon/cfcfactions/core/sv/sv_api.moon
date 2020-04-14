@@ -30,7 +30,7 @@ cfcFactions.api.CreateFaction = ( name, color, description, creatorSteamId, priv
         private: private
         temporary: temp
 
-    cfcFactions.api.post endpoint, { faction: params }
+    cfcFactions.api.post endpoint, { factions: params }
 
 cfcFactions.api.DestroyFaction = ( id ) ->
     endpoint = "#{paths.FACTIONS_ENDPOINT}/#{cfcFactions.api.handleIds id}"
@@ -40,7 +40,7 @@ cfcFactions.api.DestroyFaction = ( id ) ->
 cfcFactions.api.UpdateFaction = ( id, params ) ->
     endpoint = "#{paths.FACTIONS_ENDPOINT}/#{cfcFactions.api.handleIds id}"
 
-    cfcFactions.api.patch endpoint, { faction: params }
+    cfcFactions.api.patch endpoint, { factions: params }
 
 cfcFactions.api.UpdatePlayer = ( id, params ) ->
     endpoint = "#{paths.PLAYERS_ENDPOINT}/#{cfcFactions.api.handleIds id}"

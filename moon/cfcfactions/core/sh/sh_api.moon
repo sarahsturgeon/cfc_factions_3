@@ -39,14 +39,16 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
 
     statusType = math.floor status/100
 
-    unless data
+    -- Non json returned, absolute catastrophe
+    unless body
         if logger
             paramStr = ToString params, "Parameters", true
-            errorMessage =
-                "Invalid JSON for #{method} - #{url}",
-                paramStr,
-                "Body:",
+            errorMessage = {
+                "Invalid JSON for #{method} - #{url}"
+                paramStr
+                "Body:"
                 responseBody
+            }
 
             errorMessage = concat errorMessage, "\n"
 
@@ -54,11 +56,14 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
 
         reject { databaseError: "Invalid JSON:\n#{responseBody}" }
 
-    :data, :pagination, :errors = body
+    :data = body
 
-    if statusType == 5
+    -- Internal error
+    if statusType == 5 or not data
+        -- Change to data.errors
+        exceptionData = body
         if logger
-            dataCopy = Copy data
+            dataCopy = Copy exceptionData
 
             paramStr = ToString params, "Parameters", true
             exception = dataCopy.exception
@@ -66,23 +71,26 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
             dataCopy.exception = nil
             bodyStr = ToString dataCopy, "Body", true
 
-            errorMessage =
-                "Database exception for #{method} - #{url}.",
-                url,
-                exception,
-                paramStr,
+            errorMessage = {
+                "Database exception for #{method} - #{url}."
+                url
+                exception
+                paramStr
                 bodyStr
+            }
             errorMessage = concat errorMessage, "\n"
 
             logger\fatal errorMessage
 
-        reject { databaseError: data }
+        reject { databaseError: exceptionData }
 
     unless success
         k, v = next data.errors
         reject v
 
-    data, headers
+    body.data = nil
+
+    data, headers, body
 
 cfcFactions.api.post = ( endpoint, params ) ->
     cfcFactions.api.request "POST", endpoint, params

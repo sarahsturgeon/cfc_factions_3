@@ -91,13 +91,15 @@ function PANEL:Think() end
 
 local function _SetAllFactionsPage( self, page )
     self.AllFactionList:Clear()
+    local itemCount = 30
 
-    local success, data = awaitSpinner( self, cfcFactions.api.GetFactions( page, 30 ) )
+    local success, data, headers, meta = awaitSpinner( self, cfcFactions.api.GetFactions( page, itemCount ) )
     if not success then return end
 
-    p(headers["total-pages"])
+    local elementCount = meta.pagination and meta.pagination.count
+    local pageCount = elementCount and math.ceil( elementCount / itemCount )
 
-    self.PaginationBar:SetPageCount( headers["total-pages"] or 1 )
+    self.PaginationBar:SetPageCount( pageCount or 1 )
 
     self:SetFactions( data )
 end
