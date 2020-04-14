@@ -2,7 +2,6 @@
 Version 3 for Corn Flake Crew Build/Kill server.
 
 ## Requirements
-- [CHTTP](https://github.com/timschumi/gmod-chttp)
 - [Network Promises](https://github.com/CFC-Servers/cfc_network_promises)
 - [CFC Logger](https://github.com/CFC-Servers/cfc_logger)
 
