@@ -1,3 +1,6 @@
+import concat, Copy, map, ToString from table
+import JSONToTable from util
+
 cfcFactions.api or= {}
 
 paths = cfcFactions.Config.Paths
@@ -11,7 +14,7 @@ parseErrors = ( data ) ->
     for field, fieldErrors in pairs errors
         errStr = fieldErrors
         if ( type fieldErrors ) == "table"
-            errStr = table.concat fieldErrors, ", "
+            errStr = concat fieldErrors, ", "
 
         out ..= "#{field}: #{errStr};"
     out
@@ -21,7 +24,7 @@ cfcFactions.api.handleIds = ( ids ) ->
         ids = { ids }
     if #ids == 0
         ids = { -1 }
-    table.concat ids, ","
+    concat ids, ","
 
 cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key ) ->
     url = apiRoot .. endPoint
@@ -31,27 +34,48 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
         headers:
             Accept: "application/json"
 
-    success, body, status, headers = await NP.http.request method, url, overrides
-    data = util.JSONToTable body
+    success, responseBody, status, headers = await NP.http.request method, url, overrides
+    body = JSONToTable responseBody
 
     statusType = math.floor status/100
 
     unless data
         if logger
-            paramStr = table.ToString params, "Parameters", true
-            logger\fatal "Invalid JSON for #{method} - #{url}.\n#{paramStr}\nBody: #{\n#{body}"
-        reject { databaseError: "Invalid JSON:\n#{body}" }
+            paramStr = ToString params, "Parameters", true
+            errorMessage =
+                "Invalid JSON for #{method} - #{url}",
+                paramStr,
+                "Body:",
+                responseBody
+
+            errorMessage = concat errorMessage, "\n"
+
+            logger\fatal errorMessage
+
+        reject { databaseError: "Invalid JSON:\n#{responseBody}" }
+
+    :data, :pagination, :errors = body
 
     if statusType == 5
         if logger
-            dataCopy = table.Copy data
+            dataCopy = Copy data
 
-            paramStr = table.ToString params, "Parameters", true
+            paramStr = ToString params, "Parameters", true
             exception = dataCopy.exception
-            dataCopy.traces = table.map dataCopy.traces, table.head
+            dataCopy.traces = map dataCopy.traces, table.head
             dataCopy.exception = nil
-            bodyStr = table.ToString dataCopy, "Body", true
-            logger\fatal "Database exception for #{method} - #{url}.\n#{exception}\n#{paramStr}\n#{bodyStr}"
+            bodyStr = ToString dataCopy, "Body", true
+
+            errorMessage =
+                "Database exception for #{method} - #{url}.",
+                url,
+                exception,
+                paramStr,
+                bodyStr
+            errorMessage = concat errorMessage, "\n"
+
+            logger\fatal errorMessage
+
         reject { databaseError: data }
 
     unless success
