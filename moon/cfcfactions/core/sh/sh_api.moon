@@ -8,17 +8,6 @@ apiRoot = paths.BACKEND_ROOT
 
 logger = cfcFactions.logger
 
-parseErrors = ( data ) ->
-    _, errors = next data
-    out = ""
-    for field, fieldErrors in pairs errors
-        errStr = fieldErrors
-        if ( type fieldErrors ) == "table"
-            errStr = concat fieldErrors, ", "
-
-        out ..= "#{field}: #{errStr};"
-    out
-
 cfcFactions.api.handleIds = ( ids ) ->
     if ( type ids ) ~= "table"
         ids = { ids }
@@ -56,14 +45,13 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
 
         reject { databaseError: "Invalid JSON:\n#{responseBody}" }
 
-    :data = body
+    :data, :errors = body
 
-    -- Internal error
+    -- Internal or framework error
     if statusType == 5 or not data
         -- Change to data.errors
-        exceptionData = body
         if logger
-            dataCopy = Copy exceptionData
+            dataCopy = Copy body
 
             paramStr = ToString params, "Parameters", true
             exception = dataCopy.exception
@@ -82,11 +70,12 @@ cfcFactions.api.request = async ( method="GET", endPoint, params, headers, key )
 
             logger\fatal errorMessage
 
-        reject { databaseError: exceptionData }
+        reject { databaseError: body }
 
     unless success
-        k, v = next data.errors
-        reject v
+        -- Change this when errors isnt an array of arrays
+        err = body.errors[1][1].detail
+        reject err
 
     body.data = nil
 

@@ -148,31 +148,35 @@ function PANEL:Init()
         else
             self.Submit:SetEnabled( true )
 
-            for errorType, typeData in pairs( data ) do
-                if errorType == "argumentError" or errorType == "createFactionError" then
-                    for errorOrigin, errorData in pairs( typeData ) do
-                        if errorMap[errorOrigin] then
-                            local entry = errorMap[errorOrigin].entry
-                            entry:SetTextColor( Color( 255, 0, 0 ) )
-                            local prevOnChange = entry.OnChange
-                            function entry:OnChange( ... )
-                                self:SetTextColor( Color( 0, 0, 0 ) )
-                                self.OnChange = prevOnChange
-                                prevOnChange( self, ... )
-                            end
-                            if type( errorData ) == "table" then
-                                _, errorData = next( errorData )
-                            end
-                            errorMap[errorOrigin].error:SetText( tostring( errorData ) )
-                        else
-                            self.MainError:SetText( "Uh oh, something went wrong" )
-                        end
+            -- Assuming single error per error object
+            local errorType, typeData = next( data )
+
+            if errorType ~= "argumentError" and errorType ~= "createFactionError" then
+                return self.MainError:SetText( "Uh oh, something went wrong" )
+            end
+
+            if type( typeData ) == "string" then
+                typeData = { unknown = typeData }
+            end
+
+            for errorOrigin, errorData in pairs( typeData ) do
+                if errorMap[errorOrigin] then
+                    local entry = errorMap[errorOrigin].entry
+                    entry:SetTextColor( Color( 255, 0, 0 ) )
+                    local prevOnChange = entry.OnChange
+                    function entry:OnChange( ... )
+                        self:SetTextColor( Color( 0, 0, 0 ) )
+                        self.OnChange = prevOnChange
+                        prevOnChange( self, ... )
                     end
+                    if type( errorData ) == "table" then
+                        _, errorData = next( errorData )
+                    end
+                    errorMap[errorOrigin].error:SetText( tostring( errorData ) )
                 else
                     self.MainError:SetText( "Uh oh, something went wrong" )
                 end
             end
-            
         end
     end )
 
