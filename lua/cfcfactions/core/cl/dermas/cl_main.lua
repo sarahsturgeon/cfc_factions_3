@@ -1,5 +1,7 @@
 include( "cfcfactions/core/cl/dermas/tabs/cl_tab_factionslist.lua" )
 include( "cfcfactions/core/cl/dermas/tabs/cl_tab_faction.lua" )
+-- These will be uncommented when they're change to the new tab format
+--      PANEL:AddMenuTab( tabName, tabPanel )
 -- include( "cfcfactions/core/cl/dermas/tabs/cl_factioneersderma.lua" )
 -- include( "cfcfactions/core/cl/dermas/tabs/cl_creditsderma.lua" )
 -- include( "cfcfactions/core/cl/dermas/tabs/cl_alertsderma.lua" )
@@ -58,6 +60,7 @@ function PANEL:Init()
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
     self.MainView:SetBackgroundColor( cfg.InlineHeaderPanel )
 
+    -- This is the part where we need localUserData, can't happen before the await
     hook.Run( "cfc_Fac_AddMenuTabs", self )
 end
 

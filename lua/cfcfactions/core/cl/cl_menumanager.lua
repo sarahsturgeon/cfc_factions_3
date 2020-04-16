@@ -17,6 +17,7 @@ local function _ShowMenu( self )
 
     cfcFactions.localUserData = data[1]
 
+    -- This could happen before the await, so long as the hook in D_cfcmainderma isnt called
     local doOnShow = true
     if not self.MainFrame then
         cfcFactions:CreateMenu()
@@ -40,8 +41,16 @@ function cfcFactions:HideMenu()
     gui.EnableScreenClicker( false )
 end
 
-function cfcFactions:ToggleMenu( force )
-    if self.MainFrame:IsVisible() then
+function cfcFactions:ReloadMenu()
+    self.MainFrame:Remove()
+    self.MainFrame = nil
+    self.MainPanel = nil
+
+    self:ShowMenu()
+end
+
+function cfcFactions:ToggleMenu()
+    if self.MainFrame and self.MainFrame:IsVisible() then
         cfcFactions:HideMenu()
     else
         cfcFactions:ShowMenu()
@@ -60,9 +69,7 @@ local function _OpenMenu()
     if not value then return end
 
     -- Escape the call from async, so errors are clearer - Not needed anymore? Test without it
-    timer.Simple( 0, function()
-        cfcFactions:ShowMenu()
-    end )
+    cfcFactions:ShowMenu()
 end
 
 cfcFactions.OpenMenu = async( _OpenMenu )

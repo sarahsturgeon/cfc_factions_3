@@ -145,6 +145,7 @@ function PANEL:Init()
 
         if success then
             self:Remove()
+            cfcFactions:ReloadMenu()
         else
             self.Submit:SetEnabled( true )
 
