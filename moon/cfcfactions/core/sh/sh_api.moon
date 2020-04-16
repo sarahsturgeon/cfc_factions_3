@@ -105,6 +105,13 @@ cfcFactions.api.GetFaction = ( id ) ->
 
     cfcFactions.api.get endpoint
 
+cfcFactions.api.GetFactionMembers = ( factionID ) ->
+    endpoint = paths.PLAYERS_FIND_ENDPOINT
+    params =
+        faction: steamID
+
+    cfcFactions.api.post endpoint, { players: params }
+
 cfcFactions.api.GetPlayers = ( page, pageCount ) ->
     endpoint = paths.PLAYERS_ENDPOINT
     endpoint = "#{endpoint}?page=#{page}" if page
