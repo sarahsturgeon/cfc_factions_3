@@ -1,22 +1,3 @@
-cfcFactions.credits or= {}
-
-cfcFactions.credits.developers =
-    "STEAM_0:1:74678877": "Bleck"
-    "STEAM_0:1:39801724": "Decline"
-    "STEAM_0:1:77453431": "hmmm"
-    "STEAM_0:1:28482516": "iLikeYoBraids"
-    "STEAM_0:1:13693373": "Lego1042"
-    "STEAM_0:1:115301653": "Periapsis"
-    "STEAM_0:0:21170873": "Phatso"
-    "STEAM_0:1:28607710": "Voodoo"
-    "STEAM_0:1:46658202": "Sam"
-
-cfcFactions.credits.GenerateDeveloperNames = ->
-    devs = cfcFactions.credits.developers
-    devs[ply\SteamID!] and= ply\Nick! for ply in *player.GetAll!
-
-    devs
-
 cfcFactions.colorToInt = ( c ) ->
     ( bit.lshift c.r, 16 ) + ( bit.lshift c.g, 8 ) + c.b
 
