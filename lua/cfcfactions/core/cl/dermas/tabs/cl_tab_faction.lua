@@ -17,12 +17,15 @@ local function _Initialize( self )
     factionData = factionData[1]
     factionData.color = string.ToColor( string.Replace( factionData.color, ",", " " ) .. " 255" )
 
-    self.general = vgui.Create( "D_cfc_faction_general" )
-    self.general:SetFactionData( factionData )
-    self.pSheet:AddSheet( "General", self.general )
-
+    self.tabs = {}
+    hook.Run( "cfc_Fac_AddFactionSubTabs", self, factionData )
 end
 PANEL.Initialize = async( _Initialize )
+
+function PANEL:AddSubTab( name, panel )
+    self.pSheet:AddSheet( name, panel )
+    self.tabs[name] = panel
+end
 
 function PANEL:SetFactionID( id )
     self.factionID = id

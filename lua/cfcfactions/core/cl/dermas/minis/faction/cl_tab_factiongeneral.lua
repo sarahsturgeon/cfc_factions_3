@@ -22,7 +22,6 @@ local function _Initialize( self )
     local success, playerData = awaitSpinner( self, cfcFactions.api.GetPlayerBySteamID64( steamIDs ) )
 
     if not success then return end
-    
 
 end
 PANEL.Initialize = async( _Initialize )
@@ -117,3 +116,9 @@ function PANEL:SetFactionData( data )
     self.faction = data
     self:Initialize()
 end
+
+hook.Add( "cfc_Fac_AddFactionSubTabs", "cfc_Fac_AddGeneralFactionSubTab", function( factionPanel, factionData )
+    local panel = vgui.Create( "D_cfc_faction_general" )
+    panel:SetFactionData( factionData )
+    factionPanel:AddSubTab( "General", panel )
+end )
