@@ -190,5 +190,5 @@ function PANEL:SetFactions( factions )
 end
 
 hook.Add( "cfc_Fac_AddMenuTabs", "cfc_Fac_AddFactionsList", function( panel )
-    panel:AddMenuTab( "View Factions", vgui.Create( "D_cfc_tab_factionslist" ) )
+    panel:AddMenuTab( "View Factions", vgui.Create( "D_cfc_tab_factionslist" ), false, 1 )
 end )

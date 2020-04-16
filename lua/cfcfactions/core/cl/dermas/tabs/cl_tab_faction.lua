@@ -19,12 +19,19 @@ local function _Initialize( self )
 
     self.tabs = {}
     hook.Run( "cfc_Fac_AddFactionSubTabs", self, factionData )
+    self:AddTabs()
 end
 PANEL.Initialize = async( _Initialize )
 
-function PANEL:AddSubTab( name, panel )
-    self.pSheet:AddSheet( name, panel )
-    self.tabs[name] = panel
+function PANEL:AddSubTab( name, panel, index )
+    table.insert( self.tabs, { name = name, panel = panel, position = index } )
+end
+
+function PANEL:AddTabs()
+    table.SortByMember( self.tabs, "position", true )
+    for k, tab in pairs( self.tabs ) do
+        self.pSheet:AddSheet( tab.name, tab.panel )
+    end
 end
 
 function PANEL:SetFactionID( id )
@@ -40,5 +47,5 @@ function PANEL:PerformLayout( w, h )
 end
 
 hook.Add( "cfc_Fac_AddMenuTabs", "cfc_Fac_AddFaction", function( panel )
-    panel:AddMenuTab( "My Faction", vgui.Create( "D_cfc_tab_faction" ), not tobool( cfcFactions.localUserData.faction ) )
+    panel:AddMenuTab( "My Faction", vgui.Create( "D_cfc_tab_faction" ), not tobool( cfcFactions.localUserData.faction ), 2 )
 end )

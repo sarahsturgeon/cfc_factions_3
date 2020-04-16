@@ -61,10 +61,28 @@ function PANEL:Init()
     self.MainView:SetBackgroundColor( cfg.InlineHeaderPanel )
 
     -- This is the part where we need localUserData, can't happen before the await
+    self.tabsToAdd = {}
     hook.Run( "cfc_Fac_AddMenuTabs", self )
+    self:AddTabs()
 end
 
-function PANEL:AddMenuTab( tabName, panel, noButton )
+function PANEL:AddMenuTab( tabName, panel, noButton, position )
+    table.insert( self.tabsToAdd, {
+        name = tabName,
+        panel = panel,
+        noButton = noButton,
+        position = position
+    } )
+end
+
+function PANEL:AddTabs()
+    table.SortByMember( self.tabsToAdd, "position", true )
+    for k, tab in pairs( self.tabsToAdd ) do
+        self:_AddMenuTab( tab.name, tab.panel, tab.noButton )
+    end
+end
+
+function PANEL:_AddMenuTab( tabName, panel, noButton )
     local this = self
 
     panel:SetParent( self.MainView )

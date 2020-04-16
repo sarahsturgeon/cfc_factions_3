@@ -120,5 +120,5 @@ end
 hook.Add( "cfc_Fac_AddFactionSubTabs", "cfc_Fac_AddGeneralFactionSubTab", function( factionPanel, factionData )
     local panel = vgui.Create( "D_cfc_faction_general" )
     panel:SetFactionData( factionData )
-    factionPanel:AddSubTab( "General", panel )
+    factionPanel:AddSubTab( "General", panel, 1 )
 end )
