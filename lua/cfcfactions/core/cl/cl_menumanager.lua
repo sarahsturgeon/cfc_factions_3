@@ -7,17 +7,12 @@ function cfcFactions:CreateMenu()
 
     self.MainPanel = vgui.Create( "D_cfcmainderma", self.MainFrame )
     self.MainPanel:Dock( FILL )
+
     self.MainFrame:SetVisible( false )
     self.MainFrame:SetDraggable( false )
 end
 
 local function _ShowMenu( self )
-    local success, data = await( cfcFactions.api.GetPlayer( LocalPlayer():GetFactionsID() ) )
-    if not success then return end
-
-    cfcFactions.localUserData = data[1]
-
-    -- This could happen before the await, so long as the hook in D_cfcmainderma isnt called
     local doOnShow = true
     if not self.MainFrame then
         cfcFactions:CreateMenu()
@@ -28,8 +23,17 @@ local function _ShowMenu( self )
     self.MainFrame:SetDraggable( true )
     gui.EnableScreenClicker( true )
 
-    if doOnShow and self.MainPanel:GetSelectedPanel().OnShow then
-        self.MainPanel:GetSelectedPanel():OnShow()
+    self.MainPanel:HidePanel()
+
+    local success, data = awaitSpinner( self.MainPanel, cfcFactions.api.GetPlayer( LocalPlayer():GetFactionsID() ) )
+    if not success then return end
+
+    cfcFactions.localUserData = data[1]
+
+    self.MainPanel:ShowPanel( doOnShow )
+
+    if not doOnShow then
+        self.MainPanel:TriggerTabAdding()
     end
 end
 

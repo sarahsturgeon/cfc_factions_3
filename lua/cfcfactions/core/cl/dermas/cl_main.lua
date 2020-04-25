@@ -59,8 +59,9 @@ function PANEL:Init()
     self.MainView:SetSize( self.Container:GetWide() - 20, self.Container:GetTall() - 230 )
     self.MainView:SetPos( ( self:GetWide() / 2 ) - ( self.MainView:GetWide() / 2 ), 120 )
     self.MainView:SetBackgroundColor( cfg.InlineHeaderPanel )
+end
 
-    -- This is the part where we need localUserData, can't happen before the await
+function PANEL:TriggerTabAdding()
     self.tabsToAdd = {}
     hook.Run( "cfc_Fac_AddMenuTabs", self )
     self:AddTabs()
@@ -124,6 +125,23 @@ function PANEL:SelectTab( tabName, skipButtonAnim, ... )
     end
     if not found then error( "Unknown tab " .. tabName ) end
     self.selectedTab = tabName
+end
+
+function PANEL:ShowPanel( doOnShow )
+    local panel = self:GetSelectedPanel()
+    if panel then
+        panel:Show()
+        if doOnShow then
+            panel:OnShow()
+        end
+    end
+end
+
+function PANEL:HidePanel()
+    local panel = self:GetSelectedPanel()
+    if panel then
+        panel:Hide()
+    end
 end
 
 function PANEL:GetSelectedPanel()
