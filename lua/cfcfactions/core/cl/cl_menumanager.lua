@@ -35,6 +35,16 @@ end
 
 cfcFactions.ShowMenu = async( _ShowMenu )
 
+function cfcFactions:HasPermission( factionID, perm )
+    if not cfcFactions.localUserData then return false end
+
+    if cfcFactions.localUserData.faction.id == factionID then
+        return table.hasMember( cfcFactions.localUserData.permissions, "name", perm )
+    else
+        return LocalPlayer():IsAdmin()
+    end
+end
+
 function cfcFactions:HideMenu()
     self.MainFrame:Hide()
     self.MainFrame:SetDraggable( false )

@@ -43,3 +43,9 @@ table.tail = ( tab ) ->
     tabCopy = table.Copy tab
     table.remove tabCopy, 1
     tabCopy
+
+table.hasMember = ( tab, member, value ) ->
+    for k, v in pairs tab
+        if ( istable v ) and v[member] == value
+            return true
+    false
