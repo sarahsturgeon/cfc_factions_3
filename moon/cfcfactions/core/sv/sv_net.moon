@@ -91,12 +91,21 @@ findPermissionTarget = ( types ) ->
     for k, argType in pairs types
         return k if ( argType.type\lower! == "player" ) and ( argType.isPermissionTarget )
 
-cNet.RegisterResponse = ( name, types, permissions, callback ) ->
+factionIDType =
+    type: "integer"
+    name: "factionID"
+
+cNet.RegisterResponse = ( name, onFaction, types, permissions, callback ) ->
     validateTypes types
     netName = "cfc_Fac_#{name}"
     targetIndex = findPermissionTarget types
+
+    if onFaction
+        table.insert types, 1, factionIDType
+
     NP.net.receive netName, async ( ply, ... ) ->
         data = { ... }
+
         reject { argumentError: "Invalid number of arguments, expected #{#types}, got #{#data}" } if #types ~= #data
 
         errors = {}
@@ -111,7 +120,9 @@ cNet.RegisterResponse = ( name, types, permissions, callback ) ->
         if targetIndex
             permissionTarget = data[targetIndex]
 
-        await ( cfcFactions.permissions.assertMany ply, permissions, permissionTarget ), AwaitTypes.PROPAGATE
+        factionID = onFaction and data[1]
+
+        await ( cfcFactions.permissions.assertMany ply, factionID, permissions, permissionTarget ), AwaitTypes.PROPAGATE
 
         ret = { xdcall callback, ply, unpack data }
 
@@ -132,31 +143,3 @@ cNet.RegisterResponse = ( name, types, permissions, callback ) ->
             reject unpack ret
 
         return unpack ret
-
-cNet.RegisterResponse "test", {
-    {
-        type: "string"
-        name: "first"
-        minLength: 5
-        maxLength: 30
-    },
-    {
-        type: "boolean"
-        name: "hoolean"
-    },
-    {
-        type: "colorstring"
-        name: "urmom"
-    },
-    {
-        type: "colorstring"
-        name: "urmombutopaque"
-        hasAlpha: false
-    },
-    {
-        type: "integer"
-        name: "int"
-        min: 3
-        max: 5
-    }
-}, {}, print

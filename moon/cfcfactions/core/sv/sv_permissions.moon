@@ -5,7 +5,7 @@ perms = cfcFactions.permissions
 
 logger = cfcFactions.logger
 
-perms.assertMany = async ( ply, permissions, permissionTarget ) ->
+perms.assertMany = async ( ply, targetFactionID, permissions, permissionTarget ) ->
     return if #permissions == 0
 
     permissions = table.Copy permissions
@@ -25,6 +25,12 @@ perms.assertMany = async ( ply, permissions, permissionTarget ) ->
     callerData = playerData[1]
     targetData = playerData[2]
 
+    if targetFactionID and ( callerData.faction.id ~= targetFactionID )
+        if ply\IsAdmin!
+            return
+        else
+            reject { permissionError: "Not a member of this faction" }
+
     onPlayer = false
 
     for _, permData in pairs callerData.permissions
@@ -33,11 +39,13 @@ perms.assertMany = async ( ply, permissions, permissionTarget ) ->
                 onPlayer = true
 
     for missingPerm in *permissions
-        insert errors, missingPerm
+        insert errors, "Missing #{missingPerm}"
 
     if onPlayer
         if targetData
-            if callerData.rank.power < targetData.rank.power
+            if callerData.faction.id ~= targetData.faction.id
+                insert errors, "Target player not in same faction"
+            elseif callerData.rank.power < targetData.rank.power
                 insert errors, "Cannot target this player"
         else
             insert errors, "No target player specified"

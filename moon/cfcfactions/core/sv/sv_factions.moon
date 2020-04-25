@@ -15,7 +15,7 @@ factions.CreateFaction = async ( owner, name, color, description, inviteonly, te
 
     return factionData
 
-cfcFactions.net.RegisterResponse "CreateFaction", {
+cfcFactions.net.RegisterResponse "CreateFaction", false, {
     {
         type: "string"
         name: "name"
@@ -54,7 +54,7 @@ factions.DeleteFaction = async ( ply, id ) ->
 
     return true
 
-cfcFactions.net.RegisterResponse "DeleteFaction", {
+cfcFactions.net.RegisterResponse "DeleteFaction", true, {
     {
         type: "string"
         name: "id"
