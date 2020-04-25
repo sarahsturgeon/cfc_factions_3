@@ -108,7 +108,7 @@ cfcFactions.api.GetFaction = ( id ) ->
 cfcFactions.api.GetFactionMembers = ( factionID ) ->
     endpoint = paths.PLAYERS_FIND_ENDPOINT
     params =
-        faction: steamID
+        faction: factionID
 
     cfcFactions.api.post endpoint, { players: params }
 
