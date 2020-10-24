@@ -1,4 +1,4 @@
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
 
 function cfcFactions.addFactionButton( self, text, lineHeight )
     local btn = vgui.Create( "DButtonPretty", self.BottomGrid )

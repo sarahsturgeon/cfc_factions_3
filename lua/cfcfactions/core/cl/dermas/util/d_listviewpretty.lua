@@ -1,22 +1,5 @@
 local PANEL = {}
-local cfg = ColorSchemes
-
--- Simple table mapping function, apply f to every element in tab
-function table.map( tab, f )
-    local out = {}
-    for k, v in pairs( tab ) do
-        out[k] = f( v )
-    end
-    return out
-end
-
-function table.reduce( tab, f, start )
-    local total = start
-    table.map( tab, function( x )
-        total = f( total, x )
-    end )
-    return total
-end
+local cfg = cfcFactions.Config.ColorSchemes
 
 function PANEL:Init()
     self.Paint = nil

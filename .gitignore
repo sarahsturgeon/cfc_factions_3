@@ -1,6 +1,10 @@
 # Compiled Lua sources
 luac.out
 
+# Compiled moonscript
+lua/cfcfactions/core/sh/
+lua/cfcfactions/core/sv/
+
 # luarocks build files
 *.src.rock
 *.zip
@@ -38,4 +42,7 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
+*.bat
 
+# IDE
+.idea/*

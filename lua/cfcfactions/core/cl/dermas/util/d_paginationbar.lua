@@ -1,5 +1,5 @@
 local PANEL = {}
-local cfg = ColorSchemes
+local cfg = cfcFactions.Config.ColorSchemes
 
 function PANEL:Init()
     self.pageCount = 10
@@ -45,13 +45,9 @@ local function formatBtn( btn )
     btn:SetFont( "CFC_Normal" )
 end
 
-function PANEL:PerformLayout()
+function PANEL:ReplaceButtons()
     local w, h = self:GetSize()
-
-    if w == self.prevW and h == self.prevH and self:GetPageCount() == self.prevPageCount then -- Nothing changed, no need to recreate
-        return
-    end
-
+    
     self:ClearButtons()
     local btns = self.btns
 
@@ -112,6 +108,18 @@ function PANEL:PerformLayout()
     self.prevW = w
     self.prevH = h
     self.prevPageCount = self.pageCount
+end
+
+function PANEL:PerformLayout()
+    local w, h = self:GetSize()
+
+    if w == self.prevW and h == self.prevH and self:GetPageCount() == self.prevPageCount then -- Nothing changed, no need to recreate
+        return
+    end
+
+    timer.Simple( 0, function()
+        self:ReplaceButtons()
+    end )
 end
 
 function PANEL:SetPageCount( c )
