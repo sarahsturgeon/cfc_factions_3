@@ -99,6 +99,7 @@ local function _SetAllFactionsPage( self, page )
     local elementCount = meta.pagination and meta.pagination.count
     local pageCount = elementCount and math.ceil( elementCount / itemCount )
 
+    self.AllFactionList:Show()
     self.PaginationBar:SetPageCount( pageCount or 1 )
 
     self:SetFactions( data )
@@ -139,7 +140,7 @@ end
 PANEL.OnlineFactionsSetup = async( _OnlineFactionsSetup )
 
 local function _AllFactionsSetup( self )
-    -- TODO: Work out how many pages we need
+    self.AllFactionList:Hide()
     self.PaginationBar:SetPageCount( 1 )
     self:SetAllFactionsPage( 1 )
 end

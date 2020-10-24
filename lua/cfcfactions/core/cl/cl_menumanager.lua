@@ -102,4 +102,3 @@ hook.Add( "OnPlayerChat", "CFC_Fac_SayMenuCommand", function( ply, text )
         cfcFactions:OpenMenu()
     end
 end )
-
