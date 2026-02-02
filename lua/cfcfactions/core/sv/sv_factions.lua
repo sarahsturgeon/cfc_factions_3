@@ -9,7 +9,7 @@ if not SERVER then return end
 
 local fpm = cfcFactions.fpm
 local factioneers = cfcFactions.Users
-
+local net = net
 cfcFactions.Factions = cfcFactions.Factions or {}
 
 local function TrimStringSize( str, max )
@@ -19,10 +19,10 @@ local function TrimStringSize( str, max )
     return #TemporaryString > MaxCharTrim and string.Trim( str ).sub( 1, MaxCharTrim ) or str
 end
 
--- TODO: Instead of generating a random ID, we'll just fetch total factions + 1
+-- TODO: Generate a faction unq GUIDE, make sure no duplicates in sql
 local function GenerateID()
-    -- In the future, grab factions from DB and increment by 1 for total factions
-    return #cfcFactions.Factions + 1
+    local generatedFakeID = #cfcFactions.Factions + 1
+    return generatedFakeID
 end
 
 function cfcFactions:Faction( id )
@@ -31,12 +31,9 @@ function cfcFactions:Faction( id )
 end
 
 function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, temporary )
-    if not IsValid( ply ) then
-        return
-    end
+
     -- change to look up total_factions = total_factions + 1
     local TmpUnqID = GenerateID()
-
     local factionOwner = ply
     local factionName = name
     local factionColor = color
@@ -47,44 +44,38 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     ----------------
     --[type checks]
     ----------------
+    ---TODO: Adding logging to register when creating a faction isn't done correctly.
     if type( factionOwner ) ~= "Player" then
-        -- Send Alert -> Not a valid PlayerType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-ply-type"], 1, nil )
         return
     end
 
     if type( factionName ) ~= "string" then
-        -- Send Alert -> Not a valid NameType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, factionOwner )
         return
     end
 
     if type( factionColor ) ~= "Color" then
-        -- Send Alert -> Not a valid ColorType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-table-type"], 1, factionOwner )
         return
     end
 
     if type( factionDescription ) ~= "string" then
-        -- Send Alert -> Not a valid DescriptionType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-string-type"], 1, factionOwner )
         return
     end
 
     if type( factionInviteOnly ) ~= "boolean" then
-        -- Send Alert -> Not a valid IntType
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["invalid-int-type"], 1, factionOwner )
         return
     end
 
     if not factionOwner:IsPlayer() or not IsValid( factionOwner ) then
-        -- SendAlert -> Not a valid player
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["general-error"], 1, nil )
         return
     end
 
-    -- UniqueName Check
-    if not cfcFactions:isUniqueName( factionName ) then
+    if not cfcFactions:CheckForUniqueName( factionName ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["is-in-faction"], 1, factionOwner )
         return
     end
@@ -97,7 +88,6 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
     -- Lets keep this short, no need for a book in a name or description.
     factionName = TrimStringSize( factionName, 25 )
     factionDescription = TrimStringSize( factionDescription, 255 )
-
 
     local CurrentTimeStamp = cfcFactions:TimeStamp()
 
@@ -156,7 +146,7 @@ end
 
 -- Checks a specifc string to see if it is unique amongst other factions.
 -- This is kinda useless since we need to check from the sqldb first instead of just server tables.
-function cfcFactions:isUniqueName( faction_name )
+function cfcFactions:CheckForUniqueName( faction_name )
     -- TODO: Change to check this on SQL side, not server!
     for k, v in pairs( cfcFactions.Factions ) do
         if string.lower( string.Trim( v.Name ) ) == string.lower( string.Trim( faction_name ) ) then
@@ -285,7 +275,7 @@ function cfcFactions:EditFaction( id, name, description, color, private, tempora
 end
 
 -- TODO: Probably a better way to load faction news
-local function requestFactionNews( len, ply )
+local function RequestFactionNews( len, ply )
     for k, v in pairs( string.Explode( "\n", cfcFactions:LoadNews() ) ) do
         net.Start( "CFC_Fac_SendNews" )
             net.WriteString( v .. "\n" )
@@ -294,7 +284,7 @@ local function requestFactionNews( len, ply )
     end
 end
 
-net.Receive( "CFC_Fac_RequestNews", requestFactionNews )
+net.Receive( "CFC_Fac_RequestNews", RequestFactionNews )
 
 -- When client submits a faction to create, we receive it here. This is a net side, we'll check perms here but not valid types ( We probably should )
 local function RequestFactionCreation( len, ply )
@@ -318,7 +308,11 @@ local function RequestFactionCreation( len, ply )
         ["Temporary"] = fIsTemporary
     }
 
-    if ( not fpm:hasPermission( fOwner, "CanCreateFaction" ) ) and ( not fpm:hasPermission( fOwner, "AccessAll" ) ) then
+    -- TODO: Perhaps for future reference, might want to consider whitelisting names and descriptions 
+    -- or even prevent entire ranks from creating factions willy nilly
+    -- also consider deleting the faction if no players join the server after X amount of time (And less than Y amount of  total members)
+
+    if ( not fpm:HasPermission( fOwner, "CanCreateFaction" ) ) and ( not fpm:HasPermission( fOwner, "AccessAll" ) ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["factions-ban"], 1, fOwner )
         return
     end
@@ -340,10 +334,6 @@ local function RequestFactionDetails( len, ply )
     -- Check if user has proper permission to edit each part of a faction
     -- CanEditAll, CanEditDescription, CanEditName, CanEditColor, CanEditInvite
 
-    if not IsValid( ply ) then
-        return
-    end
-
     local TmpOwner = ply
     local TmpID = net.ReadInt( 32 )
     local TmpName = net.ReadString()
@@ -359,22 +349,22 @@ local function RequestFactionDetails( len, ply )
 
     -- TODO: We should eventually do the notifcation system here to return a table of all error message keys that were triggered, then
     -- send that small table all at once saying "Hey, you can't edit the name, color, and invite"
-    if not fpm:hasPermission( TmpOwner, "CanEditName" ) then
+    if not fpm:HasPermission( TmpOwner, "CanEditName" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-name"], 1, TmpOwner )
         TmpName = EditingFaction.Name
     end
 
-    if not fpm:hasPermission( TmpOwner, "CanEditColor" ) then
+    if not fpm:HasPermission( TmpOwner, "CanEditColor" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-color"], 1, TmpOwner )
         TmpColor = EditingFaction.Color
     end
 
-    if not fpm:hasPermission( TmpOwner, "CanEditInvite" ) then
+    if not fpm:HasPermission( TmpOwner, "CanEditInvite" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-invite"], 1, TmpOwner )
         TmpPrivate = EditingFaction.Invite
     end
 
-    if not fpm:hasPermission( TmpOwner, "CanEditDescription" ) then
+    if not fpm:HasPermission( TmpOwner, "CanEditDescription" ) then
         cfcFactions:SendNotifcation( cfcFactions.ErrorMessages["no-permission-descrption"], 1, TmpOwner )
         TmpDescription = EditingFaction.Description
     end
@@ -431,7 +421,7 @@ local function RequestFactionDeletion( len, ply )
     if ply:IsInFaction( FactionToDelete ) then
         ErrorNoHalt( "Needs Testing", "RequestFactionDeletion( len, ply )" )
 
-        if fpm:hasPermission( ply, "CanDisbandFaction" ) then
+        if fpm:HasPermission( ply, "CanDisbandFaction" ) then
             local factionExists = cfcFactions:Faction( FactionToDelete ) ~= nil
             local playerOwnsFaction = FactionToDelete.Owner == ply:SteamID64()
 

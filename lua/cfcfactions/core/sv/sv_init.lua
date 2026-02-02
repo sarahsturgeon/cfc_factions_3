@@ -2,27 +2,24 @@ cfcFactions.Addons = {}
 cfcFactions.Users = cfcFactions.Users or {}
 cfcFactions.Factions = cfcFactions.Factions or {}
 
-cfcFactions.logger = CFCLogger( "CFC Factions 3" )
+require( "logger" )
+cfcFactions.logger = Logger( "CFC Factions 3" )
 local logger = cfcFactions.logger
 
 -- Logger callbacks
 logger:on( "error" ):call( ErrorNoHalt )
 logger:on( "fatal" ):call( error )
-
 -- sh
 include( "cfcfactions/core/sh/sh_init.lua" )
-
 -- sv
 include( "cfcfactions/config/sv_config.lua" )
 include( "cfcfactions/core/sv/sv_netvars.lua" )
 include( "cfcfactions/core/sv/sv_users.lua" )
 include( "cfcfactions/core/sv/sv_permsys.lua" )
 include( "cfcfactions/core/sv/sv_mysql.lua" )
-
 include( "cfcfactions/core/sv/sv_factions.lua" )
 include( "cfcfactions/core/sv/sv_factionmanagment.lua" )
 include( "cfcfactions/core/sv/sv_player_ext.lua" )
-
 -- cl
 AddCSLuaFile( "cfcfactions/config/cl_config.lua" )
 AddCSLuaFile( "cfcfactions/core/cl/cl_clientstartup.lua" )
@@ -50,34 +47,31 @@ resource.AddFile( "resource/fonts/coolvetica.ttf" )
 resource.AddFile( "resource/icons/lock.png" )
 resource.AddFile( "resource/icons/no_avatar.png" )
 
--- Core function to initializeFactions
--- Handdles making sure SQL_DB is ran
 function cfcFactions:InitializeFactions()
-    if not SERVER then return end
-
-    logger:info( "Initializing cfcFactions" )
+	if not SERVER then return end
+	logger:info( "Initializing cfcFactions" )
 end
-hook.Add( "Initialize", "cfcInitializeFactions", cfcFactions:InitializeFactions() )
 
--- Player Say Hook
+hook.Add( "Initialize", "CFC_FACTIONS3_InitializeFactions", cfcFactions:InitializeFactions() )
+
 -- Handles if a player wishes to open the faction menu by typing the command
-local function cfcPlayerSay( ply, msg )
-    if string.len( cfcFactions.Config.CHAT_COMMAND or "" ) > 0 then
-        local chatTrigger = cfcFactions.Config.CHAT_COMMAND
-        if string.sub( msg, 0, #chatTrigger ) == chatTrigger then
-            -- Handles both opening and closing
-            ply:DisplayMenu()
-            return ""
-        end
-    end
+local function CFCPlayerSay( ply, msg )
+	if string.len( cfcFactions.Config.CHAT_COMMAND or "" ) > 0 then
+		local chatTrigger = cfcFactions.Config.CHAT_COMMAND
+		if string.sub( msg, 0, #chatTrigger ) == chatTrigger then
+			-- Handles both opening and closing
+			ply:DisplayMenu()
+			return ""
+		end
+	end
 end
-hook.Add( "PlayerSay", "cfcPlayerSay", cfcPlayerSay )
 
+hook.Add( "PlayerSay", "CFC_FACTIONS3_RegisterPlayerChatCommand", CFCPlayerSay )
 -- InitialSpawn hook, fetches the data and properly sets it serverside
-local function cfcOnPlayerInitialSpawn( ply )
-
-    -- Always load a user as if never exsisted. Afterwards, load their proper data from source
-    -- TODO: Instead of RegisteringUser, we load them from sql, if they're not found, THEN, we register them
-    cfcFactions.Users:registerUser( ply )
+local function CFCOnPlayerInitialSpawn( ply )
+	-- Always load a user as if never exsisted. Afterwards, load their proper data from source
+	-- TODO: Instead of RegisteringUser, we load them from sql
+	cfcFactions.Users:RegisterUser( ply )
 end
-hook.Add( "PlayerInitialSpawn", "cfcPlayerInitialSpawn", cfcOnPlayerInitialSpawn )
+
+hook.Add( "PlayerInitialSpawn", "CFC_FACTIONS3_RegisterInitialPlayers", CFCOnPlayerInitialSpawn )

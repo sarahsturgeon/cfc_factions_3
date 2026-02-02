@@ -66,13 +66,9 @@ cfcFactions.ErrorMessages = {
     ["is-gay"]                = "Cannot kick Phatso. The fuck?",
     ["depreciated-key"]       = "Deprecated key permission. Removing",
     ["factions-ban"]           = "Unable to use factions. Banned from using Factions.",
-    ["contract-barred"]       = "Barred from creating contracts! Request an admin.",
-    ["insufficient-funds"]    = "You lack the required funds to allow this contract.",
     ["excessive-kills"]       = "Too many kills requested. Set a lower number.",
-    ["contract-accept-fail"]  = "Unable to accept contract",
     ["duplicate-name"]        = "Unable to create faction, duplicate name or too similar to exsisting faction name.",
     ["test-string"]           = "Test String, please ignore.",
-    ["contract-ban"]          = "Unable to create contract. Barred from creating contracts",
     ["no-permission-edit"]    = "Unable to edit faction. Missing EditFaction permission.",
     ["no-permission-name"]    = "Unable to edit faction. Missing Editname permission.",
     ["no-permission-color"]   = "Unable to edit faction. Missing EditColor permission.",
@@ -153,7 +149,8 @@ end
 
 
 function cfcFactions.colorToInt( c )
-    return bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
+    local bitshifting = bit.lshift( c.r, 16 ) + bit.lshift( c.g, 8 ) + c.b
+    return bitshifting
 end
 
 function cfcFactions.intToColor( n )

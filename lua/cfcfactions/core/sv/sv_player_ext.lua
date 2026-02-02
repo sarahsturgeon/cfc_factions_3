@@ -10,8 +10,10 @@ but it will instead just be a 'shortcut' to sv_user.lua 's IsInFaction'
 
 meta = FindMetaTable( "Player" )
 local fpm = cfcFactions.fpm
+
+-- TODO: Should probably have some kind of internal cooldown just to be safe
 function meta:CFCToggleMenu()
-    if not fpm:hasPermission( self, "AccessAll" ) then
+    if not fpm:HasPermission( self, "AccessAll" ) then
         return cfcFactions:SendNotifcation( "factions-ban", mtype, player )
     end
 
@@ -25,7 +27,6 @@ end
 
 -- Checks to see if a player is currently in a faction. returns false if not in one.
 function meta:IsInFaction()
-    if self:IsMerc() == true then return true end
 
     local userHasFaction = self:GetFactionID() ~= nil
 
@@ -72,20 +73,3 @@ end
 function meta:SetFactionRank( rank )
     fpm.Users[self:SteamID64()].FactionRank = rank
 end
-
-function meta:IsMerc()
-    return fpm[self:SteamID64()].IsMerc or false
-end
-
--- function player:SetRank( rank )
-
--- end
-
--- function player:KickByID( id, ply )
-
--- end
-
-
--- function player:Ban( ply )
-
--- end

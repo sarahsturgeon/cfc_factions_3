@@ -16,69 +16,147 @@ fpm.Permissions.CorePermissions = {
         --  NamedKey = table( description )
         -- "ExamplePermission" = {Description = "A short description of what the permission should do"}
         -- "CanKick" = {Description = "Allows a user to kick from faction."}
-        --[""] = {Description = ""},
+        -- [""] = {Description = ""},
 
-        -- faction managment
-        ["CanBan"]                   = {Description = "Allows the user to ban from their own faction."},
-        ["CanUnban"]                 = {Description = "Allows the user to unban a member from their own faction."},
-        ["CanDisbandFaction"]        = {Description = "Allows a user to disband their faction."},
-        ["CanEditAll"]               = {Description = "Allows a user to edit any faction detail."},
-        ["CanEditDescription"]       = {Description = "Allows a user to edit the faction's description."},
-        ["CanEditName"]              = {Description = "Allows a user to edit the faction's name."},
-        ["CanEditColor"]             = {Description = "Allows a user to edit the faction's color."},
-        ["CanEditInvite"]            = {Description = "Allows a user to edit the faction's invite status."},
+        -- TODO: Should probably also have a number assigned to each one for easy managment. Instead of looking up by keyName, can just check for a number. 
+        -- CAN_BAN = 6 for example. 
 
-        -- permssions
-        ["CanEditPermissions"]       = {Description = "Allows a user to edit a faction's permission structure."},
-        ["CanAddPermissions"]        = {Description = "Allows a user to add a permission to a member."},
-        ["CanSetRanks"]              = {Description = "Allows a user to set a member's rank."},
-        ["CanRemoveRanks"]           = {Description = "Allows a user to remove a member's rank."},
-        ["CanRemovePermissions"]     = {Description = "Allows a user to remove a member's permissions."},
-
-        -- housekeeping
-        ["CanViewLogs"]              = {Description = "Allows a user to view the faction's logs."},
-        ["CanViewFactionWiki"]       = {Description = "Allows a user to view their faction's wiki."},
-        ["CanEditFactionWiki"]       = {Description = "Allows a user to edit their faction's wiki."},
-
-        -- misc
-        ["CanSendAllMessage"]        = {Description = "Allows a user to send a member to any faction member."},
-
-        ["CanSendFactionMessage"]    = {Description = "Allows a user to send a message to their own faction."},
-        ["CanReceiveFactionMessage"] = {Description = "Allows a user to receive a faction message from their own faction."},
-        ["CanSpawnXPObject"]         = {Description = "Allows a user to spawn a XP gathering object."},
-        ["CanDeleteXPObject"]        = {Description = "Allows a user to remove a XP gathering object."},
-        ["CanDeclareWar"]            = {Description = "Allows a user to declare war on other factions."},
-        ["CanUndeclareWar"]          = {Description = "Allows a user to remove a war from another faction."},
-        ["CanSetAllies"]             = {Description = "Allows a user to set allies."},
-        ["CanSetEnemies"]            = {Description = "Allows a user to set enemies."},
-        ["CanRemoveAllies"]          = {Description = "Allows a user to remove allies."},
-        ["CanRemoveEnemies"]         = {Description = "Allows a user to remove enemies."},
-        ["CanHireMercs"]             = {Description = "Allows a user to hire mercenaries."},
-        ["CanFireMercs"]             = {Description = "Allows a user to fire mercenaries."},
-        ["CanSendInvite"]            = {Description = "Allows a user to send out faction invites."},
-        ["CanRevokeInvite"]          = {Description = "Allows a user to revoke a faction invite."},
-        ["CanDamageAllies"]          = {Description = "Allows a user to damage allies."},
-        ["CanDamageTeammates"]       = {Description = "Allows a user to damage teammates."}
+        ["CanBan"]                   = {
+            Description = "Allows the user to ban from their own faction."
+        },
+        ["CanUnban"]                 = {
+            Description = "Allows the user to unban a member from their own faction."
+        },
+        ["CanDisbandFaction"]        = {
+            Description = "Allows a user to disband their faction."
+        },
+        ["CanEditAll"]               = {
+            Description = "Allows a user to edit any faction detail."
+        },
+        ["CanEditDescription"]       = {
+            Description = "Allows a user to edit the faction's description."
+        },
+        ["CanEditName"]              = {
+            Description = "Allows a user to edit the faction's name."
+        },
+        ["CanEditColor"]             = {
+            Description = "Allows a user to edit the faction's color."
+        },
+        ["CanEditInvite"]            = {
+            Description = "Allows a user to edit the faction's invite status."
+        },
+        ["CanEditPermissions"]       = {
+            Description = "Allows a user to edit a faction's permission structure."
+        },
+        ["CanAddPermissions"]        = {
+            Description = "Allows a user to add a permission to a member."
+        },
+        ["CanSetRanks"]              = {
+            Description = "Allows a user to set a member's rank."
+        },
+        ["CanRemoveRanks"]           = {
+            Description = "Allows a user to remove a member's rank."
+        },
+        ["CanRemovePermissions"]     = {
+            Description = "Allows a user to remove a member's permissions."
+        },
+        ["CanViewLogs"]              = {
+            Description = "Allows a user to view the faction's logs."
+        },
+        ["CanViewFactionWiki"]       = {
+            Description = "Allows a user to view their faction's wiki."
+        },
+        ["CanEditFactionWiki"]       = {
+            Description = "Allows a user to edit their faction's wiki."
+        },
+        ["CanSendAllMessage"]        = {
+            Description = "Allows a user to send a member to any faction member."
+        },
+        ["CanSendFactionMessage"]    = {
+            Description = "Allows a user to send a message to their own faction."
+        },
+        ["CanReceiveFactionMessage"] = {
+            Description = "Allows a user to receive a faction message from their own faction."
+        },
+        ["CanSpawnXPObject"]         = {
+            Description = "Allows a user to spawn a XP gathering object."
+        },
+        ["CanDeleteXPObject"]        = {
+            Description = "Allows a user to remove a XP gathering object."
+        },
+        ["CanDeclareWar"]            = {
+            Description = "Allows a user to declare war on other factions."
+        },
+        ["CanUndeclareWar"]          = {
+            Description = "Allows a user to remove a war from another faction."
+        },
+        ["CanSetAllies"]             = {
+            Description = "Allows a user to set allies."
+        },
+        ["CanSetEnemies"]            = {
+            Description = "Allows a user to set enemies."
+        },
+        ["CanRemoveAllies"]          = {
+            Description = "Allows a user to remove allies."
+        },
+        ["CanRemoveEnemies"]         = {
+            Description = "Allows a user to remove enemies."
+        },
+        ["CanHireMercs"]             = {
+            Description = "Allows a user to hire mercenaries."
+        },
+        ["CanFireMercs"]             = {
+            Description = "Allows a user to fire mercenaries."
+        },
+        ["CanSendInvite"]            = {
+            Description = "Allows a user to send out faction invites."
+        },
+        ["CanRevokeInvite"]          = {
+            Description = "Allows a user to revoke a faction invite."
+        },
+        ["CanDamageAllies"]          = {
+            Description = "Allows a user to damage allies."
+        },
+        ["CanDamageTeammates"]       = {
+            Description = "Allows a user to damage teammates."
+        },
+        ["IsDeveloper"]          = {
+            Description = "Gives full permissions over everything that is cfc_Factions."
+        },
+        ["IsTester"]             = {
+            Description = "A test permission to let users access experimental features."
+        },
+        ["IsFactionsAdmin"]      = {
+            Description = "Lets a user have full control over other factions. "
+        },
+        ["CanCreateFaction"]     = {
+            Description = "Lets a user create their own factions."
+        },
+        ["CanJoinFaction"]       = {
+            Description = "Lets a user join other's factions."
+        },
+        ["AccessAll"]            = {
+            Description = "Lets a user access factions and its content."
+        },
+        ["CanLeaveFaction"]      = {
+            Description = "Lets a user leave their faction."
+        },
+        ["TestPerm"]             = {
+            Description = "Test permission, please ignore."
+        },
+        ["CanReceiveAllMessage"] = {
+            Description = "Allows a user to receive a message from anyone."
+        }
 }
 
--- super special permissions not used by factions specifically
-fpm.Permissions.SpecialPermissions = {
-    ["IsDeveloper"]          = {Description = "Gives full permissions over everything that is cfc_Factions."},
-    ["IsTester"]             = {Description = "A test permission to let users access experimental features."},
-    ["IsFactionsAdmin"]      = {Description = "Lets a user have full control over other factions. "},
-    ["CanCreateFaction"]     = {Description = "Lets a user create their own factions."},
-    ["CanJoinFaction"]       = {Description = "Lets a user join other's factions."},
-    ["AccessAll"]            = {Description = "Lets a user access factions and its content."},
-    ["CanLeaveFaction"]      = {Description = "Lets a user leave their faction."},
-    ["TestPerm"]             = {Description = "Test permission, please ignore."},
-    ["CanReceiveAllMessage"] = {Description = "Allows a user to receive a message from anyone."}
-}
 
 -- //interal ranks inside a self contained faction. These will always be avaible to default to encase
 -- a user decides to mess up their internal ranks.
 -- !Best not to change these unless a core permission is needed
+
+-- TODO: Perhaps move to a json format instead of hard coding ranks
 fpm.defaultRanks = {
-    -- creator of a faction. Can do anything in their own faction
+    -- creator of their own faction. Can do anything in their own faction
     ["leader"] = " * ",
 
     -- Coleader, can do most things but can't disband
@@ -117,13 +195,8 @@ fpm.defaultRanks = {
     }
 }
 
--- Returns a copy of merged tables for all permissions ( Special and core ).
-function fpm:FetchMergedPermissions()
-    return table.Merge( fpm.Permissions.CorePermissions, fpm.Permissions.SpecialPermissions )
-end
-
 -- Revokes a user's permissions, essentialy removing them from cfcFaction's permission system
-function fpm:revokeUser( ply )
+function fpm:RevokeUser( ply )
     local isValidPlayer = ply:IsPlayer() and IsValid( ply )
 
     if not isValidPlayer then return false end
@@ -134,15 +207,16 @@ function fpm:revokeUser( ply )
 end
 
 -- forces init for all current humans connected
-function fpm:authAllUsers()
+function fpm:AuthAllUsers()
     for _, players in pairs ( player.GetHumans() ) do
-        fpm:authUser( players )
+        fpm:AuthUser( players )
     end
 end
+hook.Add( "Initialize", "CFC_FACTIONS3_InitializeUsers", fpm:AuthAllUsers() )
 
 -- Auths a user and allows them to use factions properly. If not, things make explode
 -- Or simply just don't want them using it
-function fpm:authUser( authPlayer )
+function fpm:AuthUser( authPlayer )
     logger:info( "Authenticating Factions user " .. authPlayer:SteamID() )
     -- Checks and balances
     if not authPlayer:IsPlayer() then
@@ -157,31 +231,33 @@ function fpm:authUser( authPlayer )
         return
     end
 
-    factioneers:registerUser( authPlayer )
+    factioneers:RegisterUser( authPlayer )
 
     -- Basic, core permissions ( almost ) every user should require in order to properly use factions.
-    local AuthUserPerms = {
+    local AUTH_USER_PERMS = {
         "AccessAll", "CanReceiveAllMessage", "CanLeaveFaction", "CanCreateFaction", "CanJoinFaction"
     }
 
     if IsValid( authPlayer ) and authPlayer:IsAdmin() then
-        table.insert( AuthUserPerms, "IsFactionsAdmin" )
-        -- Testing dev access, SteamID is 'Voodoo'
-        -- Remove code when final branch is published
+        table.insert( AUTH_USER_PERMS, "IsFactionsAdmin" )
+        -- In hindsight, probably shouldn't actually give devs extra permissions based on credits. If someone were to stop development for CFC, 
+        -- they would still have entire access to factions. 
+        -- So here is a TODO: If you release factions as a finished product, for the love of god uncouple this from release. 
+        -- Else you'll have billy bob who left 8 years ago still maintain access to everyone's factions 
         if ( cfcFactions.Credits.Developers[authPlayer:SteamID()] ~= nil ) then
-            table.insert( AuthUserPerms, "IsDeveloper" )
-            table.insert( AuthUserPerms, "IsTester" )
+            table.insert( AUTH_USER_PERMS, "IsDeveloper" )
+            table.insert( AUTH_USER_PERMS, "IsTester" )
         end
     end
 
-    -- fpm.Users[ply:SteamID64()] = { ["Permissions"] = AuthUserPerms }
-    for _, AuthPermission in pairs( AuthUserPerms ) do
-        self:addPermission( authPlayer, AuthPermission )
+    for _, AuthPermission in pairs( AUTH_USER_PERMS ) do
+        self:AddPermission( authPlayer, AuthPermission )
     end
 end
 
--- Checks to see if a ply has a  specific permission( s )
-function fpm:hasPermission( ply, permission )
+-- Checks to see if a ply has a  specific permission( player, string )
+-- returns false if they do not have it, true if they do
+function fpm:HasPermission( ply, permission )
     -- Handling normal permissions now
     if not ply:IsPlayer() then
         logger:error( "Cannot check permission, player is invalid!" )
@@ -231,11 +307,11 @@ function fpm:hasPermission( ply, permission )
 end
 
 -- Adds a permission to the ply. True if success, false if otherwise
-function fpm:addPermission( ply, permission )
+function fpm:AddPermission( ply, permission )
     local isValidPlayer = IsValid( ply ) or not ply:IsPlayer()
 
     if not isValidPlayer then
-        logger:error( "Unable to add permission, invalid ply!" )
+        logger:error( "Unable to add permission, invalid player!" )
         return false
     end
 
@@ -247,22 +323,19 @@ function fpm:addPermission( ply, permission )
 
     local usr = factioneers:User( ply )
 
-    if fpm:IsSpecialPermission( permission ) == false then
-        table.insert( usr.FactionMetadata.InternalFactionPermissions, permission )
-    else
-        table.insert( usr.CFCPermissions, permission )
-    end
+
+    table.insert( usr.CFCPermissions, permission )
 
     return true
 end
 
 -- Revokes a permission( s ) from the ply. True if success, false if otherwise
-function fpm:revokePermission( ply, permission_string )
+function fpm:RevokePermission( ply, permission_string )
     local usr = factioneers[ply:SteamID64()]
 
     for Key, Permission in pairs( usr.CFCPermissions ) do
         if Permission == permission_string then
-            usr.CFCPermissions[k] = nil
+            usr.CFCPermissions[Key] = nil
             return true
         end
     end
@@ -270,45 +343,26 @@ function fpm:revokePermission( ply, permission_string )
     return false
 end
 
-function fpm:IsSpecialPermission( perm )
-    if fpm:IsValidPermission( perm ) then
-        if ( fpm.Permissions.SpecialPermissions[perm] ~= nil ) then
-            return true
-        else
-            return false
-        end
-    end
-
-    -- TODO: What is the default behavior here if not valid permission?
-end
-
--- Returns a list of permissions the ply currently has
-function fpm:getPermissionList( ply )
+function fpm:GetPermissionList( ply )
     return fpm.Users.AuthUsers[ply:SteamID64()]
 end
 
 function fpm:IsValidPermission( permission )
     if not permission then return end
 
-    for perm, v in pairs( fpm.Permissions.CorePermissions ) do
+    for perm, _ in pairs( fpm.Permissions.CorePermissions ) do
         if string.lower( perm ) == string.lower( permission ) then
             return true
         end
     end
-
-    for n, m in pairs( fpm.Permissions.SpecialPermissions ) do
-        if string.lower( n ) == string.lower( permission ) then
-            return true
-        end
-    end
 end
 
-function fpm:IsDev( ply )
-    return self:hasPermission( ply, "IsDeveloper" )
+function fpm:IsFactionDev( ply )
+    return self:HasPermission( ply, "IsDeveloper" )
 end
 
 function fpm:IsFactionAdmin( ply )
-    return self:hasPermission( ply, "IsFactionsAdmin" )
+    return self:HasPermission( ply, "IsFactionsAdmin" )
 end
 
-hook.Add( "Initialize", "cfcInitializeUsers", fpm:authAllUsers() )
+

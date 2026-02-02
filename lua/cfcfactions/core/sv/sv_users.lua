@@ -31,7 +31,7 @@ local function ReturnDefaultTable()
 end
 
 -- Registers a new user to be accessible by factions
-function factioneers:registerUser( user )
+function factioneers:RegisterUser( user )
 
     if not user:IsPlayer() then
         -- Error out, not a player
@@ -108,7 +108,7 @@ function factioneers:UpdateUser( user, lastonline, factionid, kills, deaths, fac
     end
 
     if not factioneers:UserExists( user ) then
-        factioneers:registerUser( user )
+        factioneers:RegisterUser( user )
     end
 
     local userTable = factioneers[user:SteamID64()]
@@ -185,7 +185,7 @@ function factioneers:UpdateStats( user, lastonline, kills, deaths )
     if IsValidNumber( deaths ) then userFactionTable.FactionMetadata["Deaths"] = deaths end
 end
 
-function factioneers:SetUserFaction( user, id, rank )
+function factioneers:setUserFaction( user, id, rank )
     self:UpdateUser( user, _, id, rank )
 end
 
@@ -266,7 +266,7 @@ end
 -- local function SendUserRefresh( data )
 -- end
 
-local function factionsPlayerInitialSpawn( ply )
-    cfcFactions.fpm:authUser( ply )
+local function FactionsPlayerInitialSpawn( ply )
+    cfcFactions.fpm:AuthUser( ply )
 end
-hook.Add( "PlayerInitialSpawn", "CFC_Fac_PlayerInitialSpawn", factionsPlayerInitialSpawn )
+hook.Add( "PlayerInitialSpawn", "CFC_FACTIONS3_AuthPlayersOnInitalSpawn", FactionsPlayerInitialSpawn )
