@@ -8,6 +8,7 @@ Global Tables: cfcFactions.Dermas, cfcFactions.Alerts, cfcFactions.ErrorMessages
 ]]--
 
 local net = net
+local logger = cfcFactions.logger
 cfcFactions.Credits = cfcFactions.Credits or {}
 -- Sends a notifaction msg:string, mtype:number, player:entity
 
@@ -125,7 +126,7 @@ function cfcFactions:SendNotifcation( msg, mtype, ply )
             net.SendToServer()
         else
             -- TODO: Log an event here
-            print( "" )
+            logger:info( string.format( "Faction Alert Message to send is too long! Less than 256 characters." ) )
         end
     end
 
@@ -142,7 +143,7 @@ function cfcFactions:SendNotifcation( msg, mtype, ply )
             end
         else
             -- TODO: Log an event here
-            print( "" )
+            logger:info( string.format( "Faction Alert Message to send is too long! Less than 256 characters." ) )
         end
     end
 end
