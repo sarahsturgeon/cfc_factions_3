@@ -140,7 +140,6 @@ function cfcFactions:CreateFaction( ply, name, color, description, inviteonly, t
 
     hook.Call( "CFC_Factionhook_FactionCreated", _, FinalFaction.Name, FinalFaction.Owner, FinalFaction.ID )
 
-    --- Returns the newly created faction as a table
     return FinalFaction
 end
 

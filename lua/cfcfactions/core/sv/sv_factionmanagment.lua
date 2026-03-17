@@ -16,7 +16,6 @@ local logger = cfcFactions.logger
 
 --------------------------------------------------------------------------------------------------------------
 -- Permission System : dev only
-
 --------------------------------------------------------------------------------------------------------------
 -- Grants a player permission based on "Player Name":player, "Permission":string
 local function AllowFactionPermission( ply, cmd, args )
@@ -32,7 +31,7 @@ local function AllowFactionPermission( ply, cmd, args )
             ply:ChatPrint( string.format( "You have been granted access: %s", args[1] ) )
             logger:info( string.format( "%s has been granted access to %s", ply:GetName(), args[1] ) )
         else
-            -- TODO:
+            -- function fpm:AddPermission( ply, permission ) will return false on invalid player or invalid permission 
             Error( "TODO: What happens here?" )
         end
     else
@@ -54,7 +53,7 @@ local function RemoveFactionPermission( ply, cmd, args )
             print( string.format( "Success on removing permission %s", args[1] ) )
             logger:info( string.format( "%s has been denied access to %s", ply:GetName(), args[1] ) )
         else
-            -- TODO:
+            -- function fpm:RevokePermission( ply, permission_string ) will return false if the permission is not in a known table of user permissions (usr.CFCPermissions)
             Error( "TODO: What happens here?" )
         end
     else

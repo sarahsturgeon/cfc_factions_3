@@ -64,10 +64,8 @@ cfcFactions.ErrorMessages = {
     ["is-user"]               = "Player is a user",
     ["is-developer"]          = "Player is a developer",
     ["is-tester"]             = "Player is a tester",
-    ["is-gay"]                = "Cannot kick Phatso. The fuck?",
     ["depreciated-key"]       = "Deprecated key permission. Removing",
-    ["factions-ban"]           = "Unable to use factions. Banned from using Factions.",
-    ["excessive-kills"]       = "Too many kills requested. Set a lower number.",
+    ["factions-ban"]          = "Unable to use factions. Banned from using Factions.",
     ["duplicate-name"]        = "Unable to create faction, duplicate name or too similar to exsisting faction name.",
     ["test-string"]           = "Test String, please ignore.",
     ["no-permission-edit"]    = "Unable to edit faction. Missing EditFaction permission.",
@@ -81,16 +79,6 @@ function cfcFactions:TimeStamp()
     return os.date( "%H:%M:%S - %d/%m/%Y", os.time() )
 end
 
--- function cfcFactions:UUID()
---     local template ='xxxxxxxxxxxxxxxxxxxx'
---     return string.gsub( template, '[xy]', function ( c )
---         local v = ( c == 'x' ) and math.random( 0, 9 ) or math.random( 0, 9 )
---         return string.format( '%x', v )
---     end )
--- end
-
--- TODO: add "respond" option, enabled SendNotifcation to tell the user to respond to whatever alert is showing.
--- Sends a notifcation to an optional player
 -- msg = string or predifined key hard coded above ( cfcFactions.ErrorMessages )
 -- mtype = Number, Error being 1, Msg being 2, Alert being 3, Warning being 4
 -- player to send the notifcation to. Optional
@@ -125,7 +113,6 @@ function cfcFactions:SendNotifcation( msg, mtype, ply )
             end
             net.SendToServer()
         else
-            -- TODO: Log an event here
             logger:info( string.format( "Faction Alert Message to send is too long! Less than 256 characters." ) )
         end
     end
@@ -142,7 +129,6 @@ function cfcFactions:SendNotifcation( msg, mtype, ply )
                 MsgN( msg )
             end
         else
-            -- TODO: Log an event here
             logger:info( string.format( "Faction Alert Message to send is too long! Less than 256 characters." ) )
         end
     end
